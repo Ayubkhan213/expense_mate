@@ -102,7 +102,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Expense Mate'**
+  /// **'Expense Manager'**
   String get appName;
 
   /// No description provided for @home.
@@ -123,6 +123,30 @@ abstract class AppLocalizations {
   /// **'Records'**
   String get records;
 
+  /// No description provided for @transactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get transactions;
+
+  /// No description provided for @budgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Budgets'**
+  String get budgets;
+
+  /// No description provided for @income.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get income;
+
+  /// No description provided for @expense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get expense;
+
   /// No description provided for @profile.
   ///
   /// In en, this message translates to:
@@ -134,6 +158,918 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change Theme'**
   String get changeTheme;
+
+  /// No description provided for @borrowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Borrowed'**
+  String get borrowed;
+
+  /// No description provided for @lent.
+  ///
+  /// In en, this message translates to:
+  /// **'Lent'**
+  String get lent;
+
+  /// No description provided for @borrowedFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Borrowed From'**
+  String get borrowedFrom;
+
+  /// No description provided for @lentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Lent To'**
+  String get lentTo;
+
+  /// No description provided for @personName.
+  ///
+  /// In en, this message translates to:
+  /// **'Person Name'**
+  String get personName;
+
+  /// No description provided for @returnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Return Date'**
+  String get returnDate;
+
+  /// No description provided for @setReturnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Return Date'**
+  String get setReturnDate;
+
+  /// No description provided for @debt.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt'**
+  String get debt;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @partialPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Partial Payment'**
+  String get partialPayment;
+
+  /// No description provided for @fullPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Payment'**
+  String get fullPayment;
+
+  /// No description provided for @paid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get paid;
+
+  /// No description provided for @remaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remaining;
+
+  /// No description provided for @overdue.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get overdue;
+
+  /// No description provided for @cash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get cash;
+
+  /// No description provided for @card.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get card;
+
+  /// No description provided for @bank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank'**
+  String get bank;
+
+  /// No description provided for @wallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get wallet;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethod;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @enterNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a note'**
+  String get enterNote;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @salary.
+  ///
+  /// In en, this message translates to:
+  /// **'Salary'**
+  String get salary;
+
+  /// No description provided for @bonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus'**
+  String get bonus;
+
+  /// No description provided for @commission.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission'**
+  String get commission;
+
+  /// No description provided for @tips.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips'**
+  String get tips;
+
+  /// No description provided for @business.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get business;
+
+  /// No description provided for @freelance.
+  ///
+  /// In en, this message translates to:
+  /// **'Freelance'**
+  String get freelance;
+
+  /// No description provided for @consulting.
+  ///
+  /// In en, this message translates to:
+  /// **'Consulting'**
+  String get consulting;
+
+  /// No description provided for @selfEmployed.
+  ///
+  /// In en, this message translates to:
+  /// **'Self Employed'**
+  String get selfEmployed;
+
+  /// No description provided for @investment.
+  ///
+  /// In en, this message translates to:
+  /// **'Investment'**
+  String get investment;
+
+  /// No description provided for @dividends.
+  ///
+  /// In en, this message translates to:
+  /// **'Dividends'**
+  String get dividends;
+
+  /// No description provided for @interest.
+  ///
+  /// In en, this message translates to:
+  /// **'Interest'**
+  String get interest;
+
+  /// No description provided for @capitalGains.
+  ///
+  /// In en, this message translates to:
+  /// **'Capital Gains'**
+  String get capitalGains;
+
+  /// No description provided for @cryptocurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Cryptocurrency'**
+  String get cryptocurrency;
+
+  /// No description provided for @rental.
+  ///
+  /// In en, this message translates to:
+  /// **'Rental'**
+  String get rental;
+
+  /// No description provided for @realEstate.
+  ///
+  /// In en, this message translates to:
+  /// **'Real Estate'**
+  String get realEstate;
+
+  /// No description provided for @royalties.
+  ///
+  /// In en, this message translates to:
+  /// **'Royalties'**
+  String get royalties;
+
+  /// No description provided for @pension.
+  ///
+  /// In en, this message translates to:
+  /// **'Pension'**
+  String get pension;
+
+  /// No description provided for @socialSecurity.
+  ///
+  /// In en, this message translates to:
+  /// **'Social Security'**
+  String get socialSecurity;
+
+  /// No description provided for @annuity.
+  ///
+  /// In en, this message translates to:
+  /// **'Annuity'**
+  String get annuity;
+
+  /// No description provided for @trustFund.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust Fund'**
+  String get trustFund;
+
+  /// No description provided for @gift.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get gift;
+
+  /// No description provided for @inheritance.
+  ///
+  /// In en, this message translates to:
+  /// **'Inheritance'**
+  String get inheritance;
+
+  /// No description provided for @lottery.
+  ///
+  /// In en, this message translates to:
+  /// **'Lottery'**
+  String get lottery;
+
+  /// No description provided for @refund.
+  ///
+  /// In en, this message translates to:
+  /// **'Refund'**
+  String get refund;
+
+  /// No description provided for @cashback.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashback'**
+  String get cashback;
+
+  /// No description provided for @award.
+  ///
+  /// In en, this message translates to:
+  /// **'Award'**
+  String get award;
+
+  /// No description provided for @grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant'**
+  String get grant;
+
+  /// No description provided for @scholarship.
+  ///
+  /// In en, this message translates to:
+  /// **'Scholarship'**
+  String get scholarship;
+
+  /// No description provided for @sideHustle.
+  ///
+  /// In en, this message translates to:
+  /// **'Side Hustle'**
+  String get sideHustle;
+
+  /// No description provided for @otherIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Income'**
+  String get otherIncome;
+
+  /// No description provided for @food.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get food;
+
+  /// No description provided for @groceries.
+  ///
+  /// In en, this message translates to:
+  /// **'Groceries'**
+  String get groceries;
+
+  /// No description provided for @diningout.
+  ///
+  /// In en, this message translates to:
+  /// **'Dining Out'**
+  String get diningout;
+
+  /// No description provided for @fastFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Fast Food'**
+  String get fastFood;
+
+  /// No description provided for @cafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Cafe'**
+  String get cafe;
+
+  /// No description provided for @delivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get delivery;
+
+  /// No description provided for @transport.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport'**
+  String get transport;
+
+  /// No description provided for @fuel.
+  ///
+  /// In en, this message translates to:
+  /// **'Fuel'**
+  String get fuel;
+
+  /// No description provided for @parking.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking'**
+  String get parking;
+
+  /// No description provided for @publicTransit.
+  ///
+  /// In en, this message translates to:
+  /// **'Public Transit'**
+  String get publicTransit;
+
+  /// No description provided for @taxi.
+  ///
+  /// In en, this message translates to:
+  /// **'Taxi'**
+  String get taxi;
+
+  /// No description provided for @carMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Car Maintenance'**
+  String get carMaintenance;
+
+  /// No description provided for @vehicleInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Insurance'**
+  String get vehicleInsurance;
+
+  /// No description provided for @shopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shopping'**
+  String get shopping;
+
+  /// No description provided for @clothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Clothing'**
+  String get clothing;
+
+  /// No description provided for @electronics.
+  ///
+  /// In en, this message translates to:
+  /// **'Electronics'**
+  String get electronics;
+
+  /// No description provided for @furniture.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture'**
+  String get furniture;
+
+  /// No description provided for @cosmetics.
+  ///
+  /// In en, this message translates to:
+  /// **'Cosmetics'**
+  String get cosmetics;
+
+  /// No description provided for @accessories.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessories'**
+  String get accessories;
+
+  /// No description provided for @bills.
+  ///
+  /// In en, this message translates to:
+  /// **'Bills'**
+  String get bills;
+
+  /// No description provided for @electricity.
+  ///
+  /// In en, this message translates to:
+  /// **'Electricity'**
+  String get electricity;
+
+  /// No description provided for @water.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get water;
+
+  /// No description provided for @gas.
+  ///
+  /// In en, this message translates to:
+  /// **'Gas'**
+  String get gas;
+
+  /// No description provided for @internet.
+  ///
+  /// In en, this message translates to:
+  /// **'Internet'**
+  String get internet;
+
+  /// No description provided for @phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get phone;
+
+  /// No description provided for @streaming.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaming'**
+  String get streaming;
+
+  /// No description provided for @rent.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent'**
+  String get rent;
+
+  /// No description provided for @mortgage.
+  ///
+  /// In en, this message translates to:
+  /// **'Mortgage'**
+  String get mortgage;
+
+  /// No description provided for @propertyTax.
+  ///
+  /// In en, this message translates to:
+  /// **'Property Tax'**
+  String get propertyTax;
+
+  /// No description provided for @homeRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Repair'**
+  String get homeRepair;
+
+  /// No description provided for @hoaFees.
+  ///
+  /// In en, this message translates to:
+  /// **'HOA Fees'**
+  String get hoaFees;
+
+  /// No description provided for @health.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get health;
+
+  /// No description provided for @doctor.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor'**
+  String get doctor;
+
+  /// No description provided for @pharmacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Pharmacy'**
+  String get pharmacy;
+
+  /// No description provided for @dental.
+  ///
+  /// In en, this message translates to:
+  /// **'Dental'**
+  String get dental;
+
+  /// No description provided for @vision.
+  ///
+  /// In en, this message translates to:
+  /// **'Vision'**
+  String get vision;
+
+  /// No description provided for @gym.
+  ///
+  /// In en, this message translates to:
+  /// **'Gym'**
+  String get gym;
+
+  /// No description provided for @yoga.
+  ///
+  /// In en, this message translates to:
+  /// **'Yoga'**
+  String get yoga;
+
+  /// No description provided for @sports.
+  ///
+  /// In en, this message translates to:
+  /// **'Sports'**
+  String get sports;
+
+  /// No description provided for @entertainment.
+  ///
+  /// In en, this message translates to:
+  /// **'Entertainment'**
+  String get entertainment;
+
+  /// No description provided for @movies.
+  ///
+  /// In en, this message translates to:
+  /// **'Movies'**
+  String get movies;
+
+  /// No description provided for @concerts.
+  ///
+  /// In en, this message translates to:
+  /// **'Concerts'**
+  String get concerts;
+
+  /// No description provided for @games.
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get games;
+
+  /// No description provided for @hobbies.
+  ///
+  /// In en, this message translates to:
+  /// **'Hobbies'**
+  String get hobbies;
+
+  /// No description provided for @books.
+  ///
+  /// In en, this message translates to:
+  /// **'Books'**
+  String get books;
+
+  /// No description provided for @music.
+  ///
+  /// In en, this message translates to:
+  /// **'Music'**
+  String get music;
+
+  /// No description provided for @travel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get travel;
+
+  /// No description provided for @hotel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hotel'**
+  String get hotel;
+
+  /// No description provided for @flights.
+  ///
+  /// In en, this message translates to:
+  /// **'Flights'**
+  String get flights;
+
+  /// No description provided for @vacation.
+  ///
+  /// In en, this message translates to:
+  /// **'Vacation'**
+  String get vacation;
+
+  /// No description provided for @tours.
+  ///
+  /// In en, this message translates to:
+  /// **'Tours'**
+  String get tours;
+
+  /// No description provided for @education.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get education;
+
+  /// No description provided for @tuition.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuition'**
+  String get tuition;
+
+  /// No description provided for @courses.
+  ///
+  /// In en, this message translates to:
+  /// **'Courses'**
+  String get courses;
+
+  /// No description provided for @supplies.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplies'**
+  String get supplies;
+
+  /// No description provided for @insurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get insurance;
+
+  /// No description provided for @healthInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Insurance'**
+  String get healthInsurance;
+
+  /// No description provided for @lifeInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Life Insurance'**
+  String get lifeInsurance;
+
+  /// No description provided for @homeInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Insurance'**
+  String get homeInsurance;
+
+  /// No description provided for @personalCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Care'**
+  String get personalCare;
+
+  /// No description provided for @haircut.
+  ///
+  /// In en, this message translates to:
+  /// **'Haircut'**
+  String get haircut;
+
+  /// No description provided for @spa.
+  ///
+  /// In en, this message translates to:
+  /// **'Spa'**
+  String get spa;
+
+  /// No description provided for @skincare.
+  ///
+  /// In en, this message translates to:
+  /// **'Skincare'**
+  String get skincare;
+
+  /// No description provided for @pets.
+  ///
+  /// In en, this message translates to:
+  /// **'Pets'**
+  String get pets;
+
+  /// No description provided for @petFood.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet Food'**
+  String get petFood;
+
+  /// No description provided for @vet.
+  ///
+  /// In en, this message translates to:
+  /// **'Vet'**
+  String get vet;
+
+  /// No description provided for @petSupplies.
+  ///
+  /// In en, this message translates to:
+  /// **'Pet Supplies'**
+  String get petSupplies;
+
+  /// No description provided for @savings.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings'**
+  String get savings;
+
+  /// No description provided for @loanPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Loan Payment'**
+  String get loanPayment;
+
+  /// No description provided for @creditCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit Card'**
+  String get creditCard;
+
+  /// No description provided for @bankFees.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank Fees'**
+  String get bankFees;
+
+  /// No description provided for @charity.
+  ///
+  /// In en, this message translates to:
+  /// **'Charity'**
+  String get charity;
+
+  /// No description provided for @donation.
+  ///
+  /// In en, this message translates to:
+  /// **'Donation'**
+  String get donation;
+
+  /// No description provided for @gifts.
+  ///
+  /// In en, this message translates to:
+  /// **'Gifts'**
+  String get gifts;
+
+  /// No description provided for @kids.
+  ///
+  /// In en, this message translates to:
+  /// **'Kids'**
+  String get kids;
+
+  /// No description provided for @childcare.
+  ///
+  /// In en, this message translates to:
+  /// **'Childcare'**
+  String get childcare;
+
+  /// No description provided for @toys.
+  ///
+  /// In en, this message translates to:
+  /// **'Toys'**
+  String get toys;
+
+  /// No description provided for @activities.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities'**
+  String get activities;
+
+  /// No description provided for @subscriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscriptions'**
+  String get subscriptions;
+
+  /// No description provided for @software.
+  ///
+  /// In en, this message translates to:
+  /// **'Software'**
+  String get software;
+
+  /// No description provided for @maintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get maintenance;
+
+  /// No description provided for @legal.
+  ///
+  /// In en, this message translates to:
+  /// **'Legal'**
+  String get legal;
+
+  /// No description provided for @tax.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax'**
+  String get tax;
+
+  /// No description provided for @otherExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Expense'**
+  String get otherExpense;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @single.
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get single;
+
+  /// No description provided for @multiple.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple'**
+  String get multiple;
+
+  /// No description provided for @categoriesSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories Selected'**
+  String get categoriesSelected;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// No description provided for @thisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get thisMonth;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @thisYear.
+  ///
+  /// In en, this message translates to:
+  /// **'This Year'**
+  String get thisYear;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

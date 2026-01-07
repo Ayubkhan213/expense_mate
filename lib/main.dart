@@ -2,6 +2,7 @@ import 'package:expense_mate/core/app_export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await HiveInitializer.init();
   await ThemePersistence.init();
   await LanguagePersistence.init();
 
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
 
                 //  ROUTING
                 onGenerateRoute: AppRouter.generateRoute,
-                initialRoute: RouteName.home,
+                initialRoute: RouteName.splash,
               );
             },
           );
@@ -56,3 +57,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// flutter gen-l10n
+//flutter pub run build_runner build --delete-conflicting-outputs
+// C:\Program Files\Common Files\Oracle\Java\javapath

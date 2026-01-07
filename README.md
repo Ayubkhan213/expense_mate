@@ -14,34 +14,30 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
 <!-- lib/
 │
-├── core/ -->
-│   ├── theme/
-│   │    ├── bloc/
-│   │    │    ├── theme_bloc.dart
-│   │    │    ├── theme_event.dart
-│   │    │    └── theme_state.dart
-│   │    ├── themes/
-│   │    │    ├── theme1/
-│   │    │    │    ├── light_theme.dart
-│   │    │    │    └── dark_theme.dart
-│   │    │    ├── theme2/
-│   │    │    │    ├── light_theme.dart
-│   │    │    │    └── dark_theme.dart
-│   │    │    ├── theme3/
-│   │    │    │    ├── light_theme.dart
-│   │    │    │    └── dark_theme.dart
-│   │    │    ├── theme4/
-│   │    │    │    ├── light_theme.dart
-│   │    │    │    └── dark_theme.dart
-│   │    │    └── theme5/
-│   │    │         ├── light_theme.dart
-│   │    │         └── dark_theme.dart
-│   │    ├── app_themes.dart
-│   │    ├── theme_persistence.dart
-│   │    └── theme_constants.dart
-│   │
+core/
+ ├── data/
+ │    ├── models/
+ │    │     ├── transaction_model.dart
+ │    │     ├── transaction_item_model.dart
+ │    │     └── debt_model.dart
+ │    │
+ │    └── datasources/
+ │          └── hive_service.dart
+ │
+ ├── domain/
+ │    ├── entities/
+ │    │     ├── transaction.dart
+ │    │     ├── transaction_item.dart
+ │    │     └── debt.dart
+ │    │
+ │    └── repositories/
+ │          └── transaction_repository.dart
+ │
+ └──
+
 │   ├── utils/
 │   ├── services/
 │   ├── constants/

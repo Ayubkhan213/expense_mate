@@ -1,5 +1,4 @@
-import 'package:expense_mate/core/navigation/route_name.dart';
-import 'package:flutter/material.dart';
+import 'package:expense_mate/core/app_export.dart';
 
 class ProfileFace extends StatelessWidget {
   const ProfileFace({super.key});
@@ -37,6 +36,33 @@ class ProfileFace extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
                 child: Text('Language', style: TextStyle(color: Colors.white)),
+              ),
+            ),
+            SizedBox(height: 10.0),
+            BlocListener<AuthBloc, AuthState>(
+              listenWhen: (p, c) => p.status != c.status,
+              listener: (context, state) {
+                if (state.status == AuthStatus.unauthenticated) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    RouteName.login,
+                    (_) => false,
+                  );
+                }
+              },
+              child: InkWell(
+                onTap: () {
+                  print('inkwell');
+                  context.read<AuthBloc>().add(LogoutEvent());
+                },
+                child: Container(
+                  padding: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.0),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  child: Text('Log OuT', style: TextStyle(color: Colors.white)),
+                ),
               ),
             ),
           ],
