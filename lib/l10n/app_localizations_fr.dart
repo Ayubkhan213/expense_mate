@@ -493,4 +493,97 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get thisYear => 'Cette année';
+
+  @override
+  String get recurring => 'Récurrent';
+
+  @override
+  String get enterPin => 'Entrez votre code PIN';
+
+  @override
+  String get enterPinSubtitle => 'Entrez votre code PIN à 4 chiffres pour continuer';
+
+  @override
+  String get signIn => 'Se connecter';
+
+  @override
+  String get forgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get passwordMinLength => 'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get enterPasswordError => 'Veuillez entrer votre mot de passe';
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get invalidEmail => 'Veuillez entrer un e-mail valide';
+
+  @override
+  String get enterEmailError => 'Veuillez entrer votre e-mail';
+
+  @override
+  String get enterEmail => 'Entrez votre e-mail';
+
+  @override
+  String get emailAddress => 'Adresse e-mail';
+
+  @override
+  String get welcomeBack => 'Bon retour';
+
+  @override
+  String get login => 'Connexion';
+
+  @override
+  String get quickLogin => 'Connexion rapide';
+
+  @override
+  String get enterYourPassword => 'Entrez votre mot de passe';
+
+  @override
+  String get signUp => 'S\'inscrire';
+
+  @override
+  String get dontHaveAccount => 'Vous n\'avez pas de compte ?';
+
+  @override
+  String get onboardingTitle1 => 'Suivez vos dépenses';
+
+  @override
+  String get onboardingDesc1 => 'Enregistrez et catégorisez facilement toutes vos dépenses quotidiennes en un seul endroit';
+
+  @override
+  String get onboardingTitle2 => 'Budgétisation intelligente';
+
+  @override
+  String get onboardingDesc2 => 'Définissez des budgets personnalisés et obtenez des informations avec de belles analyses';
+
+  @override
+  String get onboardingTitle3 => 'Rapports détaillés';
+
+  @override
+  String get onboardingDesc3 => 'Des analyses complètes pour mieux comprendre votre santé financière';
+
+  @override
+  String get onboardingTitle4 => 'Sécurisé et privé';
+
+  @override
+  String get onboardingDesc4 => 'Vos données protégées par une sécurité de niveau entreprise. Votre vie privée est notre priorité';
+
+  @override
+  String get skip => 'Passer';
+
+  @override
+  String get next => 'Suivant';
+
+  @override
+  String get back => 'Retour';
+
+  @override
+  String get getStarted => 'Commencer';
+
+  @override
+  String get selectExpenseCategory => 'Sélectionner une catégorie de dépense';
 }

@@ -1,3 +1,4 @@
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:expense_mate/features/auth/presentation/bloc/auth_bloc.dart';
@@ -9,37 +10,41 @@ class QuickLoginComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Text(
-          'Enter Your PIN',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A1A),
+    final t = AppLocalizations.of(context)!;
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            t.enterPin,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF1A1A1A),
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          'Enter your 4-digit PIN to continue',
-          style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-        ),
-        const SizedBox(height: 36),
+          const SizedBox(height: 6),
+          Text(
+            t.enterPinSubtitle,
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+          ),
+          const SizedBox(height: 36),
 
-        /// PIN DOTS
-        BlocBuilder<AuthBloc, AuthState>(
-          buildWhen: (p, c) => p.enteredPin != c.enteredPin,
-          builder: (context, state) {
-            return _PinDots(pin: state.enteredPin);
-          },
-        ),
+          /// PIN DOTS
+          BlocBuilder<AuthBloc, AuthState>(
+            buildWhen: (p, c) => p.enteredPin != c.enteredPin,
+            builder: (context, state) {
+              return _PinDots(pin: state.enteredPin);
+            },
+          ),
 
-        const SizedBox(height: 40),
+          const SizedBox(height: 40),
 
-        /// NUMBER PAD
-        _NumberPad(),
-      ],
+          /// NUMBER PAD
+          _NumberPad(),
+        ],
+      ),
     );
   }
 }
@@ -51,6 +56,7 @@ class _PinDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(4, (index) {
@@ -79,15 +85,16 @@ class _PinDots extends StatelessWidget {
 class _NumberPad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Column(
-      children: const [
+      children: [
         _NumberRow(numbers: ['1', '2', '3']),
         SizedBox(height: 18),
         _NumberRow(numbers: ['4', '5', '6']),
         SizedBox(height: 18),
         _NumberRow(numbers: ['7', '8', '9']),
         SizedBox(height: 18),
-        _NumberRow(numbers: ['', '0', 'delete']),
+        _NumberRow(numbers: ['', '0', t.delete]),
       ],
     );
   }

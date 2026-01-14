@@ -493,4 +493,97 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get thisYear => 'یہ سال';
+
+  @override
+  String get recurring => 'بار بار';
+
+  @override
+  String get enterPin => 'اپنا پن درج کریں';
+
+  @override
+  String get enterPinSubtitle => 'جاری رکھنے کے لیے اپنا 4 ہندسوں کا پن درج کریں';
+
+  @override
+  String get signIn => 'سائن ان کریں';
+
+  @override
+  String get forgotPassword => 'پاس ورڈ بھول گئے؟';
+
+  @override
+  String get passwordMinLength => 'پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے';
+
+  @override
+  String get enterPasswordError => 'براہ کرم اپنا پاس ورڈ درج کریں';
+
+  @override
+  String get password => 'پاس ورڈ';
+
+  @override
+  String get invalidEmail => 'براہ کرم درست ای میل درج کریں';
+
+  @override
+  String get enterEmailError => 'براہ کرم اپنی ای میل درج کریں';
+
+  @override
+  String get enterEmail => 'اپنی ای میل درج کریں';
+
+  @override
+  String get emailAddress => 'ای میل ایڈریس';
+
+  @override
+  String get welcomeBack => 'خوش آمدید';
+
+  @override
+  String get login => 'لاگ ان';
+
+  @override
+  String get quickLogin => 'فوری لاگ ان';
+
+  @override
+  String get enterYourPassword => 'اپنا پاس ورڈ درج کریں';
+
+  @override
+  String get signUp => 'سائن اپ';
+
+  @override
+  String get dontHaveAccount => 'کیا آپ کا اکاؤنٹ نہیں ہے؟';
+
+  @override
+  String get onboardingTitle1 => 'اپنے اخراجات ٹریک کریں';
+
+  @override
+  String get onboardingDesc1 => 'اپنے روزانہ کے تمام اخراجات کو آسانی سے ایک جگہ ریکارڈ اور درجہ بندی کریں';
+
+  @override
+  String get onboardingTitle2 => 'سمارٹ بجٹنگ';
+
+  @override
+  String get onboardingDesc2 => 'ذاتی نوعیت کے بجٹ مقرر کریں اور خوبصورت تجزیات کے ساتھ بصیرت حاصل کریں';
+
+  @override
+  String get onboardingTitle3 => 'تفصیلی رپورٹس';
+
+  @override
+  String get onboardingDesc3 => 'اپنی مالی صحت کو بہتر طریقے سے سمجھنے کے لیے جامع تجزیات';
+
+  @override
+  String get onboardingTitle4 => 'محفوظ اور نجی';
+
+  @override
+  String get onboardingDesc4 => 'آپ کا ڈیٹا انٹرپرائز گریڈ سیکیورٹی سے محفوظ ہے۔ رازداری ہماری اولین ترجیح ہے';
+
+  @override
+  String get skip => 'چھوڑیں';
+
+  @override
+  String get next => 'اگلا';
+
+  @override
+  String get back => 'واپس';
+
+  @override
+  String get getStarted => 'شروع کریں';
+
+  @override
+  String get selectExpenseCategory => 'اخراجات کی قسم منتخب کریں';
 }

@@ -493,4 +493,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get thisYear => 'This Year';
+
+  @override
+  String get recurring => 'Recurring';
+
+  @override
+  String get enterPin => 'Enter Your PIN';
+
+  @override
+  String get enterPinSubtitle => 'Enter your 4-digit PIN to continue';
+
+  @override
+  String get signIn => 'Sign In';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get passwordMinLength => 'Password must be at least 6 characters';
+
+  @override
+  String get enterPasswordError => 'Please enter your password';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email';
+
+  @override
+  String get enterEmailError => 'Please enter your email';
+
+  @override
+  String get enterEmail => 'Enter your email';
+
+  @override
+  String get emailAddress => 'Email Address';
+
+  @override
+  String get welcomeBack => 'Welcome Back';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get quickLogin => 'Quick Login';
+
+  @override
+  String get enterYourPassword => 'Enter your password';
+
+  @override
+  String get signUp => 'Sign Up';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account?';
+
+  @override
+  String get onboardingTitle1 => 'Track Your Expenses';
+
+  @override
+  String get onboardingDesc1 => 'Record and categorize all your daily expenses effortlessly in one place';
+
+  @override
+  String get onboardingTitle2 => 'Smart Budgeting';
+
+  @override
+  String get onboardingDesc2 => 'Set personalized budgets and get insights with beautiful analytics';
+
+  @override
+  String get onboardingTitle3 => 'Detailed Reports';
+
+  @override
+  String get onboardingDesc3 => 'Comprehensive analytics to understand your financial health better';
+
+  @override
+  String get onboardingTitle4 => 'Secure & Private';
+
+  @override
+  String get onboardingDesc4 => 'Your data protected with enterprise-grade security. Privacy is our top priority';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get getStarted => 'Get Started';
+
+  @override
+  String get selectExpenseCategory => 'Select Expense Category';
 }

@@ -1,30 +1,25 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:expense_mate/core/services/hive_box_manager.dart';
 
 class ThemePersistence {
-  static const _boxName = 'settings';
   static const _keyThemeIndex = 'themeIndex';
   static const _keyIsDark = 'isDark';
 
-  static late Box _box;
-
-  static Future<void> init() async {
-    await Hive.initFlutter();
-    _box = await Hive.openBox(_boxName);
-  }
+  // No need for init() - BoxManager handles it!
+  // No need for _box - use BoxManager.settings!
 
   static void saveThemeIndex(int index) {
-    _box.put(_keyThemeIndex, index);
+    HiveBoxManager.settings.put(_keyThemeIndex, index);
   }
 
   static int getThemeIndex() {
-    return _box.get(_keyThemeIndex, defaultValue: 0) as int;
+    return HiveBoxManager.settings.get(_keyThemeIndex, defaultValue: 0) as int;
   }
 
   static void saveDarkMode(bool isDark) {
-    _box.put(_keyIsDark, isDark);
+    HiveBoxManager.settings.put(_keyIsDark, isDark);
   }
 
   static bool getDarkMode() {
-    return _box.get(_keyIsDark, defaultValue: false) as bool;
+    return HiveBoxManager.settings.get(_keyIsDark, defaultValue: false) as bool;
   }
 }

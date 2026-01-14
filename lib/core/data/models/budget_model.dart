@@ -48,6 +48,8 @@ class BudgetModel extends HiveObject {
 
   @HiveField(14)
   DateTime updatedAt;
+  @HiveField(15)
+  final String? userId;
 
   BudgetModel({
     required this.id,
@@ -64,6 +66,7 @@ class BudgetModel extends HiveObject {
     this.isActive = true,
     this.isArchived = false,
     DateTime? createdAt,
+    this.userId,
     DateTime? updatedAt,
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();

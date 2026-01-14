@@ -1,10 +1,13 @@
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/di/injection_container.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDependencies();
+
   await HiveInitializer.init();
-  await ThemePersistence.init();
-  await LanguagePersistence.init();
+  // await ThemePersistence.init();
+  // await LanguagePersistence.init();
 
   runApp(const MyApp());
 }

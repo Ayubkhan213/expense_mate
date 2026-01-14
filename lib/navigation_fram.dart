@@ -1,6 +1,8 @@
 // ==================== MAIN FRAME ====================
 import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/features/add_record/presentation/components/category_section/category_selection_component.dart';
+import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/features/budgets/presentation/components/add_budget_bottomsheet.dart';
+import 'package:expense_mate/features/transcation/presentation/components/category_section/category_selection_component.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/budget_face.dart';
 
 class MainFrame extends StatelessWidget {
@@ -50,8 +52,9 @@ class MainFrame extends StatelessWidget {
                           context.read<NavBloc>().add(ChangeTabEvent(1)),
                     ),
                     _NavItem(
-                      icon: Icons.receipt_long_rounded,
-                      label: t.records,
+                      icon: Icons.autorenew_rounded,
+
+                      label: t.recurring,
                       isActive: state.index == 2,
                       onTap: () =>
                           context.read<NavBloc>().add(ChangeTabEvent(2)),
@@ -100,9 +103,10 @@ class MainFrame extends StatelessWidget {
       // shape: const CircleBorder(),
       backgroundColor: Theme.of(context).primaryColor,
       onPressed: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(builder: (context) => CategorySelector()),
+          RouteName.addRecord,
+          // MaterialPageRoute(builder: (context) => CategorySelector()),
         );
         // if (currentIndex == 2) {
         //   // Records tab - add transaction
@@ -168,15 +172,20 @@ class _NavItem extends StatelessWidget {
   }
 }
 
-// ==================== CREATE BUDGET BOTTOM SHEET ====================
 void _showCreateBudgetBottomSheet(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) => const CreateBudgetBottomSheet(),
-  );
+  // Just call this - it handles everything!
+  AddBudgetBottomSheet.show(context);
 }
+
+// // ==================== CREATE BUDGET BOTTOM SHEET ====================
+// void _showCreateBudgetBottomSheet(BuildContext context) {
+//   showModalBottomSheet(
+//     context: context,
+//     isScrollControlled: true,
+//     backgroundColor: Colors.transparent,
+//     builder: (context) => const CreateBudgetBottomSheet(),
+//   );
+// }
 
 class CreateBudgetBottomSheet extends StatefulWidget {
   const CreateBudgetBottomSheet({super.key});
@@ -687,5 +696,3 @@ class IconOption {
 
   IconOption(this.emoji, this.label);
 }
-
-enum BudgetType { monthly, project, custom }

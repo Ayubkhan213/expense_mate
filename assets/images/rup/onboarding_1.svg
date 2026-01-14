@@ -1,0 +1,139 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E0F2FE;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#DBEAFE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DCFCE7;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="phone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E293B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0F172A;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="card1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4F46E5;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="card2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#22C55E;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16A34A;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="card3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D97706;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="shadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#bg1)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="60" cy="60" r="40" fill="#6366F1" opacity="0.08"/>
+  <circle cx="340" cy="80" r="50" fill="#22C55E" opacity="0.08"/>
+  <circle cx="350" cy="330" r="45" fill="#F59E0B" opacity="0.08"/>
+  
+  <!-- Main illustration -->
+  <g transform="translate(200, 200)">
+    <!-- Phone shadow -->
+    <ellipse cx="0" cy="90" rx="70" ry="8" fill="#000" opacity="0.15"/>
+    
+    <!-- Phone device -->
+    <rect x="-75" y="-110" width="150" height="200" rx="20" fill="url(#phone)" filter="url(#shadow)"/>
+    <rect x="-70" y="-105" width="140" height="190" rx="16" fill="#F8FAFC"/>
+    
+    <!-- Phone notch -->
+    <rect x="-25" y="-105" width="50" height="4" rx="2" fill="#64748B"/>
+    
+    <!-- Status bar icons -->
+    <circle cx="-55" cy="-88" r="3" fill="#22C55E"/>
+    <rect x="45" y="-91" width="12" height="6" rx="1" fill="#64748B" opacity="0.3"/>
+    <text x="60" y="-86" font-size="8" fill="#64748B" font-weight="600">100%</text>
+    
+    <!-- Screen header -->
+    <text x="0" y="-70" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">My Expenses</text>
+    
+    <!-- Expense cards with animation -->
+    <g class="expense-card">
+      <rect x="-60" y="-45" width="120" height="42" rx="10" fill="url(#card1)" filter="url(#shadow)">
+        <animate attributeName="opacity" values="1;0.85;1" dur="3s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="-45" cy="-32" r="8" fill="#FFFFFF" opacity="0.95"/>
+      <path d="M -48,-32 L -45,-29 L -41,-35" stroke="#6366F1" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <text x="-30" y="-28" font-size="9" font-weight="600" fill="#FFFFFF">Groceries</text>
+      <text x="-30" y="-18" font-size="7" fill="#FFFFFF" opacity="0.8">Today, 2:30 PM</text>
+      <text x="55" y="-24" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="end">$45.50</text>
+    </g>
+    
+    <g class="expense-card">
+      <rect x="-60" y="0" width="120" height="42" rx="10" fill="url(#card2)" filter="url(#shadow)">
+        <animate attributeName="opacity" values="1;0.85;1" dur="3s" begin="0.5s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="-45" cy="13" r="8" fill="#FFFFFF" opacity="0.95"/>
+      <text x="-45" y="17" font-size="10" fill="#22C55E" text-anchor="middle">🚗</text>
+      <text x="-30" y="17" font-size="9" font-weight="600" fill="#FFFFFF">Transport</text>
+      <text x="-30" y="27" font-size="7" fill="#FFFFFF" opacity="0.8">Yesterday</text>
+      <text x="55" y="21" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="end">$28.00</text>
+    </g>
+    
+    <g class="expense-card">
+      <rect x="-60" y="45" width="120" height="42" rx="10" fill="url(#card3)" filter="url(#shadow)">
+        <animate attributeName="opacity" values="1;0.85;1" dur="3s" begin="1s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="-45" cy="58" r="8" fill="#FFFFFF" opacity="0.95"/>
+      <text x="-45" y="62" font-size="10" fill="#F59E0B" text-anchor="middle">☕</text>
+      <text x="-30" y="62" font-size="9" font-weight="600" fill="#FFFFFF">Coffee</text>
+      <text x="-30" y="72" font-size="7" fill="#FFFFFF" opacity="0.8">2 days ago</text>
+      <text x="55" y="66" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="end">$12.50</text>
+    </g>
+    
+    <!-- Add button -->
+    <circle cx="55" cy="85" r="16" fill="#6366F1" filter="url(#glow)">
+      <animate attributeName="r" values="16;17;16" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="55" y="92" font-size="26" font-weight="300" fill="#FFFFFF" text-anchor="middle">+</text>
+  </g>
+  
+  <!-- Floating money icons -->
+  <g opacity="0.4">
+    <text x="50" y="140" font-size="24" fill="#6366F1">$</text>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-10; 0,0" dur="3s" repeatCount="indefinite"/>
+  </g>
+  
+  <g opacity="0.3">
+    <text x="330" y="180" font-size="20" fill="#22C55E">$</text>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,8; 0,0" dur="4s" repeatCount="indefinite"/>
+  </g>
+  
+  <g opacity="0.35">
+    <text x="70" y="280" font-size="22" fill="#F59E0B">$</text>
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-12; 0,0" dur="3.5s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Bottom text -->
+  <text x="200" y="360" font-size="20" font-weight="bold" fill="#1E293B" text-anchor="middle">Track Your Expenses</text>
+  <text x="200" y="382" font-size="12" fill="#64748B" text-anchor="middle">Record and categorize all your daily</text>
+  <text x="200" y="396" font-size="12" fill="#64748B" text-anchor="middle">expenses effortlessly in one place</text>
+</svg>

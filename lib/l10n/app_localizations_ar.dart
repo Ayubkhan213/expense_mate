@@ -493,4 +493,97 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get thisYear => 'هذا العام';
+
+  @override
+  String get recurring => 'متكرر';
+
+  @override
+  String get enterPin => 'أدخل الرقم السري';
+
+  @override
+  String get enterPinSubtitle => 'أدخل رقمك السري المكون من 4 أرقام للمتابعة';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get forgotPassword => 'هل نسيت كلمة المرور؟';
+
+  @override
+  String get passwordMinLength => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
+
+  @override
+  String get enterPasswordError => 'يرجى إدخال كلمة المرور';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get invalidEmail => 'يرجى إدخال بريد إلكتروني صالح';
+
+  @override
+  String get enterEmailError => 'يرجى إدخال بريدك الإلكتروني';
+
+  @override
+  String get enterEmail => 'أدخل بريدك الإلكتروني';
+
+  @override
+  String get emailAddress => 'عنوان البريد الإلكتروني';
+
+  @override
+  String get welcomeBack => 'مرحبًا بعودتك';
+
+  @override
+  String get login => 'تسجيل الدخول';
+
+  @override
+  String get quickLogin => 'تسجيل دخول سريع';
+
+  @override
+  String get enterYourPassword => 'أدخل كلمة المرور';
+
+  @override
+  String get signUp => 'إنشاء حساب';
+
+  @override
+  String get dontHaveAccount => 'ليس لديك حساب؟';
+
+  @override
+  String get onboardingTitle1 => 'تتبع نفقاتك';
+
+  @override
+  String get onboardingDesc1 => 'سجل وصنف جميع نفقاتك اليومية بسهولة في مكان واحد';
+
+  @override
+  String get onboardingTitle2 => 'الميزانية الذكية';
+
+  @override
+  String get onboardingDesc2 => 'حدد ميزانيات شخصية واحصل على رؤى بتحليلات جميلة';
+
+  @override
+  String get onboardingTitle3 => 'تقارير مفصلة';
+
+  @override
+  String get onboardingDesc3 => 'تحليلات شاملة لفهم صحتك المالية بشكل أفضل';
+
+  @override
+  String get onboardingTitle4 => 'آمن وخاص';
+
+  @override
+  String get onboardingDesc4 => 'بياناتك محمية بأمان على مستوى البنوك. خصوصيتك أولويتنا القصوى';
+
+  @override
+  String get skip => 'تخطي';
+
+  @override
+  String get next => 'التالي';
+
+  @override
+  String get back => 'رجوع';
+
+  @override
+  String get getStarted => 'ابدأ الآن';
+
+  @override
+  String get selectExpenseCategory => 'اختر فئة المصروف';
 }

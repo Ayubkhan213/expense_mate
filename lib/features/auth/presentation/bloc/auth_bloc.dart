@@ -437,12 +437,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await getCurrentLoggedInUserUseCase();
 
       if (user != null) {
-        emit(
-          state.copyWith(
-            status: AuthStatus.authenticated,
-            user: user, //  STORE USER MODEL
-          ),
-        );
+        emit(state.copyWith(status: AuthStatus.authenticated, user: user));
       } else {
         emit(
           state.copyWith(

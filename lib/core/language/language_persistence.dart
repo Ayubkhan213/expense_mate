@@ -1,25 +1,26 @@
-import 'package:expense_mate/core/app_export.dart';
+import 'package:flutter/material.dart';
+import 'package:expense_mate/core/services/hive_box_manager.dart';
 
 class LanguagePersistence {
-  static late Box box;
+  static const _keyLocale = 'locale';
 
-  /// Initialize Hive box
-  static Future<void> init() async {
-    box = await Hive.openBox("languageBox");
-  }
+  // No need for init() or box variable anymore!
 
   /// Returns saved Locale, default is English
   static Locale getSavedLocale() {
-    final String code = box.get("locale", defaultValue: "en");
+    final String code = HiveBoxManager.language.get(
+      _keyLocale,
+      defaultValue: "en",
+    );
     return Locale(code);
   }
 
   static String getLocale() {
-    return box.get("locale", defaultValue: "en");
+    return HiveBoxManager.language.get(_keyLocale, defaultValue: "en");
   }
 
   /// Save selected locale
   static Future<void> saveLocale(String localeCode) async {
-    await box.put("locale", localeCode);
+    await HiveBoxManager.language.put(_keyLocale, localeCode);
   }
 }

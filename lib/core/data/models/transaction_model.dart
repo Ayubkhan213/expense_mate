@@ -51,6 +51,9 @@ class TransactionModel extends HiveObject {
   @HiveField(14)
   final String? budgetId;
 
+  @HiveField(15)
+  final String? userId;
+
   TransactionModel({
     required this.id,
     required this.type,
@@ -67,6 +70,7 @@ class TransactionModel extends HiveObject {
     DateTime? updatedAt,
     this.isDeleted = false,
     this.budgetId,
+    this.userId,
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
 }

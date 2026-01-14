@@ -14,22 +14,23 @@ class LoginComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Form(
       key: formKey,
       child: Column(
         children: [
           CustomTextField(
             controller: emailController,
-            label: 'Email Address',
-            hint: 'Enter your email',
+            label: t.emailAddress,
+            hint: t.enterEmail,
             prefixIcon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your email';
+                return t.enterEmailError;
               }
               if (!value.contains('@') || !value.contains('.')) {
-                return 'Please enter a valid email';
+                return t.invalidEmail;
               }
               return null;
             },
@@ -37,15 +38,15 @@ class LoginComponent extends StatelessWidget {
           const SizedBox(height: 20),
           CustomTextField(
             controller: passwordController,
-            label: 'Password',
-            hint: 'Enter your password',
+            label: t.password,
+            hint: t.enterYourPassword,
             prefixIcon: Icons.lock_outline,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your password';
+                return t.enterPasswordError;
               }
               if (value.length < 6) {
-                return 'Password must be at least 6 characters';
+                return t.passwordMinLength;
               }
               return null;
             },
@@ -57,8 +58,8 @@ class LoginComponent extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/forgot-password');
               },
-              child: const Text(
-                'Forgot Password?',
+              child: Text(
+                t.forgotPassword,
                 style: TextStyle(
                   color: Color(0xFF6C5CE7),
                   fontWeight: FontWeight.w600,
@@ -69,7 +70,7 @@ class LoginComponent extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           CustomButton(
-            text: 'Sign In',
+            text: t.signIn,
             isLoading:
                 context.watch<AuthBloc>().state.status == AuthStatus.loading,
             onPressed: () {
@@ -95,15 +96,15 @@ class LoginComponent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Don't have an account? ",
+                  t.dontHaveAccount,
                   style: TextStyle(color: Colors.grey[700], fontSize: 14),
                 ),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, RouteName.signup);
                   },
-                  child: const Text(
-                    'Sign Up',
+                  child: Text(
+                    t.signUp,
                     style: TextStyle(
                       color: Color(0xFF6C5CE7),
                       fontWeight: FontWeight.bold,

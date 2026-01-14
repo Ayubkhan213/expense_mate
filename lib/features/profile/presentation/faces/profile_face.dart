@@ -52,8 +52,9 @@ class ProfileFace extends StatelessWidget {
               },
               child: InkWell(
                 onTap: () {
-                  print('inkwell');
+                  // print('inkwell');
                   context.read<AuthBloc>().add(LogoutEvent());
+                  // print(context.read<AuthBloc>().state.user?.email);
                 },
                 child: Container(
                   padding: EdgeInsets.all(8.0),

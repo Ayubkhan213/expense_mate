@@ -36,12 +36,12 @@ export 'package:expense_mate/features/profile/presentation/faces/language_face.d
 export 'package:expense_mate/features/profile/presentation/faces/template_face.dart';
 export 'package:expense_mate/core/data/models/category_hive_model.dart';
 export 'package:expense_mate/core/utils/translation_helper.dart';
-export 'package:expense_mate/features/add_record/presentation/bloc/add_record_bloc.dart';
-export 'package:expense_mate/features/add_record/presentation/bloc/add_record_state.dart';
-export 'package:expense_mate/features/add_record/presentation/bloc/add_record_event.dart';
+export 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc.dart';
+export 'package:expense_mate/features/transcation/presentation/bloc/transcation_state.dart';
+export 'package:expense_mate/features/transcation/presentation/bloc/transcation_event.dart';
 
-export 'package:expense_mate/features/add_record/presentation/components/category_section/components/category_grid/category_grid.dart';
-export 'package:expense_mate/features/add_record/presentation/components/category_section/components/mode_button.dart';
+export 'package:expense_mate/features/transcation/presentation/components/category_section/components/category_grid/category_grid.dart';
+export 'package:expense_mate/features/transcation/presentation/components/category_section/components/mode_button.dart';
 export 'package:expense_mate/features/auth/presentation/bloc/auth_bloc.dart';
 export 'package:expense_mate/features/auth/presentation/bloc/auth_event.dart';
 export 'package:expense_mate/features/auth/presentation/bloc/auth_state.dart';
@@ -61,7 +61,7 @@ export 'package:expense_mate/features/auth/domain/use_cases/login_with_pin_useca
 export 'package:expense_mate/features/auth/domain/use_cases/logout_usecase.dart';
 export 'package:expense_mate/features/auth/domain/use_cases/register_usecase.dart';
 export 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
-export 'package:expense_mate/core/data/repository/category_repository_imp/category_repository_imp.dart';
+export 'package:expense_mate/core/data/repository_imp/category_repository_imp.dart';
 export 'package:expense_mate/features/auth/data/data_source/auth_data_source.dart';
 export 'package:expense_mate/features/auth/data/data_source/currency_data_source.dart';
 export 'package:expense_mate/features/auth/data/repositories/auth_repository_imp.dart';
