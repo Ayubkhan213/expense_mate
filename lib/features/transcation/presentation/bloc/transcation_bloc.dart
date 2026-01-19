@@ -3,7 +3,7 @@
 import 'package:expense_mate/core/data/models/category_hive_model.dart';
 
 import 'package:expense_mate/core/domain/repository/category_repository.dart';
-import 'package:expense_mate/features/transcation/domain/use_cases/create_budget_transcation.dart';
+// import 'package:expense_mate/features/transcation/domain/use_cases/create_budget_transcation.dart';
 import 'package:expense_mate/features/transcation/domain/use_cases/create_debt_transcation.dart';
 import 'package:expense_mate/features/transcation/domain/use_cases/create_normal_transcation.dart';
 import 'package:expense_mate/features/transcation/domain/use_cases/create_recurring_transcation.dart';
@@ -13,17 +13,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TranscationBloc extends Bloc<TransactionEvent, TranscationState> {
   CategoryRepository categoryRepository;
-  CreateBudgetTransaction createBudgetTransaction;
-  CreateDebtTransaction createDebtTransaction;
-  CreateNormalTransaction createNormalTransaction;
-  ProcessDueRecurring processDueRecurring;
+  // CreateBudgetTransaction createBudgetTransaction;
+  // CreateDebtTransaction createDebtTransaction;
+  // CreateNormalTransaction createNormalTransaction;
+  // ProcessDueRecurring processDueRecurring;
 
   TranscationBloc({
     required this.categoryRepository,
-    required this.createBudgetTransaction,
-    required this.createDebtTransaction,
-    required this.createNormalTransaction,
-    required this.processDueRecurring,
+    // required this.createBudgetTransaction,
+    // required this.createDebtTransaction,
+    // required this.createNormalTransaction,
+    // required this.processDueRecurring,
   }) : super(TranscationState()) {
     on<ToggleSelectionTabs>((event, emit) {
       emit(

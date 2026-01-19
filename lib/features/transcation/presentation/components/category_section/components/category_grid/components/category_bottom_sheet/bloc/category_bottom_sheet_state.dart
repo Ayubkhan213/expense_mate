@@ -4,6 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:expense_mate/core/data/models/category_hive_model.dart';
 import 'package:expense_mate/core/data/models/enums.dart';
 
+/// Enum to track transaction status
+enum TransactionStatus { initial, loading, success, error }
+
 class CategoryBottomSheetState extends Equatable {
   final String display;
   final String currentNumber;
@@ -19,6 +22,8 @@ class CategoryBottomSheetState extends Equatable {
   final String? personName;
   final DateTime? expectedReturnDate;
   final PaymentMethod paymentMethod;
+  final TransactionStatus transactionStatus;
+  final String? errorMessage;
 
   const CategoryBottomSheetState({
     required this.display,
@@ -30,11 +35,13 @@ class CategoryBottomSheetState extends Equatable {
     required this.note,
     required this.category,
     required this.transactionType,
+    this.transactionStatus = TransactionStatus.initial,
     this.isDebt = false,
     this.debtType,
     this.personName,
     this.expectedReturnDate,
     required this.paymentMethod,
+    this.errorMessage,
   });
 
   factory CategoryBottomSheetState.initial(CategoryHiveModel category) {
@@ -55,6 +62,8 @@ class CategoryBottomSheetState extends Equatable {
       personName: null,
       expectedReturnDate: null,
       paymentMethod: PaymentMethod.cash,
+      transactionStatus: TransactionStatus.initial,
+      errorMessage: '',
     );
   }
 
@@ -76,6 +85,8 @@ class CategoryBottomSheetState extends Equatable {
     DateTime? expectedReturnDate,
     bool clearExpectedReturnDate = false,
     PaymentMethod? paymentMethod,
+    TransactionStatus? transactionStatus,
+    String? errorMessage,
   }) {
     return CategoryBottomSheetState(
       display: display ?? this.display,
@@ -94,6 +105,8 @@ class CategoryBottomSheetState extends Equatable {
           ? null
           : (expectedReturnDate ?? this.expectedReturnDate),
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      transactionStatus: transactionStatus ?? this.transactionStatus,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 
@@ -113,5 +126,7 @@ class CategoryBottomSheetState extends Equatable {
     personName,
     expectedReturnDate,
     paymentMethod,
+    transactionStatus,
+    errorMessage,
   ];
 }

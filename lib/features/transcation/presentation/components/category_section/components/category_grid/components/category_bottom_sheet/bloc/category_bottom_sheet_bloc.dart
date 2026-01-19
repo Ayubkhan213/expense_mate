@@ -2,15 +2,25 @@ import 'dart:io';
 
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:expense_mate/core/data/models/transaction_item_model.dart';
+import 'package:expense_mate/core/data/models/transaction_model.dart';
+import 'package:expense_mate/core/data/models/transcation_result.dart';
+import 'package:expense_mate/core/domain/use_cases/save_budget_transcation_usecase.dart';
+import 'package:expense_mate/core/services/app_prefs.dart';
 import 'package:expense_mate/features/transcation/presentation/components/category_section/components/category_grid/components/category_bottom_sheet/bloc/category_bottom_sheet_event.dart';
 import 'package:expense_mate/features/transcation/presentation/components/category_section/components/category_grid/components/category_bottom_sheet/bloc/category_bottom_sheet_state.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class CategoryBottomSheetBloc
     extends Bloc<CategoryBottomSheetEvent, CategoryBottomSheetState> {
-  CategoryBottomSheetBloc({required CategoryHiveModel category})
-    : super(CategoryBottomSheetState.initial(category)) {
+  SaveBudgetTranscationUsecase saveBudgetTranscationUsecase;
+
+  CategoryBottomSheetBloc({
+    required CategoryHiveModel category,
+    required this.saveBudgetTranscationUsecase,
+  }) : super(CategoryBottomSheetState.initial(category)) {
     on<NumberPressed>((event, emit) {
       String display = state.display == '0'
           ? event.number
@@ -121,7 +131,6 @@ class CategoryBottomSheetBloc
     on<NoteChanged>((event, emit) {
       emit(state.copyWith(note: event.note));
     });
-    // Add these handlers to CategoryBottomSheetBloc
 
     on<PersonNameChanged>((event, emit) {
       emit(state.copyWith(personName: event.name));
@@ -171,5 +180,63 @@ class CategoryBottomSheetBloc
     on<PaymentMethodChanged>((event, emit) {
       emit(state.copyWith(paymentMethod: event.paymentMethod));
     });
+
+    on<SaveBudgetTransaction>(_onSaveBudgetTransaction);
+  }
+
+  Future<void> _onSaveBudgetTransaction(
+    SaveBudgetTransaction event,
+    Emitter<CategoryBottomSheetState> emit,
+  ) async {
+    try {
+      // 1️ Validation
+      if (double.parse(state.display) <= 0) {
+        emit(
+          state.copyWith(
+            transactionStatus: TransactionStatus.error,
+            errorMessage: 'Amount cannot be zero',
+          ),
+        );
+        return;
+      }
+
+      // 2️ Create Transaction Item
+      final item = TransactionItem(
+        category: state.category.key,
+        amount: double.parse(state.display),
+        note: state.note,
+      );
+
+      // 3️ Create Transaction Model
+      final transaction = TransactionModel(
+        id: const Uuid().v4(),
+        type: TransactionType.expense,
+        items: [item],
+        totalAmount: double.parse(state.display),
+        paymentMethod: state.paymentMethod,
+        date: state.selectedDateTime,
+        isDebt: state.isDebt,
+        debtId: null,
+        attachmentPath: state.selectedImage?.path,
+        budgetId: event.budgetId,
+        userId: AppPrefs.instance.userId,
+      );
+
+      // 4️ Call UseCase
+      TransactionResult transactionResult = await saveBudgetTranscationUsecase(
+        transcationModel: transaction,
+      );
+      if (transactionResult.success) {
+        // 5️ Emit Success
+        emit(state.copyWith(transactionStatus: TransactionStatus.success));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          transactionStatus: TransactionStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 }

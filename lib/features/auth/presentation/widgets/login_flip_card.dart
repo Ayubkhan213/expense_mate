@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/common/custom_snackbar.dart';
 
 class LoginFlipCard extends StatelessWidget {
   final Animation<double> animation;
@@ -20,28 +21,21 @@ class LoginFlipCard extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
-        //  WRONG PIN
+        // WRONG PIN
         if (state.status == AuthStatus.unauthenticated &&
             state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage!),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-        //  ERROR
-        if (state.status == AuthStatus.error && state.errorMessage != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage!),
-              backgroundColor: Colors.red,
-            ),
-          );
+          CustomSnackbar.showError(context, state.errorMessage!);
         }
 
-        //  SUCCESS → HOME
+        // ERROR
+        if (state.status == AuthStatus.error && state.errorMessage != null) {
+          CustomSnackbar.showError(context, state.errorMessage!);
+        }
+
+        // SUCCESS → HOME
         if (state.status == AuthStatus.authenticated) {
+          CustomSnackbar.showSuccess(context, 'Login successful 🎉');
+
           Navigator.pushReplacementNamed(context, RouteName.home);
         }
       },

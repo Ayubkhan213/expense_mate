@@ -1,12 +1,11 @@
-import 'package:expense_mate/core/error/failure.dart';
-import 'package:expense_mate/core/utils/either.dart';
+import 'package:expense_mate/core/data/models/transcation_result.dart';
 
 import '../../data/models/transaction_model.dart';
 import '../../data/models/enums.dart';
 
 abstract class TransactionRepository {
   // CREATE
-  Future<String> createTransaction(TransactionModel transaction);
+  // Future<String> createTransaction(TransactionModel transaction);
 
   // READ
   TransactionModel? getTransactionById(String id);
@@ -43,6 +42,9 @@ abstract class TransactionRepository {
   double getTotalExpense({DateTime? startDate, DateTime? endDate});
 
   double getBalance({DateTime? startDate, DateTime? endDate});
+  Future<TransactionResult> saveBudgetTransactionUseCase({
+    required TransactionModel transcationModel,
+  });
 
   Map<String, double> getCategoryBreakdown({
     required TransactionType type,

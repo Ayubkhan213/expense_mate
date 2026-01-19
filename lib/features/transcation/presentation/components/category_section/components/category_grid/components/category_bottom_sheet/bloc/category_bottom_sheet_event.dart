@@ -58,3 +58,8 @@ class PaymentMethodChanged extends CategoryBottomSheetEvent {
 
   const PaymentMethodChanged(this.paymentMethod);
 }
+
+class SaveBudgetTransaction extends CategoryBottomSheetEvent {
+  final String budgetId;
+  const SaveBudgetTransaction({required this.budgetId});
+}

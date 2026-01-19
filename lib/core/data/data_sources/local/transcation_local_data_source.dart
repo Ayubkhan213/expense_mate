@@ -1,10 +1,12 @@
 import 'package:expense_mate/core/data/models/transaction_model.dart';
 import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:expense_mate/core/data/models/transcation_result.dart';
 import 'package:expense_mate/core/services/hive_box_manager.dart';
 import 'package:hive/hive.dart';
 
 abstract class TransactionLocalDataSource {
-  Future<String> createTransaction(TransactionModel transaction);
+  Future<TransactionResult> createTransaction(TransactionModel transaction);
+
   TransactionModel? getTransactionById(String id);
   List<TransactionModel> getAllTransactions();
   List<TransactionModel> getTransactionsByDateRange(
@@ -25,9 +27,26 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
   Box<TransactionModel> get _box => HiveBoxManager.transactions;
 
   @override
-  Future<String> createTransaction(TransactionModel transaction) async {
-    await _box.put(transaction.id, transaction);
-    return transaction.id;
+  Future<TransactionResult> createTransaction(
+    TransactionModel transaction,
+  ) async {
+    try {
+      await _box.put(transaction.id, transaction);
+
+      return TransactionResult(
+        success: true,
+        message: 'Transaction added successfully',
+        transactionId: transaction.id,
+      );
+    } catch (e, stackTrace) {
+      print('CreateTransaction error: $e');
+      print(stackTrace);
+
+      return TransactionResult(
+        success: false,
+        message: 'Failed to add transaction',
+      );
+    }
   }
 
   @override

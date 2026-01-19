@@ -1,5 +1,6 @@
 // lib/features/auth/presentation/bloc/auth_bloc.dart
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/services/app_prefs.dart';
 import 'package:expense_mate/features/auth/domain/repository/currency_repository.dart';
 import 'package:expense_mate/features/auth/domain/use_cases/get_current_login_user.dart';
 
@@ -326,7 +327,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         pin: event.pin,
         useBiometric: event.useBiometric,
       );
-
+      AppPrefs.instance.setUserId(newUser.id);
+      AppPrefs.instance.setLoggedIn(true);
       emit(
         state.copyWith(
           status: AuthStatus.authenticated,

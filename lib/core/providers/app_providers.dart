@@ -1,9 +1,10 @@
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/data_sources/local/budget_local_data_source.dart';
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/repository_imp/budget_repository.dart';
 import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
 import 'package:expense_mate/core/di/injection_container.dart';
+import 'package:expense_mate/features/budgets/data/repository_imp/budget_repository_imp.dart'
+    show BudgetRepositoryImp;
 import 'package:expense_mate/features/budgets/domain/use_cases/create_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/delete_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/get_all_budgets_usecase.dart';

@@ -1,3 +1,5 @@
+import 'package:expense_mate/features/budgets/data/repository_imp/budget_repository_imp.dart';
+import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/create_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/delete_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/get_all_budgets_usecase.dart';
@@ -43,13 +45,13 @@ import 'package:expense_mate/core/data/data_sources/local/recurring_local_data_s
 
 // ================= REPOSITORIES =================
 import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
-import 'package:expense_mate/core/data/repository_imp/budget_repository.dart';
+// import 'package:expense_mate/core/data/repository_imp/budget_repository.dart';
 import 'package:expense_mate/core/data/repository_imp/debt_repository.dart';
 import 'package:expense_mate/core/data/repository_imp/recurring_repository.dart';
 import 'package:expense_mate/core/data/repository_imp/category_repository_imp.dart';
 
 import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
-import 'package:expense_mate/core/domain/repository/budget_repository.dart';
+// import 'package:expense_mate/core/domain/repository/budget_repository.dart';
 import 'package:expense_mate/core/domain/repository/debt_repository.dart';
 import 'package:expense_mate/core/domain/repository/recurrin_repository.dart';
 import 'package:expense_mate/core/domain/repository/category_repository.dart';
@@ -88,10 +90,10 @@ Future<void> initializeDependencies() async {
   sl.registerFactory(
     () => TranscationBloc(
       categoryRepository: sl(),
-      createNormalTransaction: sl(),
-      createDebtTransaction: sl(),
-      createBudgetTransaction: sl(),
-      processDueRecurring: sl(),
+      // createNormalTransaction: sl(),
+      // createDebtTransaction: sl(),
+      // createBudgetTransaction: sl(),
+      // processDueRecurring: sl(),
     ),
   );
 
@@ -108,28 +110,28 @@ Future<void> initializeDependencies() async {
   );
 
   // ================= TRANSACTION USE CASES =================
-  sl.registerLazySingleton(() => CreateNormalTransaction(repository: sl()));
+  // sl.registerLazySingleton(() => CreateNormalTransaction(repository: sl()));
 
-  sl.registerLazySingleton(
-    () => CreateDebtTransaction(
-      transactionRepository: sl(),
-      debtRepository: sl(),
-    ),
-  );
+  // sl.registerLazySingleton(
+  //   () => CreateDebtTransaction(
+  //     transactionRepository: sl(),
+  //     debtRepository: sl(),
+  //   ),
+  // );
 
-  sl.registerLazySingleton(
-    () => CreateBudgetTransaction(
-      transactionRepository: sl(),
-      budgetRepository: sl(),
-    ),
-  );
+  // sl.registerLazySingleton(
+  //   () => CreateBudgetTransaction(
+  //     transactionRepository: sl(),
+  //     budgetRepository: sl(),
+  //   ),
+  // );
 
-  sl.registerLazySingleton(
-    () => ProcessDueRecurring(
-      recurringRepository: sl(),
-      createNormalTransaction: sl(),
-    ),
-  );
+  // sl.registerLazySingleton(
+  //   () => ProcessDueRecurring(
+  //     recurringRepository: sl(),
+  //     createNormalTransaction: sl(),
+  //   ),
+  // );
 
   // ================= Budget USE CASES =================
   sl.registerSingleton(() => GetAllBudgetsUseCase(repository: sl()));

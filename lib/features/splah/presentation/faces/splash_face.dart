@@ -414,13 +414,13 @@ class _SplashFaceState extends State<SplashFace> with TickerProviderStateMixin {
         if (state.status == AuthStatus.authenticated) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RouteName.onBoarding,
+            RouteName.home,
             (_) => false,
           );
         } else if (state.status == AuthStatus.unauthenticated) {
           Navigator.pushNamedAndRemoveUntil(
             context,
-            RouteName.onBoarding,
+            RouteName.login,
             (_) => false,
           );
         }

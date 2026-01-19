@@ -1,7 +1,7 @@
-import 'package:expense_mate/core/domain/repository/budget_repository.dart';
 import 'package:expense_mate/core/domain/use_cases/use_case.dart';
 import 'package:expense_mate/core/error/failure.dart';
 import 'package:expense_mate/core/utils/either.dart';
+import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
 
 class DeleteBudgetUseCase implements UseCase<void, String> {
   final BudgetRepository repository;

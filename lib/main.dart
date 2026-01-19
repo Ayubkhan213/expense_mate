@@ -1,10 +1,12 @@
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/di/injection_container.dart';
+import 'package:expense_mate/core/services/app_prefs.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDependencies();
-
+  // Initialize shared preferences
+  await AppPrefs.instance.init();
   await HiveInitializer.init();
   // await ThemePersistence.init();
   // await LanguagePersistence.init();
@@ -64,3 +66,11 @@ class MyApp extends StatelessWidget {
 // flutter gen-l10n
 //flutter pub run build_runner build --delete-conflicting-outputs
 // C:\Program Files\Common Files\Oracle\Java\javapath
+
+
+
+//Ayub khan
+//ayubkhn1@gmail.com
+//03417825364
+//ayub213
+// 4321

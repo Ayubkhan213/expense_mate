@@ -1,4 +1,5 @@
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:expense_mate/core/data/models/transcation_result.dart';
 import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
 
 import 'package:expense_mate/core/data/models/transaction_model.dart';
@@ -10,10 +11,10 @@ class TransactionRepositoryImp extends TransactionRepository {
   // Constructor now requires data source
   TransactionRepositoryImp({required this.localDataSource});
 
-  @override
-  Future<String> createTransaction(TransactionModel transaction) async {
-    return await localDataSource.createTransaction(transaction);
-  }
+  // @override
+  // Future<String> createTransaction(TransactionModel transaction) async {
+  //   return await localDataSource.createTransaction(transaction);
+  // }
 
   @override
   TransactionModel? getTransactionById(String id) {
@@ -174,5 +175,12 @@ class TransactionRepositoryImp extends TransactionRepository {
     }
 
     return breakdown;
+  }
+
+  @override
+  Future<TransactionResult> saveBudgetTransactionUseCase({
+    required TransactionModel transcationModel,
+  }) async {
+    return await localDataSource.createTransaction(transcationModel);
   }
 }

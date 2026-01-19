@@ -1,4 +1,5 @@
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/common/custom_snackbar.dart';
 import 'package:expense_mate/features/auth/presentation/widgets/signup_header.dart';
 
 class SignupFace extends StatefulWidget {
@@ -53,25 +54,21 @@ class _SignupFaceState extends State<SignupFace> {
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (prev, curr) => prev.status != curr.status,
       listener: (context, state) {
-        ///  SUCCESS
+        /// SUCCESS
         if (state.status == AuthStatus.authenticated) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account created successfully 🎉'),
-              backgroundColor: Colors.green,
-            ),
+          AnimatedSnackbar.showSuccess(
+            context,
+            'Account created successfully 🎉',
           );
 
           Navigator.pop(context); // back to login
         }
 
-        ///  ERROR
+        /// ERROR
         if (state.status == AuthStatus.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.errorMessage ?? 'Something went wrong'),
-              backgroundColor: Colors.red,
-            ),
+          AnimatedSnackbar.showError(
+            context,
+            state.errorMessage ?? 'Something went wrong',
           );
         }
       },

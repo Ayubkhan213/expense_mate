@@ -95,6 +95,7 @@ class _CategorySelectorState extends State<CategorySelector>
                             categories: state.expanceCategies ?? [],
                             selectedCategories: state.selectedCategies ?? [],
                             flowType: TransactionSource.budget,
+                            budgetModel: widget.budgetModel,
                           ),
                         ]
                       : [

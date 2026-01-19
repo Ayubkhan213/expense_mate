@@ -1,7 +1,13 @@
 // ignore_for_file: dead_code, unnecessary_null_comparison
 
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/common/custom_snackbar.dart';
+import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:expense_mate/core/data/models/budget_model.dart';
 import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
+import 'package:expense_mate/core/domain/use_cases/save_budget_transcation_usecase.dart';
+import 'package:expense_mate/core/services/app_prefs.dart';
 import 'package:expense_mate/core/utils/enum.dart';
 import 'package:expense_mate/features/transcation/presentation/components/category_section/components/category_grid/components/category_bottom_sheet/components/button_component.dart';
 import 'package:flutter/services.dart';
@@ -15,16 +21,25 @@ class CategoryBottomSheet {
     BuildContext context,
     CategoryHiveModel category,
     TransactionSource flowType,
+    BudgetModel? budgetmodel,
   ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => BlocProvider(
-        create: (_) => CategoryBottomSheetBloc(category: category),
+        create: (_) => CategoryBottomSheetBloc(
+          category: category,
+          saveBudgetTranscationUsecase: SaveBudgetTranscationUsecase(
+            transactionRepository: TransactionRepositoryImp(
+              localDataSource: TransactionLocalDataSourceImpl(),
+            ),
+          ),
+        ),
         child: _CategoryBottomSheetContent(
           category: category,
           flowType: flowType,
+          budgetModel: budgetmodel,
         ),
       ),
     );
@@ -34,10 +49,12 @@ class CategoryBottomSheet {
 class _CategoryBottomSheetContent extends StatelessWidget {
   final CategoryHiveModel category;
   final TransactionSource flowType;
+  final BudgetModel? budgetModel;
 
   const _CategoryBottomSheetContent({
     required this.category,
     required this.flowType,
+    this.budgetModel,
   });
 
   @override
@@ -94,9 +111,9 @@ class _CategoryBottomSheetContent extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: state.isDebt
                                 ? (state.debtType == DebtType.borrowed
-                                      ? Colors.red.withOpacity(0.2)
-                                      : Colors.green.withOpacity(0.2))
-                                : Colors.grey.withOpacity(0.2),
+                                      ? Colors.red.withValues(alpha: 0.2)
+                                      : Colors.green.withValues(alpha: 0.2))
+                                : Colors.grey.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(6),
                             border: Border.all(
                               color: state.isDebt
@@ -389,107 +406,292 @@ class _CategoryBottomSheetContent extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  ButtonComponent(
-                    onTap: () => bloc.add(NumberPressed(number: '.')),
-                    text: '.',
-                  ),
-                  ButtonComponent(
-                    onTap: () => bloc.add(NumberPressed(number: '0')),
-                    text: '0',
-                  ),
-                  ButtonComponent(
-                    color: Colors.red,
-                    onTap: () => bloc.add(ClearPressed()),
-                    text: '⌫',
-                  ),
-                  state.operation.isNotEmpty
-                      ? ButtonComponent(
-                          color: Colors.orange,
-                          onTap: () => bloc.add(EqualsPressed()),
-                          text: '=',
-                        )
-                      : state.display != '0' && state.currentNumber.isNotEmpty
-                      ? ButtonComponent(
-                          color: Colors.green,
-                          onTap: () {
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .category
-                                  .key,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .display,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .note,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .paymentMethod
-                                  .name,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .selectedDateTime,
-                            );
-                            print(
-                              context
-                                          .read<CategoryBottomSheetBloc>()
-                                          .state
-                                          .debtType !=
-                                      null
-                                  ? context
-                                        .read<CategoryBottomSheetBloc>()
-                                        .state
-                                        .debtType!
-                                        .name
-                                  : null,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .personName,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .personName,
-                            );
-                            print(
-                              context
-                                  .read<CategoryBottomSheetBloc>()
-                                  .state
-                                  .selectedImage,
-                            );
-                            // Submit transaction
-                            // bloc.add(SubmitTransaction());
-                            // Navigator.pop(context);
-                          },
-                          text: '✓',
-                        )
-                      : ButtonComponent(
-                          color: Colors.grey,
-                          onTap: () {},
-                          text: '✓',
-                        ),
-                ],
+              // Wrap your widget with BlocListener to listen for changes in the transaction status
+              BlocListener<CategoryBottomSheetBloc, CategoryBottomSheetState>(
+                listener: (context, state) {
+                  if (state.transactionStatus == TransactionStatus.success) {
+                    CustomSnackbar.showSuccess(
+                      context,
+                      'Transaction saved successfully!',
+                    );
+                    // Optionally close bottom sheet or reset fields
+                    Navigator.pop(context);
+                  } else if (state.transactionStatus ==
+                      TransactionStatus.error) {
+                    CustomSnackbar.showError(
+                      context,
+                      state.errorMessage ?? 'Failed to save transaction',
+                    );
+                  }
+                },
+                child: Row(
+                  children: [
+                    ButtonComponent(
+                      onTap: () => bloc.add(NumberPressed(number: '.')),
+                      text: '.',
+                    ),
+                    ButtonComponent(
+                      onTap: () => bloc.add(NumberPressed(number: '0')),
+                      text: '0',
+                    ),
+                    ButtonComponent(
+                      color: Colors.red,
+                      onTap: () => bloc.add(ClearPressed()),
+                      text: '⌫',
+                    ),
+                    state.operation.isNotEmpty
+                        ? ButtonComponent(
+                            color: Colors.orange,
+                            onTap: () => bloc.add(EqualsPressed()),
+                            text: '=',
+                          )
+                        : state.display != '0' && state.currentNumber.isNotEmpty
+                        ? ButtonComponent(
+                            color: Colors.green,
+                            onTap: () {
+                              if (flowType == TransactionSource.budget) {
+                                // Dispatch save transaction event
+                                print(AppPrefs.instance.userId);
+                                print(budgetModel!.id);
+                                bloc.add(
+                                  SaveBudgetTransaction(
+                                    budgetId: budgetModel!.id,
+                                  ),
+                                );
+                                print(
+                                  context
+                                      .read<CategoryBottomSheetBloc>()
+                                      .state
+                                      .display,
+                                );
+                                print(
+                                  context
+                                      .read<CategoryBottomSheetBloc>()
+                                      .state
+                                      .note,
+                                );
+                                print(
+                                  context
+                                      .read<CategoryBottomSheetBloc>()
+                                      .state
+                                      .paymentMethod
+                                      .name,
+                                );
+                                print(
+                                  context
+                                      .read<CategoryBottomSheetBloc>()
+                                      .state
+                                      .selectedDateTime,
+                                );
+                                print(
+                                  context
+                                      .read<CategoryBottomSheetBloc>()
+                                      .state
+                                      .selectedImage,
+                                );
+                                print(
+                                  context
+                                      .read<CategoryBottomSheetBloc>()
+                                      .state
+                                      .category
+                                      .key,
+                                );
+                              }
+                            },
+                            text: '✓',
+                          )
+                        : ButtonComponent(
+                            color: Colors.grey,
+                            onTap: () {
+                              // if (flowType == TransactionSource.budget) {
+                              //   print(
+                              //     context
+                              //         .read<CategoryBottomSheetBloc>()
+                              //         .state
+                              //         .display,
+                              //   );
+                              //   print(
+                              //     context
+                              //         .read<CategoryBottomSheetBloc>()
+                              //         .state
+                              //         .note,
+                              //   );
+                              //   print(
+                              //     context
+                              //         .read<CategoryBottomSheetBloc>()
+                              //         .state
+                              //         .paymentMethod
+                              //         .name,
+                              //   );
+                              //   print(
+                              //     context
+                              //         .read<CategoryBottomSheetBloc>()
+                              //         .state
+                              //         .selectedDateTime,
+                              //   );
+                              //   print(
+                              //     context
+                              //         .read<CategoryBottomSheetBloc>()
+                              //         .state
+                              //         .selectedImage,
+                              //   );
+                              //   print(
+                              //     context
+                              //         .read<CategoryBottomSheetBloc>()
+                              //         .state
+                              //         .category
+                              //         .key,
+                              //   );
+                              // }
+                            },
+                            text: '✓',
+                          ),
+                  ],
+                ),
               ),
+
+              // Row(
+              //   children: [
+              //     ButtonComponent(
+              //       onTap: () => bloc.add(NumberPressed(number: '.')),
+              //       text: '.',
+              //     ),
+              //     ButtonComponent(
+              //       onTap: () => bloc.add(NumberPressed(number: '0')),
+              //       text: '0',
+              //     ),
+              //     ButtonComponent(
+              //       color: Colors.red,
+              //       onTap: () => bloc.add(ClearPressed()),
+              //       text: '⌫',
+              //     ),
+              //     state.operation.isNotEmpty
+              //         ? ButtonComponent(
+              //             color: Colors.orange,
+              //             onTap: () => bloc.add(EqualsPressed()),
+              //             text: '=',
+              //           )
+              //         : state.display != '0' && state.currentNumber.isNotEmpty
+              //         ? ButtonComponent(
+              //             color: Colors.green,
+              //             onTap: () {
+              //               if (flowType == TransactionSource.budget) {
+              //                 print(
+              //                   context
+              //                       .read<CategoryBottomSheetBloc>()
+              //                       .state
+              //                       .display,
+              //                 );
+              //                 print(
+              //                   context
+              //                       .read<CategoryBottomSheetBloc>()
+              //                       .state
+              //                       .note,
+              //                 );
+              //                 print(
+              //                   context
+              //                       .read<CategoryBottomSheetBloc>()
+              //                       .state
+              //                       .paymentMethod
+              //                       .name,
+              //                 );
+              //                 print(
+              //                   context
+              //                       .read<CategoryBottomSheetBloc>()
+              //                       .state
+              //                       .selectedDateTime,
+              //                 );
+              //                 print(
+              //                   context
+              //                       .read<CategoryBottomSheetBloc>()
+              //                       .state
+              //                       .selectedImage,
+              //                 );
+              //                 print(
+              //                   context
+              //                       .read<CategoryBottomSheetBloc>()
+              //                       .state
+              //                       .category
+              //                       .key,
+              //                 );
+              //               }
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .category
+              //               //       .key,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .display,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .note,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .paymentMethod
+              //               //       .name,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .selectedDateTime,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //               .read<CategoryBottomSheetBloc>()
+              //               //               .state
+              //               //               .debtType !=
+              //               //           null
+              //               //       ? context
+              //               //             .read<CategoryBottomSheetBloc>()
+              //               //             .state
+              //               //             .debtType!
+              //               //             .name
+              //               //       : null,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .personName,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .personName,
+              //               // );
+              //               // print(
+              //               //   context
+              //               //       .read<CategoryBottomSheetBloc>()
+              //               //       .state
+              //               //       .selectedImage,
+              //               // );
+
+              //               // Submit transaction
+              //               // bloc.add(SubmitTransaction());
+              //               // Navigator.pop(context);
+              //             },
+              //             text: '✓',
+              //           )
+              //         : ButtonComponent(
+              //             color: Colors.grey,
+              //             onTap: () {},
+              //             text: '✓',
+              //           ),
+              //   ],
+              // ),
               const SizedBox(height: 12),
             ],
           ),

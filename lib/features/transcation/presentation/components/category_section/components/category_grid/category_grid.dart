@@ -42,7 +42,9 @@ class CategoryGrid extends StatelessWidget {
         return CategoryGridItem(
           category: category,
           isSelected: isSelected,
+
           onTap: () {
+            print(budgetModel?.id);
             context.read<TranscationBloc>().add(
               ToggleCategorySelection(selectedCategory: category),
             );
@@ -53,7 +55,12 @@ class CategoryGrid extends StatelessWidget {
                     .state
                     .selectedCategies!
                     .isEmpty) {
-              CategoryBottomSheet.show(context, category, flowType);
+              CategoryBottomSheet.show(
+                context,
+                category,
+                flowType,
+                budgetModel,
+              );
             }
           },
         );
