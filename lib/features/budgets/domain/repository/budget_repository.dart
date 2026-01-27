@@ -1,11 +1,12 @@
 import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/core/data/models/transaction_model.dart';
 import 'package:expense_mate/core/error/failure.dart';
 import 'package:expense_mate/core/utils/either.dart';
 
 abstract class BudgetRepository {
   Future<Either<Failure, BudgetModel>> createBudget(BudgetModel budget);
   Either<Failure, List<BudgetModel>> getAllBudgets();
-  Either<Failure, BudgetModel?> getBudgetById(String id);
+
   Future<Either<Failure, void>> updateBudget(BudgetModel budget);
   Future<Either<Failure, void>> deleteBudget(String id);
 
@@ -16,6 +17,7 @@ abstract class BudgetRepository {
   List<BudgetModel> getBudgetsByType(BudgetType type);
 
   List<BudgetModel> getOverBudgets();
+  BudgetModel? getBudgetById(String id);
 
   List<BudgetModel> getExpiredBudgets();
 
@@ -31,6 +33,7 @@ abstract class BudgetRepository {
     String transactionId,
     double amount,
   );
+  List<TransactionModel> getTransactionsByBudget(String budgetId);
 
   // Archive
   Future<void> archiveBudget(String id);

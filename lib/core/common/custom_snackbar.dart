@@ -125,11 +125,12 @@ class CustomSnackbar {
         return _SnackbarConfig(
           icon: Icons.check_circle_rounded,
           iconColor: successColor,
+          // ✅ Darker, more opaque background
           backgroundColor: isDark
-              ? colorScheme.surface
-              : successColor.withOpacity(0.1),
+              ? const Color(0xFF1E3A1E) // Dark green background
+              : successColor.withOpacity(0.15),
           borderColor: successColor,
-          textColor: colorScheme.onSurface,
+          textColor: isDark ? Colors.white : colorScheme.onSurface,
         );
 
       case SnackbarType.error:
@@ -137,11 +138,12 @@ class CustomSnackbar {
         return _SnackbarConfig(
           icon: Icons.error_rounded,
           iconColor: colorScheme.error,
+          // ✅ Darker, more opaque background
           backgroundColor: isDark
-              ? colorScheme.surface
-              : colorScheme.error.withOpacity(0.1),
+              ? const Color(0xFF3A1E1E) // Dark red background
+              : colorScheme.error.withOpacity(0.15),
           borderColor: colorScheme.error,
-          textColor: colorScheme.onSurface,
+          textColor: isDark ? Colors.white : colorScheme.onSurface,
         );
 
       case SnackbarType.warning:
@@ -150,11 +152,12 @@ class CustomSnackbar {
         return _SnackbarConfig(
           icon: Icons.warning_rounded,
           iconColor: warningColor,
+          // ✅ Darker, more opaque background
           backgroundColor: isDark
-              ? colorScheme.surface
-              : warningColor.withOpacity(0.1),
+              ? const Color(0xFF3A2E1E) // Dark orange background
+              : warningColor.withOpacity(0.15),
           borderColor: warningColor,
-          textColor: colorScheme.onSurface,
+          textColor: isDark ? Colors.white : colorScheme.onSurface,
         );
 
       case SnackbarType.info:
@@ -162,11 +165,12 @@ class CustomSnackbar {
         return _SnackbarConfig(
           icon: Icons.info_rounded,
           iconColor: colorScheme.primary,
+          // ✅ Darker, more opaque background
           backgroundColor: isDark
-              ? colorScheme.surface
-              : colorScheme.primary.withOpacity(0.1),
+              ? const Color(0xFF1E2A3A) // Dark blue background
+              : colorScheme.primary.withOpacity(0.15),
           borderColor: colorScheme.primary,
-          textColor: colorScheme.onSurface,
+          textColor: isDark ? Colors.white : colorScheme.onSurface,
         );
     }
   }
@@ -433,7 +437,7 @@ class _AnimatedSnackbarWidgetState extends State<_AnimatedSnackbarWidget>
                   border: Border.all(color: config.borderColor, width: 1.5),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withOpacity(0.6),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -463,7 +467,7 @@ class _AnimatedSnackbarWidgetState extends State<_AnimatedSnackbarWidget>
                       child: Text(
                         widget.message,
                         style: TextStyle(
-                          color: config.textColor,
+                          color: Colors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -474,11 +478,13 @@ class _AnimatedSnackbarWidgetState extends State<_AnimatedSnackbarWidget>
                     IconButton(
                       icon: Icon(
                         Icons.close,
-                        color: config.textColor.withOpacity(0.6),
+                        color: Colors.white,
+                        // color: config.textColor.withOpacity(0.6),
                         size: 20,
                       ),
                       onPressed: _dismiss,
                       padding: EdgeInsets.zero,
+                      color: Colors.white,
                       constraints: const BoxConstraints(),
                     ),
                   ],

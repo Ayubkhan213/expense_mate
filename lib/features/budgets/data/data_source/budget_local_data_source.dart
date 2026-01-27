@@ -1,8 +1,10 @@
 import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/core/data/models/transaction_model.dart';
 import 'package:expense_mate/core/services/hive_box_manager.dart';
 import 'package:hive/hive.dart';
 
 abstract class BudgetLocalDataSource {
+  List<TransactionModel> getTransactionsByBudget(String budgetId);
   Future<String> createBudget(BudgetModel budget);
   BudgetModel? getBudgetById(String id);
   List<BudgetModel> getAllBudgets();
@@ -28,7 +30,7 @@ abstract class BudgetLocalDataSource {
 
 class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
   Box<BudgetModel> get _box => HiveBoxManager.budgets;
-
+  Box<TransactionModel> get _transcationBox => HiveBoxManager.transactions;
   @override
   Future<String> createBudget(BudgetModel budget) async {
     await _box.put(budget.id, budget);
@@ -92,6 +94,13 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
       updatedAt: DateTime.now(),
     );
     await _box.put(budget.id, updated);
+  }
+
+  @override
+  List<TransactionModel> getTransactionsByBudget(String budgetId) {
+    return _transcationBox.values
+        .where((t) => !t.isDeleted && t.budgetId == budgetId)
+        .toList();
   }
 
   @override

@@ -1,7 +1,8 @@
-import 'package:expense_mate/core/data/data_sources/local/budget_local_data_source.dart';
 import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/core/data/models/transaction_model.dart';
 import 'package:expense_mate/core/error/failure.dart';
 import 'package:expense_mate/core/utils/either.dart';
+import 'package:expense_mate/features/budgets/data/data_source/budget_local_data_source.dart';
 import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
 
 class BudgetRepositoryImp extends BudgetRepository {
@@ -30,12 +31,14 @@ class BudgetRepositoryImp extends BudgetRepository {
   }
 
   @override
-  Either<Failure, BudgetModel?> getBudgetById(String id) {
-    try {
-      return Right(localDataSource.getBudgetById(id));
-    } catch (e) {
-      return Left(CacheFailure(e.toString()));
-    }
+  BudgetModel? getBudgetById(String id) {
+    return localDataSource.getBudgetById(id);
+  }
+
+  @override
+  List<TransactionModel> getTransactionsByBudget(String budgetId) {
+    return localDataSource.getTransactionsByBudget(budgetId)
+      ..sort((a, b) => b.date.compareTo(a.date));
   }
 
   @override

@@ -1,8 +1,8 @@
 import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
+import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
 
 class GetTransactionsByBudgetUseCase {
-  final TransactionRepository repository;
+  final BudgetRepository repository;
 
   GetTransactionsByBudgetUseCase(this.repository);
 

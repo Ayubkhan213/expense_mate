@@ -1,1 +1,1 @@
-enum TransactionSource { normal, budget, recurring }
+enum TransactionSource { normal, budget, recurring, debt }

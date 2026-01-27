@@ -12,4 +12,5 @@ class RouteName {
   static const String forgetPassword = 'forget_password';
   static const String budgetDetails = 'budget_details';
   static const String onBoarding = 'on_boarding';
+  static const String debtRepayment = 'debt_repayment';
 }

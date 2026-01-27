@@ -26,7 +26,7 @@ export 'package:expense_mate/core/navigation/bloc/nav_bloc.dart';
 export 'package:expense_mate/core/navigation/bloc/nav_event.dart';
 export 'package:expense_mate/core/navigation/bloc/nav_state.dart';
 export 'package:expense_mate/features/analytics/presentation/faces/analytics_face.dart';
-export 'package:expense_mate/features/home/faces/home_face.dart';
+
 export 'package:expense_mate/features/profile/presentation/faces/profile_face.dart';
 export 'package:expense_mate/features/records/presentation/faces/records_face.dart';
 export 'package:expense_mate/core/constant/app_constant.dart';
@@ -36,12 +36,12 @@ export 'package:expense_mate/features/profile/presentation/faces/language_face.d
 export 'package:expense_mate/features/profile/presentation/faces/template_face.dart';
 export 'package:expense_mate/core/data/models/category_hive_model.dart';
 export 'package:expense_mate/core/utils/translation_helper.dart';
-export 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc.dart';
-export 'package:expense_mate/features/transcation/presentation/bloc/transcation_state.dart';
-export 'package:expense_mate/features/transcation/presentation/bloc/transcation_event.dart';
+export 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_bloc.dart';
+export 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_state.dart';
+export 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_event.dart';
 
-export 'package:expense_mate/features/transcation/presentation/components/category_section/components/category_grid/category_grid.dart';
-export 'package:expense_mate/features/transcation/presentation/components/category_section/components/mode_button.dart';
+export 'package:expense_mate/features/transcation/presentation/components/category_section/category_grid.dart';
+export 'package:expense_mate/features/transcation/presentation/components/category_section/mode_button.dart';
 export 'package:expense_mate/features/auth/presentation/bloc/auth_bloc.dart';
 export 'package:expense_mate/features/auth/presentation/bloc/auth_event.dart';
 export 'package:expense_mate/features/auth/presentation/bloc/auth_state.dart';

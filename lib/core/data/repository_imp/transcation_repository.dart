@@ -1,4 +1,7 @@
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/core/data/models/debt_model.dart';
+import 'package:expense_mate/core/data/models/debt_payment_model.dart';
 import 'package:expense_mate/core/data/models/transcation_result.dart';
 import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
 
@@ -11,14 +14,25 @@ class TransactionRepositoryImp extends TransactionRepository {
   // Constructor now requires data source
   TransactionRepositoryImp({required this.localDataSource});
 
-  // @override
-  // Future<String> createTransaction(TransactionModel transaction) async {
-  //   return await localDataSource.createTransaction(transaction);
-  // }
-
   @override
   TransactionModel? getTransactionById(String id) {
     return localDataSource.getTransactionById(id);
+  }
+
+  @override
+  List<TransactionModel> getPureTransactions({int? limit}) {
+    final list =
+        localDataSource
+            .getAllTransactions()
+            .where((t) => !t.isDebt && !t.isRecurring)
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
+
+    if (limit != null) {
+      return list.take(limit).toList();
+    }
+
+    return list;
   }
 
   @override
@@ -49,11 +63,11 @@ class TransactionRepositoryImp extends TransactionRepository {
       ..sort((a, b) => b.date.compareTo(a.date));
   }
 
-  @override
-  List<TransactionModel> getTransactionsByBudget(String budgetId) {
-    return localDataSource.getTransactionsByBudget(budgetId)
-      ..sort((a, b) => b.date.compareTo(a.date));
-  }
+  // @override
+  // List<TransactionModel> getTransactionsByBudget(String budgetId) {
+  //   return localDataSource.getTransactionsByBudget(budgetId)
+  //     ..sort((a, b) => b.date.compareTo(a.date));
+  // }
 
   @override
   List<TransactionModel> getDebtTransactions() {
@@ -179,8 +193,122 @@ class TransactionRepositoryImp extends TransactionRepository {
 
   @override
   Future<TransactionResult> saveBudgetTransactionUseCase({
-    required TransactionModel transcationModel,
+    required TransactionModel transaction,
+    required BudgetModel budget,
   }) async {
-    return await localDataSource.createTransaction(transcationModel);
+    try {
+      // 1️⃣ Save transaction
+      await localDataSource.createTransaction(transaction);
+
+      // 2️⃣ Update budget values
+      final updatedBudget = BudgetModel(
+        id: budget.id,
+        name: budget.name,
+        type: budget.type,
+        totalAmount: budget.totalAmount,
+        spentAmount: budget.spentAmount + transaction.totalAmount,
+        startDate: budget.startDate,
+        endDate: budget.endDate,
+        transactionIds: [...budget.transactionIds, transaction.id],
+        category: budget.category,
+        icon: budget.icon,
+        colorCode: budget.colorCode,
+        isActive: budget.isActive,
+        isArchived: budget.isArchived,
+        userId: budget.userId,
+        updatedAt: DateTime.now(),
+        createdAt: budget.createdAt,
+      );
+
+      // 3️⃣ Save updated budget
+      await localDataSource.updateBudget(updatedBudget);
+
+      return TransactionResult(
+        success: true,
+        message: 'Transaction added & budget updated',
+        transactionId: transaction.id,
+      );
+    } catch (e, stack) {
+      print('SaveBudgetTransaction error: $e');
+      print(stack);
+
+      return TransactionResult(
+        success: false,
+        message: 'Failed to save transaction',
+      );
+    }
+  }
+
+  @override
+  Future<TransactionResult> saveNormalTransactionUseCase({
+    required TransactionModel transaction,
+  }) async {
+    try {
+      // 1️ Save transaction
+      await localDataSource.createTransaction(transaction);
+
+      return TransactionResult(
+        success: true,
+        message: 'Transaction added & budget updated',
+        transactionId: transaction.id,
+      );
+    } catch (e, stack) {
+      print('SaveBudgetTransaction error: $e');
+      print(stack);
+
+      return TransactionResult(
+        success: false,
+        message: 'Failed to save transaction',
+      );
+    }
+  }
+
+  @override
+  Future<TransactionResult> createDebt(DebtModel debt) async {
+    return await localDataSource.createDebt(debt);
+  }
+
+  @override
+  DebtModel? getDebtById(String id) {
+    return localDataSource.getDebtById(id);
+  }
+
+  // @override
+  // List<DebtModel> getAllDebts() {
+  //   // You can sort by creation date if needed
+  //   final debts = localDataSource.getAllDebts();
+  //   debts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  //   return debts;
+  // }
+
+  @override
+  Future<void> updateDebt(DebtModel debt) async {
+    // Add business logic: update timestamp, validation, etc.
+    final updatedDebt = DebtModel(
+      id: debt.id,
+      transactionId: debt.transactionId,
+      personName: debt.personName,
+      totalAmount: debt.totalAmount,
+      debtType: debt.debtType,
+      expectedReturnDate: debt.expectedReturnDate,
+      isReturned: debt.isReturned,
+      paymentIds: debt.paymentIds,
+      paidAmount: debt.paidAmount,
+      createdAt: debt.createdAt,
+      updatedAt: DateTime.now(), // Update timestamp
+      personPhone: debt.personPhone,
+      personImage: debt.personImage,
+    );
+    await localDataSource.updateDebt(updatedDebt);
+  }
+
+  @override
+  Future<void> deleteDebt(String id) async {
+    await localDataSource.deleteDebt(id);
+  }
+
+  @override
+  Future<TransactionResult> addDebtPayment(DebtPaymentModel payment) {
+    return localDataSource.addDebtPayment(payment);
   }
 }

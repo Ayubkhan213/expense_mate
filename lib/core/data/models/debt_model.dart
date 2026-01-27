@@ -70,5 +70,29 @@ class DebtModel extends HiveObject {
       DateTime.now().isAfter(expectedReturnDate) && !isReturned;
   int get daysOverdue =>
       isOverdue ? DateTime.now().difference(expectedReturnDate).inDays : 0;
+
   int get daysUntilDue => expectedReturnDate.difference(DateTime.now()).inDays;
+
+  DebtModel copyWith({
+    bool? isReturned,
+    List<String>? paymentIds,
+    double? paidAmount,
+    DateTime? updatedAt,
+  }) {
+    return DebtModel(
+      id: id,
+      transactionId: transactionId,
+      personName: personName,
+      totalAmount: totalAmount,
+      debtType: debtType,
+      expectedReturnDate: expectedReturnDate,
+      isReturned: isReturned ?? this.isReturned,
+      paymentIds: paymentIds ?? this.paymentIds,
+      paidAmount: paidAmount ?? this.paidAmount,
+      createdAt: createdAt,
+      updatedAt: updatedAt ?? DateTime.now(),
+      personPhone: personPhone,
+      personImage: personImage,
+    );
+  }
 }

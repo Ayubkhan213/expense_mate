@@ -1,9 +1,11 @@
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/core/data/models/debt_model.dart';
 import 'package:expense_mate/core/utils/enum.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/budget_details.dart';
+import 'package:expense_mate/features/home/presentation/faces/debt_transcation_repay_face.dart';
 import 'package:expense_mate/features/on_boarding/on_boarding_screen.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_section/category_selection_component.dart';
+import 'package:expense_mate/features/transcation/presentation/faces/category_selection.dart';
 import 'package:expense_mate/features/transcation/presentation/faces/add_transcation_face.dart';
 import 'package:expense_mate/features/auth/presentation/faces/login_face.dart';
 import 'package:expense_mate/features/auth/presentation/faces/signup_face.dart';
@@ -14,7 +16,7 @@ class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case 'home':
-        return MaterialPageRoute(builder: (_) => const MainFrame());
+        return MaterialPageRoute(builder: (_) => MainFrame());
 
       case 'template':
         return MaterialPageRoute(builder: (_) => const TemplateFace());
@@ -49,6 +51,12 @@ class AppRouter {
         );
       case 'on_boarding':
         return MaterialPageRoute(builder: (_) => const OnboardingScreen());
+      case 'debt_repayment':
+        final args = settings.arguments as Map<String, dynamic>?;
+        final DebtModel debtModel = args?['debt'] ?? '';
+        return MaterialPageRoute(
+          builder: (_) => DebtTransactionRepayFace(debtModel: debtModel),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) =>

@@ -1,8 +1,9 @@
 import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_state.dart';
+import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
+import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
+import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_state.dart';
 import 'package:expense_mate/features/budgets/presentation/components/budget_card.dart';
+import 'package:expense_mate/features/budgets/presentation/components/budget_fliter.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/budget_details.dart';
 
 import 'package:expense_mate/core/data/models/budget_model.dart';
@@ -374,3 +375,311 @@ class _BudgetsFaceState extends State<BudgetsFace> {
 }
 
 enum BudgetFilter { active, expired, archived, all }
+
+// enum BudgetFilter { active, expired, archived, all }
+
+// class BudgetsFace extends StatefulWidget {
+//   const BudgetsFace({super.key});
+
+//   @override
+//   State<BudgetsFace> createState() => _BudgetsFaceState();
+// }
+
+// class _BudgetsFaceState extends State<BudgetsFace> {
+//   BudgetFilter _selectedFilter = BudgetFilter.active;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     context.read<BudgetBloc>().add(LoadBudgetsEvent());
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final colorScheme = theme.colorScheme;
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     return Container(
+//       decoration: BoxDecoration(
+//         gradient: LinearGradient(
+//           begin: Alignment.topCenter,
+//           end: Alignment.bottomCenter,
+//           colors: isDark
+//               ? [colorScheme.background, colorScheme.surface]
+//               : [
+//                   colorScheme.primary.withValues(alpha: 0.03),
+//                   colorScheme.surface,
+//                 ],
+//         ),
+//       ),
+//       child: Column(
+//         children: [
+//           _buildHeader(theme, colorScheme, isDark),
+//           _buildFilterSection(),
+//           Expanded(child: _buildContent()),
+//         ],
+//       ),
+//     );
+//   }
+
+//   Widget _buildHeader(ThemeData theme, ColorScheme colorScheme, bool isDark) {
+//     return BlocBuilder<BudgetBloc, BudgetState>(
+//       builder: (context, state) {
+//         return Container(
+//           padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+//           decoration: BoxDecoration(
+//             gradient: LinearGradient(
+//               begin: Alignment.topLeft,
+//               end: Alignment.bottomRight,
+//               colors: isDark
+//                   ? [
+//                       colorScheme.surface,
+//                       colorScheme.surface.withValues(alpha: 0.9),
+//                     ]
+//                   : [
+//                       colorScheme.primary.withValues(alpha: 0.08),
+//                       colorScheme.primary.withValues(alpha: 0.03),
+//                     ],
+//             ),
+//             borderRadius: const BorderRadius.only(
+//               bottomLeft: Radius.circular(30),
+//               bottomRight: Radius.circular(30),
+//             ),
+//           ),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     'Budgets',
+//                     style: theme.textTheme.headlineLarge?.copyWith(
+//                       fontWeight: FontWeight.bold,
+//                       color: colorScheme.onSurface,
+//                     ),
+//                   ),
+//                   const SizedBox(height: 4),
+//                   Container(
+//                     padding: const EdgeInsets.symmetric(
+//                       horizontal: 10,
+//                       vertical: 4,
+//                     ),
+//                     decoration: BoxDecoration(
+//                       color: colorScheme.primary.withValues(alpha: 0.1),
+//                       borderRadius: BorderRadius.circular(12),
+//                       border: Border.all(
+//                         color: colorScheme.primary.withValues(alpha: 0.3),
+//                       ),
+//                     ),
+//                     child: Text(
+//                       '${state.activeBudgets?.length ?? 0} active',
+//                       style: TextStyle(
+//                         color: colorScheme.primary,
+//                         fontSize: 12,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               Row(
+//                 children: [
+//                   IconButton(
+//                     icon: Icon(Icons.search, color: colorScheme.primary),
+//                     onPressed: () {},
+//                   ),
+//                   IconButton(
+//                     icon: Icon(Icons.add_circle, color: colorScheme.primary),
+//                     onPressed: () {},
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         );
+//       },
+//     );
+//   }
+
+//   Widget _buildFilterSection() {
+//     return BlocBuilder<BudgetBloc, BudgetState>(
+//       builder: (context, state) {
+//         return BudgetFilterChips(
+//           selectedFilter: _selectedFilter.name,
+//           onFilterChanged: (filter) {
+//             setState(() {
+//               _selectedFilter = BudgetFilter.values.firstWhere(
+//                 (e) => e.name == filter,
+//               );
+//             });
+//           },
+//           filterCounts: {
+//             'active': state.activeBudgets?.length ?? 0,
+//             'expired':
+//                 state.budgets
+//                     ?.where((b) => b.isExpired && !b.isArchived)
+//                     .length ??
+//                 0,
+//             'archived': state.archivedBudgets?.length ?? 0,
+//             'all': state.budgets?.length ?? 0,
+//           },
+//         );
+//       },
+//     );
+//   }
+
+//   Widget _buildContent() {
+//     return BlocBuilder<BudgetBloc, BudgetState>(
+//       builder: (context, state) {
+//         if (state.status.toString().contains('loading')) {
+//           return Center(
+//             child: CircularProgressIndicator(
+//               color: Theme.of(context).colorScheme.primary,
+//             ),
+//           );
+//         }
+
+//         if (state.status.toString().contains('error')) {
+//           return _buildErrorState(state.errorMessage);
+//         }
+
+//         final budgets = _getFilteredBudgets(state);
+
+//         if (budgets.isEmpty) {
+//           return _buildEmptyState();
+//         }
+
+//         return _buildBudgetList(budgets);
+//       },
+//     );
+//   }
+
+//   List _getFilteredBudgets(dynamic state) {
+//     switch (_selectedFilter) {
+//       case BudgetFilter.active:
+//         return state.activeBudgets ?? [];
+//       case BudgetFilter.expired:
+//         return (state.budgets ?? [])
+//             .where((b) => b.isExpired && !b.isArchived)
+//             .toList();
+//       case BudgetFilter.archived:
+//         return state.archivedBudgets ?? [];
+//       case BudgetFilter.all:
+//         return state.budgets ?? [];
+//     }
+//   }
+
+//   Widget _buildBudgetList(List budgets) {
+//     return ListView.builder(
+//       padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+//       itemCount: budgets.length,
+//       itemBuilder: (context, index) {
+//         return BudgetCard(
+//           budget: budgets[index],
+//           onTap: () {
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (_) => BudgetDetailsFace(budget: budgets[index]),
+//               ),
+//             );
+//           },
+//         );
+//       },
+//     );
+//   }
+
+//   Widget _buildEmptyState() {
+//     final theme = Theme.of(context);
+//     final colorScheme = theme.colorScheme;
+
+//     String message;
+//     IconData icon;
+
+//     switch (_selectedFilter) {
+//       case BudgetFilter.active:
+//         message = 'No active budgets yet.\nCreate one to start tracking!';
+//         icon = Icons.add_card;
+//         break;
+//       case BudgetFilter.expired:
+//         message = 'No expired budgets';
+//         icon = Icons.event_busy;
+//         break;
+//       case BudgetFilter.archived:
+//         message = 'No archived budgets';
+//         icon = Icons.archive;
+//         break;
+//       case BudgetFilter.all:
+//         message = 'No budgets yet.\nCreate your first budget!';
+//         icon = Icons.account_balance_wallet;
+//         break;
+//     }
+
+//     return Center(
+//       child: Padding(
+//         padding: const EdgeInsets.all(40),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Container(
+//               padding: const EdgeInsets.all(32),
+//               decoration: BoxDecoration(
+//                 color: colorScheme.primary.withValues(alpha: 0.1),
+//                 shape: BoxShape.circle,
+//                 border: Border.all(
+//                   color: colorScheme.primary.withValues(alpha: 0.3),
+//                   width: 2,
+//                 ),
+//               ),
+//               child: Icon(
+//                 icon,
+//                 size: 64,
+//                 color: colorScheme.primary.withValues(alpha: 0.5),
+//               ),
+//             ),
+//             const SizedBox(height: 24),
+//             Text(
+//               message,
+//               textAlign: TextAlign.center,
+//               style: TextStyle(
+//                 fontSize: 16,
+//                 color: colorScheme.onSurface.withValues(alpha: 0.6),
+//                 height: 1.5,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildErrorState(String? errorMessage) {
+//     final theme = Theme.of(context);
+//     final colorScheme = theme.colorScheme;
+
+//     return Center(
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Icon(Icons.error_outline, size: 64, color: const Color(0xFFef4444)),
+//           const SizedBox(height: 16),
+//           Text(
+//             errorMessage ?? 'Something went wrong',
+//             style: TextStyle(
+//               color: colorScheme.onSurface.withValues(alpha: 0.7),
+//             ),
+//           ),
+//           const SizedBox(height: 16),
+//           ElevatedButton(
+//             onPressed: () {
+//               context.read<BudgetBloc>().add(LoadBudgetsEvent());
+//             },
+//             child: const Text('Retry'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

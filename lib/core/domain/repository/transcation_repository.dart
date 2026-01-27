@@ -1,3 +1,6 @@
+import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/core/data/models/debt_model.dart';
+import 'package:expense_mate/core/data/models/debt_payment_model.dart';
 import 'package:expense_mate/core/data/models/transcation_result.dart';
 
 import '../../data/models/transaction_model.dart';
@@ -21,7 +24,7 @@ abstract class TransactionRepository {
 
   List<TransactionModel> getTransactionsByCategory(String categoryKey);
 
-  List<TransactionModel> getTransactionsByBudget(String budgetId);
+  // List<TransactionModel> getTransactionsByBudget(String budgetId);
 
   List<TransactionModel> getDebtTransactions();
 
@@ -42,13 +45,33 @@ abstract class TransactionRepository {
   double getTotalExpense({DateTime? startDate, DateTime? endDate});
 
   double getBalance({DateTime? startDate, DateTime? endDate});
-  Future<TransactionResult> saveBudgetTransactionUseCase({
-    required TransactionModel transcationModel,
-  });
 
+  Future<TransactionResult> saveBudgetTransactionUseCase({
+    required TransactionModel transaction,
+    required BudgetModel budget,
+  });
+  Future<TransactionResult> saveNormalTransactionUseCase({
+    required TransactionModel transaction,
+  });
   Map<String, double> getCategoryBreakdown({
     required TransactionType type,
     DateTime? startDate,
     DateTime? endDate,
   });
+
+  /// Create a new debt
+  Future<TransactionResult> createDebt(DebtModel debt);
+
+  /// Get a debt by ID
+  DebtModel? getDebtById(String id);
+
+  /// Update a debt
+  Future<void> updateDebt(DebtModel debt);
+
+  /// Delete a debt
+  Future<void> deleteDebt(String id);
+  //get pure transcation
+  List<TransactionModel> getPureTransactions({int? limit});
+
+  Future<TransactionResult> addDebtPayment(DebtPaymentModel payment);
 }
