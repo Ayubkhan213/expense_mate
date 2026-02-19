@@ -1,7 +1,7 @@
 import '../../data/models/recurring_transaction_model.dart';
 import '../../data/models/enums.dart';
 
-abstract class RecurringRepository {
+abstract class RecurringRepositories {
   // CREATE
   Future<String> createRecurring(RecurringTransactionModel recurring);
 

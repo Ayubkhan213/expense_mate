@@ -18,37 +18,37 @@ class TransactionsList extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Recent Transactions',
-                style: TextStyle(
-                  color: colorScheme.primary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Navigate to all transactions
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: colorScheme.primary,
-                ),
-                child: Text(
-                  'View All →',
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(horizontal: 8),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Text(
+        //         'Recent Transactions',
+        //         style: TextStyle(
+        //           color: colorScheme.primary,
+        //           fontSize: 16,
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //       ),
+        //       TextButton(
+        //         onPressed: () {
+        //           // Navigate to all transactions
+        //         },
+        //         style: TextButton.styleFrom(
+        //           foregroundColor: colorScheme.primary,
+        //         ),
+        //         child: Text(
+        //           'View All →',
+        //           style: TextStyle(
+        //             color: colorScheme.primary,
+        //             fontWeight: FontWeight.w600,
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         ...transactions.map((transaction) {
           return TransactionCard(transaction: transaction);
         }).toList(),

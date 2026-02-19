@@ -11,7 +11,7 @@ class TemplateFace extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Choose Theme Template"),
 
-        // 🔥 Added Dark / Light Mode Switch
+        //  Added Dark / Light Mode Switch
         actions: [
           BlocBuilder<ThemeBloc, ThemeState>(
             builder: (context, state) {

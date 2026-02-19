@@ -1,12 +1,12 @@
 // ==================== MAIN FRAME ====================
 import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
 import 'package:expense_mate/core/utils/enum.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/add_budget_bottomsheet.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_state.dart';
 import 'package:expense_mate/features/home/presentation/faces/home_face.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/budget_face.dart';
+import 'package:expense_mate/features/recurring/presentation/faces/recurring_category_selection.dart';
 
 class MainFrame extends StatelessWidget {
   MainFrame({super.key});
@@ -14,7 +14,7 @@ class MainFrame extends StatelessWidget {
   final List<Widget> pages = [
     HomeFace(),
     const BudgetsFace(), // NEW: Budget tab
-    const RecordsFace(),
+    const RecurringFace(),
     const AnalyticsFace(),
     const ProfileFace(),
   ];
@@ -134,7 +134,30 @@ class MainFrame extends StatelessWidget {
         ),
       );
     }
+    // Recurring TAB
+    if (currentIndex == 2) {
+      return FloatingActionButton.extended(
+        elevation: 10,
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const RecurringCategorySelector()),
+        ),
 
+        // ... rest of your code
+        icon: const Icon(Icons.add, size: 24),
+        label: Text(
+          t.recurring,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+      );
+    }
+    if (currentIndex == 4) {
+      return SizedBox.shrink();
+    }
+    if (currentIndex == 3) {
+      return SizedBox.shrink();
+    }
     // DEFAULT FAB for other tabs
     return FloatingActionButton.extended(
       elevation: 10,

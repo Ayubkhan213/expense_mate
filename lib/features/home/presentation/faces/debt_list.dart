@@ -19,35 +19,6 @@ class DebtsList extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Active Debts',
-                style: TextStyle(
-                  color: colorScheme.primary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  foregroundColor: colorScheme.primary,
-                ),
-                child: Text(
-                  'View All →',
-                  style: TextStyle(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
         ...debts.map((debt) => DebtCard(debt: debt)).toList(),
         200.h.sh,
       ],

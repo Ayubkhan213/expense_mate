@@ -7,6 +7,8 @@ import 'package:expense_mate/features/budgets/domain/use_cases/get_all_budgets_u
 import 'package:expense_mate/features/budgets/domain/use_cases/update_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
+import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart'
+    as rec;
 import 'package:get_it/get_it.dart';
 
 // ================= CORE =================
@@ -162,9 +164,9 @@ Future<void> initializeDependencies() async {
     () => DebtRepositoryImp(localDataSource: sl()),
   );
 
-  sl.registerLazySingleton<RecurringRepository>(
-    () => RecurringRepositoryImp(localDataSource: sl()),
-  );
+  // sl.registerLazySingleton<RecurringRepositories>(
+  //   () => RecurringRepositoryImp(localDataSource: sl()),
+  // );
 
   sl.registerLazySingleton<CategoryRepository>(() => CategoryRepositoryImp());
 

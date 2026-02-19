@@ -28,7 +28,7 @@ export 'package:expense_mate/core/navigation/bloc/nav_state.dart';
 export 'package:expense_mate/features/analytics/presentation/faces/analytics_face.dart';
 
 export 'package:expense_mate/features/profile/presentation/faces/profile_face.dart';
-export 'package:expense_mate/features/records/presentation/faces/records_face.dart';
+export 'package:expense_mate/features/recurring/presentation/faces/recurring_face.dart';
 export 'package:expense_mate/core/constant/app_constant.dart';
 export 'package:expense_mate/core/language/bloc/language_event.dart';
 export 'package:expense_mate/features/profile/presentation/widgets/template_preview.dart';
