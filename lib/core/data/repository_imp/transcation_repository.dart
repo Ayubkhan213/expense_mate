@@ -19,21 +19,21 @@ class TransactionRepositoryImp extends TransactionRepository {
     return localDataSource.getTransactionById(id);
   }
 
-  @override
-  List<TransactionModel> getPureTransactions({int? limit}) {
-    final list =
-        localDataSource
-            .getAllTransactions()
-            .where((t) => !t.isDebt && !t.isRecurring)
-            .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
+  // @override
+  // List<TransactionModel> getPureTransactions({int? limit}) {
+  //   final list =
+  //       localDataSource
+  //           .getAllTransactions()
+  //           .where((t) => !t.isDebt && !t.isRecurring)
+  //           .toList()
+  //         ..sort((a, b) => b.date.compareTo(a.date));
 
-    if (limit != null) {
-      return list.take(limit).toList();
-    }
+  //   if (limit != null) {
+  //     return list.take(limit).toList();
+  //   }
 
-    return list;
-  }
+  //   return list;
+  // }
 
   @override
   List<TransactionModel> getAllTransactions() {

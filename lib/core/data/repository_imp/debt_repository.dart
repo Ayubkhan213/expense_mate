@@ -30,11 +30,11 @@ class DebtRepositoryImp extends DebtRepository {
       ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
-  @override
-  List<DebtModel> getActiveDebts() {
-    return localDataSource.getActiveDebts()
-      ..sort((a, b) => a.expectedReturnDate.compareTo(b.expectedReturnDate));
-  }
+  // @override
+  // List<DebtModel> getActiveDebts() {
+  //   return localDataSource.getActiveDebts()
+  //     ..sort((a, b) => a.expectedReturnDate.compareTo(b.expectedReturnDate));
+  // }
 
   @override
   List<DebtModel> getSettledDebts() {
@@ -75,21 +75,21 @@ class DebtRepositoryImp extends DebtRepository {
     await localDataSource.deleteDebt(id);
   }
 
-  @override
-  double getTotalBorrowed() {
-    return localDataSource
-        .getDebtsByType(DebtType.borrowed)
-        .where((d) => !d.isReturned)
-        .fold(0.0, (sum, d) => sum + d.remainingAmount);
-  }
+  // @override
+  // double getTotalBorrowed() {
+  //   return localDataSource
+  //       .getDebtsByType(DebtType.borrowed)
+  //       .where((d) => !d.isReturned)
+  //       .fold(0.0, (sum, d) => sum + d.remainingAmount);
+  // }
 
-  @override
-  double getTotalLent() {
-    return localDataSource
-        .getDebtsByType(DebtType.lent)
-        .where((d) => !d.isReturned)
-        .fold(0.0, (sum, d) => sum + d.remainingAmount);
-  }
+  // @override
+  // double getTotalLent() {
+  //   return localDataSource
+  //       .getDebtsByType(DebtType.lent)
+  //       .where((d) => !d.isReturned)
+  //       .fold(0.0, (sum, d) => sum + d.remainingAmount);
+  // }
 
   @override
   double getTotalOverdue() {

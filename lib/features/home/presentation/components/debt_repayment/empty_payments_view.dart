@@ -55,11 +55,11 @@ class EmptyPaymentsView extends StatelessWidget {
                 height: 1.5,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 6),
 
             // Hint Card
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: isDark
                     ? colorScheme.surface

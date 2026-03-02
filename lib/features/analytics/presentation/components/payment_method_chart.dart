@@ -1,5 +1,8 @@
+import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
+import 'package:expense_mate/core/data/models/enums.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -11,7 +14,7 @@ class PaymentMethodChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     if (paymentMethodBreakdown.methodAmounts.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -25,14 +28,14 @@ class PaymentMethodChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Payment Methods',
+              t.paymentMethod,
               style: AppTextStyles.h4.copyWith(
                 color: theme.textTheme.titleLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Distribution of payment methods',
+              t.paymentDistribution,
               style: AppTextStyles.caption.copyWith(
                 color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               ),
@@ -55,7 +58,7 @@ class PaymentMethodChart extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(flex: 2, child: _buildLegend(theme)),
+                  Expanded(flex: 2, child: _buildLegend(theme, context, t)),
                 ],
               ),
             ),
@@ -63,7 +66,7 @@ class PaymentMethodChart extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Payment Method Details
-            _buildPaymentMethodList(theme),
+            _buildPaymentMethodList(theme, t),
           ],
         ),
       ),
@@ -93,7 +96,11 @@ class PaymentMethodChart extends StatelessWidget {
     }).toList();
   }
 
-  Widget _buildLegend(ThemeData theme) {
+  Widget _buildLegend(
+    ThemeData theme,
+    BuildContext context,
+    AppLocalizations t,
+  ) {
     final colors = _getPaymentMethodColors();
     final entries = paymentMethodBreakdown.methodAmounts.entries.toList();
 
@@ -117,7 +124,7 @@ class PaymentMethodChart extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  _capitalize(entry.key),
+                  _getPaymentMethodText(entry.key, t), // ✅ passes string key
                   style: AppTextStyles.labelSmall,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -129,7 +136,23 @@ class PaymentMethodChart extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentMethodList(ThemeData theme) {
+  // ✅ accepts String key (from map), not enum
+  String _getPaymentMethodText(String method, AppLocalizations t) {
+    switch (method.toLowerCase()) {
+      case 'cash':
+        return t.cash;
+      case 'card':
+        return t.card;
+      case 'bank':
+        return t.bank;
+      case 'wallet':
+        return t.wallet;
+      default:
+        return method; // fallback to raw string
+    }
+  }
+
+  Widget _buildPaymentMethodList(ThemeData theme, AppLocalizations t) {
     final colors = _getPaymentMethodColors();
     final icons = _getPaymentMethodIcons();
     final entries = paymentMethodBreakdown.methodAmounts.entries.toList();
@@ -169,13 +192,14 @@ class PaymentMethodChart extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _capitalize(method),
+                      _capitalize(_getPaymentMethodText(method, t)),
+
                       style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      '$count transactions',
+                      '$count ${t.transactions} ',
                       style: AppTextStyles.caption.copyWith(
                         color: theme.textTheme.bodyMedium?.color?.withOpacity(
                           0.6,

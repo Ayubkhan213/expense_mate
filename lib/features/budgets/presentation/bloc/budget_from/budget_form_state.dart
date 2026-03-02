@@ -1,8 +1,6 @@
-// Budget Form State
 import 'package:equatable/equatable.dart';
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/navigation_fram.dart';
 
 class BudgetFormState extends Equatable {
   final BudgetType selectedType;
@@ -12,6 +10,8 @@ class BudgetFormState extends Equatable {
   final IconData selectedIcon;
   final Color selectedColor;
   final String name;
+  final String amount; // ← NEW
+  final String operation; // ← NEW ('+' | '-' | '')
   final Map<BudgetType, List<String>> categoryPresets;
   final List<Color> colorOptions;
   final List<IconData> iconOptions;
@@ -24,23 +24,26 @@ class BudgetFormState extends Equatable {
     required this.selectedIcon,
     required this.selectedColor,
     this.name = '',
+    this.amount = '', // ← NEW
+    this.operation = '', // ← NEW
     required this.categoryPresets,
     required this.colorOptions,
     required this.iconOptions,
   });
 
-  // In budget_form_state.dart
-
-  factory BudgetFormState.initial() {
+  factory BudgetFormState.initial({
+    Map<BudgetType, List<String>>? categoryPresets,
+  }) {
     final now = DateTime.now();
     return BudgetFormState(
       selectedType: BudgetType.monthly,
       startDate: DateTime(now.year, now.month, 1),
       endDate: DateTime(now.year, now.month + 1, 0),
       selectedIcon: Icons.account_balance_wallet,
-      selectedColor: const Color(
-        0xFF1565C0,
-      ), // Use a default that will be replaced by theme
+      selectedColor: const Color(0xFF1565C0),
+      amount: '',
+      operation: '',
+
       categoryPresets: {
         BudgetType.monthly: [
           'Groceries',
@@ -59,14 +62,14 @@ class BudgetFormState extends Equatable {
         BudgetType.custom: ['Custom Budget'],
       },
       colorOptions: [
-        const Color(0xFF1565C0), // Blue
-        const Color(0xFF2E7D32), // Green
-        const Color(0xFFEF6C00), // Orange
-        const Color(0xFF6A1B9A), // Purple
-        const Color(0xFFD32F2F), // Red
-        const Color(0xFF00897B), // Teal
-        const Color(0xFFE91E63), // Pink
-        const Color(0xFFFFA726), // Amber
+        const Color(0xFF1565C0),
+        const Color(0xFF2E7D32),
+        const Color(0xFFEF6C00),
+        const Color(0xFF6A1B9A),
+        const Color(0xFFD32F2F),
+        const Color(0xFF00897B),
+        const Color(0xFFE91E63),
+        const Color(0xFFFFA726),
       ],
       iconOptions: [
         Icons.account_balance_wallet,
@@ -80,8 +83,8 @@ class BudgetFormState extends Equatable {
       ],
     );
   }
-  int get durationInDays => endDate.difference(startDate).inDays;
 
+  int get durationInDays => endDate.difference(startDate).inDays;
   List<String> get currentCategories => categoryPresets[selectedType] ?? [];
 
   BudgetFormState copyWith({
@@ -92,6 +95,8 @@ class BudgetFormState extends Equatable {
     IconData? selectedIcon,
     Color? selectedColor,
     String? name,
+    String? amount,
+    String? operation,
     bool clearCategory = false,
   }) {
     return BudgetFormState(
@@ -104,6 +109,8 @@ class BudgetFormState extends Equatable {
       selectedIcon: selectedIcon ?? this.selectedIcon,
       selectedColor: selectedColor ?? this.selectedColor,
       name: name ?? this.name,
+      amount: amount ?? this.amount,
+      operation: operation ?? this.operation,
       categoryPresets: categoryPresets,
       colorOptions: colorOptions,
       iconOptions: iconOptions,
@@ -119,5 +126,7 @@ class BudgetFormState extends Equatable {
     selectedIcon,
     selectedColor,
     name,
+    amount,
+    operation,
   ];
 }

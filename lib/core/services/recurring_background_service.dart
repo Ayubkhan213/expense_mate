@@ -16,7 +16,8 @@ void callbackDispatcher() {
       await HiveInitializer.init();
       print('✅ Hive initialized in background');
 
-      await _processRecurringTransactions();
+      // ✅ Same function used everywhere — no duplication
+      await RecurringBackgroundService.processRecurringTransactions();
       print('✅ Processing completed');
 
       return Future.value(true);
@@ -28,57 +29,109 @@ void callbackDispatcher() {
   });
 }
 
-Future<void> _processRecurringTransactions() async {
-  print('📋 Processing recurring transactions...');
+class RecurringBackgroundService {
+  // ✅ Public static — called from main.dart, callbackDispatcher, and debug buttons
+  static Future<void> processRecurringTransactions() async {
+    print('📋 Processing recurring transactions...');
 
-  final recurringBox = await Hive.openBox<RecurringTransactionModel>(
-    'recurringTransactions',
-  );
-  final transactionBox = await Hive.openBox<TransactionModel>('transactions');
-  final categoryBox = await Hive.openBox<CategoryHiveModel>('categories');
-
-  print('📦 Recurring count: ${recurringBox.length}');
-
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-
-  final activeRecurring = recurringBox.values
-      .where((r) => r.isActive && !r.hasEnded)
-      .toList();
-
-  print('🔍 Found ${activeRecurring.length} active recurring');
-  print('📅 Today: $today');
-
-  for (final recurring in activeRecurring) {
-    final nextOccurrence = DateTime(
-      recurring.nextOccurrence.year,
-      recurring.nextOccurrence.month,
-      recurring.nextOccurrence.day,
+    // ✅ FIXED box names to match HiveBoxManager
+    final recurringBox = await Hive.openBox<RecurringTransactionModel>(
+      'recurring_transactions', // ← was 'recurringTransactions'
     );
+    final transactionBox = await Hive.openBox<TransactionModel>('transactions');
+    final categoryBox = await Hive.openBox<CategoryHiveModel>('categories');
 
-    print('');
-    print('Checking: ${recurring.categoryKey}');
-    print('  Next: $nextOccurrence');
-    print(
-      '  Due: ${nextOccurrence.isBefore(today) || nextOccurrence.isAtSameMomentAs(today)}',
-    );
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
-    if (nextOccurrence.isBefore(today) ||
-        nextOccurrence.isAtSameMomentAs(today)) {
-      final transaction = _createTransaction(recurring, categoryBox);
-      await transactionBox.put(transaction.id, transaction);
+    final activeRecurring = recurringBox.values
+        .where((r) => r.isActive && !r.hasEnded)
+        .toList();
 
-      recurring.generatedTransactionIds.add(transaction.id);
-      recurring.nextOccurrence = _calculateNextOccurrence(recurring);
-      await recurring.save();
+    print('🔍 Found ${activeRecurring.length} active recurring');
+    print('📅 Today: $today');
 
-      print('  ✅ CREATED ${transaction.id}');
-      print('  📅 Next: ${recurring.nextOccurrence}');
+    for (final recurring in activeRecurring) {
+      print('');
+      print('Checking: ${recurring.categoryKey}');
+
+      int createdCount = 0;
+
+      while (true) {
+        final nextOccurrence = DateTime(
+          recurring.nextOccurrence.year,
+          recurring.nextOccurrence.month,
+          recurring.nextOccurrence.day,
+        );
+
+        print('  Next: $nextOccurrence');
+        print(
+          '  Due: ${nextOccurrence.isBefore(today) || nextOccurrence.isAtSameMomentAs(today)}',
+        );
+
+        // Stop if not yet due
+        if (!nextOccurrence.isBefore(today) &&
+            !nextOccurrence.isAtSameMomentAs(today)) {
+          break;
+        }
+
+        // Stop if end date passed
+        if (recurring.hasEnded) {
+          print('  ⏹ Recurring has ended, stopping.');
+          recurring.isActive = false;
+          await recurring.save();
+          break;
+        }
+
+        final transaction = _createTransaction(recurring, categoryBox);
+        await transactionBox.put(transaction.id, transaction);
+
+        recurring.generatedTransactionIds.add(transaction.id);
+        recurring.nextOccurrence = _calculateNextOccurrence(recurring);
+        await recurring.save();
+
+        createdCount++;
+        print('  ✅ CREATED ${transaction.id} for $nextOccurrence');
+        print('  📅 Next set to: ${recurring.nextOccurrence}');
+
+        // Safety cap — prevents infinite loop on bad data
+        if (createdCount >= 365) {
+          print('  ⚠️ Safety cap reached (365), stopping catch-up.');
+          break;
+        }
+      }
+
+      print('  📊 Total created for ${recurring.categoryKey}: $createdCount');
     }
+
+    print('✅ Done. Transactions: ${transactionBox.length}');
   }
 
-  print('✅ Done. Transactions: ${transactionBox.length}');
+  static Future<void> initialize() async {
+    await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+    // Backup check every 6 hours (in case app stays closed)
+    await Workmanager().registerPeriodicTask(
+      'recurring-processor',
+      'processRecurring',
+      frequency: const Duration(hours: 6),
+      initialDelay: const Duration(minutes: 1),
+      constraints: Constraints(
+        networkType: NetworkType.notRequired,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+      ),
+    );
+
+    print('✅ WorkManager initialized - backup check every 6 hours');
+  }
+
+  static Future<void> cancelAll() async {
+    await Workmanager().cancelAll();
+  }
 }
+
+// ── Private helpers ──────────────────────────────────────────────────────────
 
 TransactionModel _createTransaction(
   RecurringTransactionModel recurring,
@@ -94,10 +147,8 @@ TransactionModel _createTransaction(
     ),
   );
 
-  final uuid = const Uuid();
-
   return TransactionModel(
-    id: uuid.v4(),
+    id: const Uuid().v4(),
     type: recurring.type,
     items: [
       TransactionItem(
@@ -146,39 +197,4 @@ DateTime _addMonths(DateTime date, int months, int dayOfMonth) {
   final validDay = dayOfMonth > daysInMonth ? daysInMonth : dayOfMonth;
 
   return DateTime(newYear, newMonth, validDay);
-}
-
-class RecurringBackgroundService {
-  static Future<void> initialize() async {
-    await Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: true, // Shows logs in debug
-    );
-
-    // Check every 6 hours (4 times per day)
-    await Workmanager().registerPeriodicTask(
-      'recurring-processor',
-      'processRecurring',
-      frequency: const Duration(hours: 6),
-      initialDelay: const Duration(minutes: 1), // First check after 1 minute
-      constraints: Constraints(
-        networkType: NetworkType.notRequired,
-        requiresBatteryNotLow: false,
-        requiresCharging: false,
-      ),
-    );
-
-    print('✅ WorkManager initialized - will check every 6 hours');
-  }
-
-  static Future<void> processNow() async {
-    await Workmanager().registerOneOffTask(
-      'process-now-${DateTime.now().millisecondsSinceEpoch}',
-      'processRecurring',
-    );
-  }
-
-  static Future<void> cancelAll() async {
-    await Workmanager().cancelAll();
-  }
 }

@@ -3,7 +3,7 @@ import 'package:expense_mate/core/data/models/enums.dart';
 enum RecurringFormStatus { initial, loading, success, error }
 
 class AddEditRecurringState {
-  final String recurringId; // null for add, id for edit
+  final String recurringId;
   final TransactionType transactionType;
   final String amount;
   final String categoryKey;

@@ -120,13 +120,13 @@ abstract class AppLocalizations {
   /// No description provided for @records.
   ///
   /// In en, this message translates to:
-  /// **'Records'**
+  /// **'records'**
   String get records;
 
   /// No description provided for @transactions.
   ///
   /// In en, this message translates to:
-  /// **'Transactions'**
+  /// **'transactions'**
   String get transactions;
 
   /// No description provided for @budgets.
@@ -174,13 +174,13 @@ abstract class AppLocalizations {
   /// No description provided for @borrowedFrom.
   ///
   /// In en, this message translates to:
-  /// **'Borrowed From'**
+  /// **'Borrowed from'**
   String get borrowedFrom;
 
   /// No description provided for @lentTo.
   ///
   /// In en, this message translates to:
-  /// **'Lent To'**
+  /// **'Lent to'**
   String get lentTo;
 
   /// No description provided for @personName.
@@ -1176,7 +1176,7 @@ abstract class AppLocalizations {
   /// No description provided for @dontHaveAccount.
   ///
   /// In en, this message translates to:
-  /// **'Don\'t have an account?'**
+  /// **'Don\"t have an account?'**
   String get dontHaveAccount;
 
   /// No description provided for @onboardingTitle1.
@@ -1256,6 +1256,1644 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Expense Category'**
   String get selectExpenseCategory;
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorPrefix;
+
+  /// No description provided for @balancePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balancePrefix;
+
+  /// No description provided for @recentTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Transactions'**
+  String get recentTransactions;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All →'**
+  String get viewAll;
+
+  /// No description provided for @activeDebts.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Debts'**
+  String get activeDebts;
+
+  /// No description provided for @addDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Debt'**
+  String get addDebt;
+
+  /// No description provided for @totalBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Balance'**
+  String get totalBalance;
+
+  /// No description provided for @youOwe.
+  ///
+  /// In en, this message translates to:
+  /// **'You Owe'**
+  String get youOwe;
+
+  /// No description provided for @youreOwed.
+  ///
+  /// In en, this message translates to:
+  /// **'You\"re Owed'**
+  String get youreOwed;
+
+  /// No description provided for @debtTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Transactions'**
+  String get debtTransactions;
+
+  /// No description provided for @allTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Transactions'**
+  String get allTransactions;
+
+  /// No description provided for @searchByPerson.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by person or category…'**
+  String get searchByPerson;
+
+  /// No description provided for @searchByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by category…'**
+  String get searchByCategory;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @dateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Date Range'**
+  String get dateRange;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get clearAll;
+
+  /// No description provided for @noDebtTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No debt transactions found'**
+  String get noDebtTransactions;
+
+  /// No description provided for @noTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions found'**
+  String get noTransactions;
+
+  /// No description provided for @tryAdjustingFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters'**
+  String get tryAdjustingFilters;
+
+  /// No description provided for @debtTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Transaction'**
+  String get debtTransaction;
+
+  /// No description provided for @settled.
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get settled;
+
+  /// No description provided for @daysOverdue.
+  ///
+  /// In en, this message translates to:
+  /// **'days overdue'**
+  String get daysOverdue;
+
+  /// No description provided for @transaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction'**
+  String get transaction;
+
+  /// No description provided for @noActiveDebts.
+  ///
+  /// In en, this message translates to:
+  /// **'No active debts'**
+  String get noActiveDebts;
+
+  /// No description provided for @debtManagementStarts.
+  ///
+  /// In en, this message translates to:
+  /// **'Your debt management starts here'**
+  String get debtManagementStarts;
+
+  /// No description provided for @noTransactionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions yet'**
+  String get noTransactionsYet;
+
+  /// No description provided for @startTracking.
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your expenses'**
+  String get startTracking;
+
+  /// No description provided for @paymentHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment History'**
+  String get paymentHistory;
+
+  /// No description provided for @payments.
+  ///
+  /// In en, this message translates to:
+  /// **'payments'**
+  String get payments;
+
+  /// No description provided for @addPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Payment'**
+  String get addPayment;
+
+  /// No description provided for @fullyPaidOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully paid off 🎉'**
+  String get fullyPaidOff;
+
+  /// No description provided for @repaid.
+  ///
+  /// In en, this message translates to:
+  /// **'% repaid'**
+  String get repaid;
+
+  /// No description provided for @cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleared'**
+  String get cleared;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @totalDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Debt'**
+  String get totalDebt;
+
+  /// No description provided for @paidOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid off!'**
+  String get paidOff;
+
+  /// No description provided for @remainingAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'remaining'**
+  String get remainingAmount;
+
+  /// No description provided for @percentPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'% Paid'**
+  String get percentPaid;
+
+  /// No description provided for @due.
+  ///
+  /// In en, this message translates to:
+  /// **'Due:'**
+  String get due;
+
+  /// No description provided for @addPaymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Payment'**
+  String get addPaymentTitle;
+
+  /// No description provided for @enterPaymentAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter payment amount'**
+  String get enterPaymentAmount;
+
+  /// No description provided for @pleaseEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter amount'**
+  String get pleaseEnterAmount;
+
+  /// No description provided for @pleaseEnterValidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get pleaseEnterValidAmount;
+
+  /// No description provided for @amountExceedsDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount exceeds remaining debt'**
+  String get amountExceedsDebt;
+
+  /// No description provided for @paymentDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Date'**
+  String get paymentDate;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (Optional)'**
+  String get noteOptional;
+
+  /// No description provided for @addANote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note'**
+  String get addANote;
+
+  /// No description provided for @savePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Payment'**
+  String get savePayment;
+
+  /// No description provided for @deletePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Payment'**
+  String get deletePayment;
+
+  /// No description provided for @deletePaymentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this payment? This action cannot be undone.'**
+  String get deletePaymentConfirm;
+
+  /// No description provided for @deleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete payment'**
+  String get deleteTooltip;
+
+  /// No description provided for @noPaymentsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Payments Yet'**
+  String get noPaymentsYet;
+
+  /// No description provided for @addFirstPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the + button below to add your first payment'**
+  String get addFirstPayment;
+
+  /// No description provided for @trackRepayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your debt repayments easily'**
+  String get trackRepayments;
+
+  /// No description provided for @myBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'My Budgets'**
+  String get myBudgets;
+
+  /// No description provided for @searchBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Search budgets…'**
+  String get searchBudgets;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get expired;
+
+  /// No description provided for @archived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived;
+
+  /// No description provided for @totalRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Remaining'**
+  String get totalRemaining;
+
+  /// No description provided for @overBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Over Budget'**
+  String get overBudget;
+
+  /// No description provided for @used.
+  ///
+  /// In en, this message translates to:
+  /// **'% used'**
+  String get used;
+
+  /// No description provided for @spent.
+  ///
+  /// In en, this message translates to:
+  /// **'spent'**
+  String get spent;
+
+  /// No description provided for @noBudgetsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No budgets yet'**
+  String get noBudgetsYet;
+
+  /// No description provided for @createFirstBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your first budget below'**
+  String get createFirstBudget;
+
+  /// No description provided for @noActiveBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'No active budgets'**
+  String get noActiveBudgets;
+
+  /// No description provided for @tapNewBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap \"New Budget\" to get started'**
+  String get tapNewBudget;
+
+  /// No description provided for @noExpiredBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'No expired budgets'**
+  String get noExpiredBudgets;
+
+  /// No description provided for @allBudgetsOnTrack.
+  ///
+  /// In en, this message translates to:
+  /// **'All your budgets are on track!'**
+  String get allBudgetsOnTrack;
+
+  /// No description provided for @nothingArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing archived'**
+  String get nothingArchived;
+
+  /// No description provided for @archivedWillShowHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived budgets will show here'**
+  String get archivedWillShowHere;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @overBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Over by'**
+  String get overBy;
+
+  /// No description provided for @daysLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'days left'**
+  String get daysLeft;
+
+  /// No description provided for @expiredDaysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'days ago'**
+  String get expiredDaysAgo;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @newBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'New Budget'**
+  String get newBudget;
+
+  /// No description provided for @monthlyBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Budget'**
+  String get monthlyBudget;
+
+  /// No description provided for @projectBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Budget'**
+  String get projectBudget;
+
+  /// No description provided for @customBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Budget'**
+  String get customBudget;
+
+  /// No description provided for @budgetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Name'**
+  String get budgetName;
+
+  /// No description provided for @budgetNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Monthly Groceries'**
+  String get budgetNameHint;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @end.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get end;
+
+  /// No description provided for @days.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get days;
+
+  /// No description provided for @color.
+  ///
+  /// In en, this message translates to:
+  /// **'Color'**
+  String get color;
+
+  /// No description provided for @icon.
+  ///
+  /// In en, this message translates to:
+  /// **'Icon'**
+  String get icon;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get dates;
+
+  /// No description provided for @style.
+  ///
+  /// In en, this message translates to:
+  /// **'Style'**
+  String get style;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @quickSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Select'**
+  String get quickSelect;
+
+  /// No description provided for @budgetType.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Type'**
+  String get budgetType;
+
+  /// No description provided for @monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get monthly;
+
+  /// No description provided for @project.
+  ///
+  /// In en, this message translates to:
+  /// **'Project'**
+  String get project;
+
+  /// No description provided for @custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get custom;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @pleaseEnterBudgetName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a budget name'**
+  String get pleaseEnterBudgetName;
+
+  /// No description provided for @totalBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Budget'**
+  String get totalBudget;
+
+  /// No description provided for @overBudgetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Over Budget!'**
+  String get overBudgetLabel;
+
+  /// No description provided for @nearLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Near Limit'**
+  String get nearLimit;
+
+  /// No description provided for @percentUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'% Used'**
+  String get percentUsed;
+
+  /// No description provided for @remainingCollapsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining:'**
+  String get remainingCollapsed;
+
+  /// No description provided for @tapToAddTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to add your first transaction'**
+  String get tapToAddTransaction;
+
+  /// No description provided for @addTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Transaction'**
+  String get addTransaction;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
+  /// No description provided for @more.
+  ///
+  /// In en, this message translates to:
+  /// **'more'**
+  String get more;
+
+  /// No description provided for @ofa.
+  ///
+  /// In en, this message translates to:
+  /// **'of'**
+  String get ofa;
+
+  /// No description provided for @wedding.
+  ///
+  /// In en, this message translates to:
+  /// **'Wedding'**
+  String get wedding;
+
+  /// No description provided for @homeRenovation.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Renovation'**
+  String get homeRenovation;
+
+  /// No description provided for @carPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Car Purchase'**
+  String get carPurchase;
+
+  /// No description provided for @customBudgetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Budget'**
+  String get customBudgetLabel;
+
+  /// No description provided for @noRecurringTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No recurring transactions'**
+  String get noRecurringTransactions;
+
+  /// No description provided for @setUpAutomatic.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up automatic transactions for\nregular income and expenses'**
+  String get setUpAutomatic;
+
+  /// No description provided for @addFirstRecurring.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Your First Recurring'**
+  String get addFirstRecurring;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @tryDifferentFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different search or filter'**
+  String get tryDifferentFilter;
+
+  /// No description provided for @monthlyNet.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Net'**
+  String get monthlyNet;
+
+  /// No description provided for @dueSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Soon'**
+  String get dueSoon;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resume;
+
+  /// No description provided for @deleteRecurringTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Recurring Transaction'**
+  String get deleteRecurringTitle;
+
+  /// No description provided for @dueNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Due Now'**
+  String get dueNow;
+
+  /// No description provided for @daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get daily;
+
+  /// No description provided for @weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get weekly;
+
+  /// No description provided for @biweekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Bi-weekly'**
+  String get biweekly;
+
+  /// No description provided for @quarterly.
+  ///
+  /// In en, this message translates to:
+  /// **'Quarterly'**
+  String get quarterly;
+
+  /// No description provided for @yearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Yearly'**
+  String get yearly;
+
+  /// No description provided for @recurringIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Income'**
+  String get recurringIncome;
+
+  /// No description provided for @recurringExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring Expense'**
+  String get recurringExpense;
+
+  /// No description provided for @noEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'No End'**
+  String get noEnd;
+
+  /// No description provided for @addNoteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Add note (optional)'**
+  String get addNoteOptional;
+
+  /// No description provided for @recurringCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring transaction created!'**
+  String get recurringCreated;
+
+  /// No description provided for @recurringUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring transaction updated!'**
+  String get recurringUpdated;
+
+  /// No description provided for @ledger.
+  ///
+  /// In en, this message translates to:
+  /// **'Ledger'**
+  String get ledger;
+
+  /// No description provided for @insights.
+  ///
+  /// In en, this message translates to:
+  /// **'Insights'**
+  String get insights;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused'**
+  String get paused;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @frequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency'**
+  String get frequency;
+
+  /// No description provided for @startDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Date'**
+  String get startDate;
+
+  /// No description provided for @endDate.
+  ///
+  /// In en, this message translates to:
+  /// **'End Date'**
+  String get endDate;
+
+  /// No description provided for @never.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get never;
+
+  /// No description provided for @nextOccurrence.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Occurrence'**
+  String get nextOccurrence;
+
+  /// No description provided for @dayOfMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Day of Month'**
+  String get dayOfMonth;
+
+  /// No description provided for @goBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBack;
+
+  /// No description provided for @monthlyEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Estimate'**
+  String get monthlyEstimate;
+
+  /// No description provided for @perMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'per month'**
+  String get perMonth;
+
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// No description provided for @noTransactionsGenerated.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions generated yet'**
+  String get noTransactionsGenerated;
+
+  /// No description provided for @generatedTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Generated Transactions'**
+  String get generatedTransactions;
+
+  /// No description provided for @transactionsThisPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'transactions this period'**
+  String get transactionsThisPeriod;
+
+  /// No description provided for @netBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Net Balance'**
+  String get netBalance;
+
+  /// No description provided for @surplus.
+  ///
+  /// In en, this message translates to:
+  /// **'Surplus'**
+  String get surplus;
+
+  /// No description provided for @deficit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deficit'**
+  String get deficit;
+
+  /// No description provided for @week.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get week;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @threeMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Months'**
+  String get threeMonths;
+
+  /// No description provided for @sixMonths.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Months'**
+  String get sixMonths;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @allTime.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get allTime;
+
+  /// No description provided for @financialOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial Overview'**
+  String get financialOverview;
+
+  /// No description provided for @budgetOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget Overview'**
+  String get budgetOverview;
+
+  /// No description provided for @overallUtilization.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Utilization'**
+  String get overallUtilization;
+
+  /// No description provided for @totalBudgets.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Budgets'**
+  String get totalBudgets;
+
+  /// No description provided for @expenseByCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense by Category'**
+  String get expenseByCategory;
+
+  /// No description provided for @noExpenseData.
+  ///
+  /// In en, this message translates to:
+  /// **'No expense data available'**
+  String get noExpenseData;
+
+  /// No description provided for @monthlyTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Trends'**
+  String get monthlyTrends;
+
+  /// No description provided for @incomeVsExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Income vs Expense over time'**
+  String get incomeVsExpense;
+
+  /// No description provided for @debtOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Overview'**
+  String get debtOverview;
+
+  /// No description provided for @activeDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'active'**
+  String get activeDebt;
+
+  /// No description provided for @paymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get paymentMethods;
+
+  /// No description provided for @paymentDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution of payment methods'**
+  String get paymentDistribution;
+
+  /// No description provided for @topExpenses.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Expenses'**
+  String get topExpenses;
+
+  /// No description provided for @top.
+  ///
+  /// In en, this message translates to:
+  /// **'Top'**
+  String get top;
+
+  /// No description provided for @avgDaily.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Daily'**
+  String get avgDaily;
+
+  /// No description provided for @avgTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg Transaction'**
+  String get avgTransaction;
+
+  /// No description provided for @savingsRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Savings Rate'**
+  String get savingsRate;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @sectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'APPEARANCE'**
+  String get sectionAppearance;
+
+  /// No description provided for @sectionAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'ACCOUNT'**
+  String get sectionAccount;
+
+  /// No description provided for @sectionData.
+  ///
+  /// In en, this message translates to:
+  /// **'DATA'**
+  String get sectionData;
+
+  /// No description provided for @sectionSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'SUPPORT'**
+  String get sectionSupport;
+
+  /// No description provided for @menuTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get menuTheme;
+
+  /// No description provided for @menuThemeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customize app appearance'**
+  String get menuThemeSubtitle;
+
+  /// No description provided for @menuLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get menuLanguage;
+
+  /// No description provided for @menuLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change app language'**
+  String get menuLanguageSubtitle;
+
+  /// No description provided for @menuDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get menuDarkMode;
+
+  /// No description provided for @menuDarkModeEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get menuDarkModeEnabled;
+
+  /// No description provided for @menuDarkModeDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get menuDarkModeDisabled;
+
+  /// No description provided for @menuEditProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get menuEditProfile;
+
+  /// No description provided for @menuEditProfileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update your information'**
+  String get menuEditProfileSubtitle;
+
+  /// No description provided for @menuPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get menuPrivacy;
+
+  /// No description provided for @menuPrivacySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your privacy settings'**
+  String get menuPrivacySubtitle;
+
+  /// No description provided for @menuNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get menuNotifications;
+
+  /// No description provided for @menuNotificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Configure notification preferences'**
+  String get menuNotificationsSubtitle;
+
+  /// No description provided for @menuDailyNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Notification'**
+  String get menuDailyNotification;
+
+  /// No description provided for @menuDailyNotificationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set daily reminder'**
+  String get menuDailyNotificationSubtitle;
+
+  /// No description provided for @menuBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & Restore'**
+  String get menuBackup;
+
+  /// No description provided for @menuBackupSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup your data'**
+  String get menuBackupSubtitle;
+
+  /// No description provided for @menuExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get menuExport;
+
+  /// No description provided for @menuExportSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Download your data'**
+  String get menuExportSubtitle;
+
+  /// No description provided for @menuHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get menuHelp;
+
+  /// No description provided for @menuHelpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get help with the app'**
+  String get menuHelpSubtitle;
+
+  /// No description provided for @menuAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get menuAbout;
+
+  /// No description provided for @menuAboutVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get menuAboutVersion;
+
+  /// No description provided for @btnLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get btnLogout;
+
+  /// No description provided for @dialogLogoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get dialogLogoutTitle;
+
+  /// No description provided for @dialogLogoutMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get dialogLogoutMessage;
+
+  /// No description provided for @dialogEditNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Name'**
+  String get dialogEditNameTitle;
+
+  /// No description provided for @dialogEditNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get dialogEditNameLabel;
+
+  /// No description provided for @btnCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get btnCancel;
+
+  /// No description provided for @btnSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get btnSave;
+
+  /// No description provided for @btnLogoutConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get btnLogoutConfirm;
+
+  /// No description provided for @imagePickerTakePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get imagePickerTakePhoto;
+
+  /// No description provided for @imagePickerGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get imagePickerGallery;
+
+  /// No description provided for @imagePickerRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get imagePickerRemove;
+
+  /// No description provided for @aboutAppName.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense Mate'**
+  String get aboutAppName;
+
+  /// No description provided for @aboutAppDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A professional expense tracking application'**
+  String get aboutAppDescription;
+
+  /// No description provided for @dailyNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Notification'**
+  String get dailyNotificationTitle;
+
+  /// No description provided for @notificationActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Active'**
+  String get notificationActive;
+
+  /// No description provided for @noNotificationSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No Notification Set'**
+  String get noNotificationSet;
+
+  /// No description provided for @notificationDailyAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily at'**
+  String get notificationDailyAt;
+
+  /// No description provided for @notificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Time'**
+  String get notificationTime;
+
+  /// No description provided for @notificationTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Title'**
+  String get notificationTitleLabel;
+
+  /// No description provided for @notificationTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter notification title'**
+  String get notificationTitleHint;
+
+  /// No description provided for @notificationMessageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Message'**
+  String get notificationMessageLabel;
+
+  /// No description provided for @notificationMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter notification message'**
+  String get notificationMessageHint;
+
+  /// No description provided for @notificationImageOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Image (Optional)'**
+  String get notificationImageOptional;
+
+  /// No description provided for @notificationAddImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Image'**
+  String get notificationAddImage;
+
+  /// No description provided for @notificationChangeImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Image'**
+  String get notificationChangeImage;
+
+  /// No description provided for @notificationRemoveImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get notificationRemoveImage;
+
+  /// No description provided for @btnSendTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Test Notification'**
+  String get btnSendTest;
+
+  /// No description provided for @btnAddToSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to Schedule List'**
+  String get btnAddToSchedule;
+
+  /// No description provided for @btnSaveAllSchedules.
+  ///
+  /// In en, this message translates to:
+  /// **'Save All Schedules'**
+  String get btnSaveAllSchedules;
+
+  /// No description provided for @scheduledNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled Notifications'**
+  String get scheduledNotifications;
+
+  /// No description provided for @cancelNotificationTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Notification'**
+  String get cancelNotificationTooltip;
+
+  /// No description provided for @infoHowItWorks.
+  ///
+  /// In en, this message translates to:
+  /// **'How it works'**
+  String get infoHowItWorks;
+
+  /// No description provided for @infoLine1.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification will repeat daily at the selected time'**
+  String get infoLine1;
+
+  /// No description provided for @infoLine2.
+  ///
+  /// In en, this message translates to:
+  /// **'Works even when the app is closed'**
+  String get infoLine2;
+
+  /// No description provided for @infoLine3.
+  ///
+  /// In en, this message translates to:
+  /// **'Images are displayed in expanded notification'**
+  String get infoLine3;
+
+  /// No description provided for @infoLine4.
+  ///
+  /// In en, this message translates to:
+  /// **'Large images are automatically resized'**
+  String get infoLine4;
+
+  /// No description provided for @templateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Theme Template'**
+  String get templateTitle;
+
+  /// No description provided for @themeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get themeLabel;
+
+  /// No description provided for @themeApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'applied'**
+  String get themeApplied;
+
+  /// No description provided for @darkLightSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark / Light'**
+  String get darkLightSwitch;
+
+  /// No description provided for @languageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get languageTitle;
+
+  /// No description provided for @langEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get langEnglish;
+
+  /// No description provided for @langArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get langArabic;
+
+  /// No description provided for @langUrdu.
+  ///
+  /// In en, this message translates to:
+  /// **'Urdu'**
+  String get langUrdu;
+
+  /// No description provided for @langFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get langFrench;
+
+  /// No description provided for @langSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'selected'**
+  String get langSelected;
+
+  /// No description provided for @analyticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get analyticsTitle;
+
+  /// No description provided for @totalTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get totalTransactions;
+
+  /// No description provided for @paymentMethodDistribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Distribution of payment methods'**
+  String get paymentMethodDistribution;
+
+  /// No description provided for @periodWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get periodWeek;
+
+  /// No description provided for @periodMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get periodMonth;
+
+  /// No description provided for @period3Months.
+  ///
+  /// In en, this message translates to:
+  /// **'3 Months'**
+  String get period3Months;
+
+  /// No description provided for @period6Months.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Months'**
+  String get period6Months;
+
+  /// No description provided for @periodYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get periodYear;
+
+  /// No description provided for @periodAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All Time'**
+  String get periodAll;
+
+  /// No description provided for @recurringTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring'**
+  String get recurringTitle;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get filterActive;
+
+  /// No description provided for @filterExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get filterExpired;
+
+  /// No description provided for @filterArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get filterArchived;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search…'**
+  String get searchHint;
+
+  /// No description provided for @results.
+  ///
+  /// In en, this message translates to:
+  /// **'results'**
+  String get results;
+
+  /// No description provided for @result.
+  ///
+  /// In en, this message translates to:
+  /// **'result'**
+  String get result;
+
+  /// No description provided for @deleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete'**
+  String get deleteConfirm;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

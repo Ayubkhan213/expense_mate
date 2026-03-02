@@ -1,5 +1,7 @@
 import 'package:expense_mate/core/data/models/transaction_model.dart';
 import 'package:expense_mate/core/extension/responsive_extension.dart';
+import 'package:expense_mate/core/utils/translation_helper.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,6 +12,7 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -64,7 +67,7 @@ class TransactionCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        transaction.items.first.category.capitalizeFirst(),
+                        context.tr(transaction.items.first.category),
                         style: TextStyle(
                           color: colorScheme.onSurface,
                           fontSize: 15,
@@ -83,7 +86,7 @@ class TransactionCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          'DEBT',
+                          t.debt.toUpperCase(),
                           style: TextStyle(
                             color: colorScheme.secondary,
                             fontSize: 9,
@@ -95,7 +98,7 @@ class TransactionCard extends StatelessWidget {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  '${DateFormat('MMM dd, yyyy').format(transaction.date)} • ${transaction.paymentMethod.name}',
+                  '${DateFormat('MMM dd, yyyy').format(transaction.date)} • ${context.trMethod(transaction.paymentMethod.name)}',
                   style: TextStyle(
                     color: colorScheme.onSurface.withValues(alpha: 0.5),
                     fontSize: 12,

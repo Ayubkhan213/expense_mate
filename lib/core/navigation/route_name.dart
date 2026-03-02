@@ -13,4 +13,6 @@ class RouteName {
   static const String budgetDetails = 'budget_details';
   static const String onBoarding = 'on_boarding';
   static const String debtRepayment = 'debt_repayment';
+  static const String allTranscation = 'all_transcation';
+  static const String allDebtTranscation = 'all_debt_transcation';
 }

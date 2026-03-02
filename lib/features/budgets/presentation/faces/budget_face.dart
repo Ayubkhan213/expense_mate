@@ -1,27 +1,38 @@
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/extension/responsive_extension.dart';
+import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_state.dart';
 import 'package:expense_mate/features/budgets/presentation/components/budget_card.dart';
-import 'package:expense_mate/features/budgets/presentation/components/budget_fliter.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/budget_details.dart';
-
 import 'package:expense_mate/core/data/models/budget_model.dart';
 
-class BudgetsFace extends StatefulWidget {
+class BudgetsFace extends StatelessWidget {
   const BudgetsFace({super.key});
 
   @override
-  State<BudgetsFace> createState() => _BudgetsFaceState();
+  Widget build(BuildContext context) {
+    context.read<BudgetBloc>().add(LoadBudgetsEvent());
+    return const _BudgetsFaceView();
+  }
 }
 
-class _BudgetsFaceState extends State<BudgetsFace> {
-  BudgetFilter _selectedFilter = BudgetFilter.active;
+// ── StatefulWidget only to hold TextEditingController (no setState) ──
+class _BudgetsFaceView extends StatefulWidget {
+  const _BudgetsFaceView();
 
   @override
-  void initState() {
-    super.initState();
-    context.read<BudgetBloc>().add(LoadBudgetsEvent());
+  State<_BudgetsFaceView> createState() => _BudgetsFaceViewState();
+}
+
+class _BudgetsFaceViewState extends State<_BudgetsFaceView> {
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -29,344 +40,586 @@ class _BudgetsFaceState extends State<BudgetsFace> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    return Scaffold(
+      backgroundColor: isDark
+          ? theme.colorScheme.background
+          : const Color(0xFFF2F4F8),
+      body: BlocBuilder<BudgetBloc, BudgetState>(
+        builder: (context, state) {
+          const expandedHeight = 270.0;
+
+          return CustomScrollView(
+            physics: const ClampingScrollPhysics(),
+            slivers: [
+              _BudgetSliverAppBar(
+                state: state,
+                isDark: isDark,
+                expandedHeight: expandedHeight,
+                searchController: _searchController,
+              ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _FilterHeaderDelegate(state: state, isDark: isDark),
+              ),
+              // Search result count banner
+              if (state.searchQuery.isNotEmpty)
+                SliverToBoxAdapter(child: _SearchBanner(state: state)),
+              if (state.status == BudgetStatus.loading)
+                const SliverFillRemaining(child: _LoadingView())
+              else if (state.status == BudgetStatus.error)
+                SliverFillRemaining(
+                  child: _ErrorView(message: state.errorMessage),
+                )
+              else if (state.filteredBudgets.isEmpty)
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Column(
+                    children: [
+                      _EmptyView(filter: state.activeFilter),
+                      SizedBox(height: expandedHeight),
+                    ],
+                  ),
+                )
+              else
+                _BudgetList(budgets: state.filteredBudgets),
+              const SliverToBoxAdapter(child: SizedBox(height: 110)),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────
+// SliverAppBar
+// ─────────────────────────────────────────
+class _BudgetSliverAppBar extends StatelessWidget {
+  final BudgetState state;
+  final bool isDark;
+  final double expandedHeight;
+  final TextEditingController searchController;
+
+  const _BudgetSliverAppBar({
+    required this.state,
+    required this.isDark,
+    required this.expandedHeight,
+    required this.searchController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final bgColor = isDark ? theme.colorScheme.surface : Colors.white;
+    final topPad = MediaQuery.of(context).padding.top;
+    final collapsedHeight = 64.0 + topPad;
+
+    return SliverAppBar(
+      expandedHeight: expandedHeight,
+      collapsedHeight: 64,
+      pinned: true,
+      stretch: false,
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      automaticallyImplyLeading: false,
+      flexibleSpace: LayoutBuilder(
+        builder: (context, constraints) {
+          final current = constraints.maxHeight;
+          final progress =
+              ((expandedHeight - current) / (expandedHeight - collapsedHeight))
+                  .clamp(0.0, 1.0);
+          final expandedOpacity = (1.0 - progress).clamp(0.0, 1.0);
+          final collapsedOpacity = ((progress - 0.20) / 0.30).clamp(0.0, 1.0);
+
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              Opacity(
+                opacity: expandedOpacity,
+                child: _ExpandedHeader(
+                  state: state,
+                  primary: primary,
+                  topPad: topPad,
+                  availableHeight: current,
+                  searchController: searchController,
+                ),
+              ),
+              if (collapsedOpacity > 0)
+                Opacity(
+                  opacity: collapsedOpacity,
+                  child: _CollapsedHeader(
+                    state: state,
+                    bgColor: bgColor,
+                    primary: primary,
+                    topPad: topPad,
+                    theme: theme,
+                    searchController: searchController,
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+// ── Expanded header ──
+class _ExpandedHeader extends StatelessWidget {
+  final BudgetState state;
+  final Color primary;
+  final double topPad;
+  final double availableHeight;
+  final TextEditingController searchController;
+
+  const _ExpandedHeader({
+    required this.state,
+    required this.primary,
+    required this.topPad,
+    required this.availableHeight,
+    required this.searchController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Container(
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: isDark
-              ? [
-                  theme.colorScheme.surface,
-                  theme.colorScheme.surface.withValues(alpha: 0.95),
-                ]
-              : [
-                  theme.colorScheme.primary.withValues(alpha: 0.05),
-                  theme.colorScheme.surface,
-                ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [primary, primary.withValues(alpha: 0.85)],
         ),
-      ),
-      child: Column(
-        children: [
-          // Header Section
-          _buildHeader(theme, isDark),
-
-          // Filter Chips
-          _buildFilterChips(theme, isDark),
-
-          // Budget List
-          Expanded(
-            child: BlocBuilder<BudgetBloc, BudgetState>(
-              builder: (context, state) {
-                if (state.status == BudgetStatus.loading) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      color: theme.colorScheme.primary,
-                    ),
-                  );
-                }
-
-                if (state.status == BudgetStatus.error) {
-                  return _buildErrorState(theme, state.errorMessage);
-                }
-
-                final budgets = _getFilteredBudgets(state);
-
-                if (budgets.isEmpty) {
-                  return _buildEmptyState(theme, isDark);
-                }
-
-                return _buildBudgetList(budgets, theme);
-              },
-            ),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildHeader(ThemeData theme, bool isDark) {
-    return BlocBuilder<BudgetBloc, BudgetState>(
-      builder: (context, state) {
-        final activeBudgets = state.activeBudgets;
-
-        return Container(
-          padding: EdgeInsets.fromLTRB(20, 50, 20, 20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.primary.withValues(alpha: 0.1),
-                theme.colorScheme.secondary.withValues(alpha: 0.05),
-              ],
-            ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: SizedBox(
+        height: availableHeight,
+        child: OverflowBox(
+          maxHeight: double.infinity,
+          alignment: Alignment.topCenter,
+          child: Padding(
+            padding: EdgeInsets.only(top: topPad),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 12, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        'Budgets',
-                        style: theme.textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
+                      if (state.searchOpen) ...[
+                        _IconBtn(
+                          icon: Icons.arrow_back_rounded,
+                          onTap: () {
+                            searchController.clear();
+                            context.read<BudgetBloc>().add(
+                              BudgetSearchClosed(),
+                            );
+                          },
                         ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        '${activeBudgets.length} active budgets',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _SearchField(
+                            key: const ValueKey('search'),
+                            controller: searchController,
+                            autofocus: true,
+                            onChanged: (v) => context.read<BudgetBloc>().add(
+                              BudgetSearchChanged(v),
+                            ),
+                            onClose: () {
+                              searchController.clear();
+                              context.read<BudgetBloc>().add(
+                                BudgetSearchClosed(),
+                              );
+                            },
                           ),
                         ),
-                      ),
+                      ] else ...[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t.myBudgets,
+                                style: AppTextStyles.h2.copyWith(
+                                  color: Colors.white,
+                                  letterSpacing: -0.5,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              Text(
+                                '${state.activeBudgets.length} ${t.active} · ${state.budgets.length} ${t.total}',
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                ),
+                              ),
+                            ],
+                          ).paddingOnly(left: 12.0),
+                        ),
+                        _IconBtn(
+                          icon: Icons.search_rounded,
+                          onTap: () => context.read<BudgetBloc>().add(
+                            BudgetSearchOpened(),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                      ],
                     ],
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.search),
-                        color: theme.colorScheme.primary,
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.more_vert),
-                        color: theme.colorScheme.primary,
-                        onPressed: () {
-                          // TODO: Show menu
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildFilterChips(ThemeData theme, bool isDark) {
-    return BlocBuilder<BudgetBloc, BudgetState>(
-      builder: (context, state) {
-        return Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _buildChoiceChip(
-                  label: 'Active (${state.activeBudgets.length})',
-                  icon: Icons.trending_up,
-                  filter: BudgetFilter.active,
-                  theme: theme,
-                  isDark: isDark,
                 ),
-                SizedBox(width: 12),
-                _buildChoiceChip(
-                  label:
-                      'Expired (${state.budgets.where((b) => b.isExpired).length})',
-                  icon: Icons.event_busy,
-                  filter: BudgetFilter.expired,
-                  theme: theme,
-                  isDark: isDark,
-                ),
-                SizedBox(width: 12),
-                _buildChoiceChip(
-                  label: 'Archived (${state.archivedBudgets.length})',
-                  icon: Icons.archive,
-                  filter: BudgetFilter.archived,
-                  theme: theme,
-                  isDark: isDark,
-                ),
-                SizedBox(width: 12),
-                _buildChoiceChip(
-                  label: 'All (${state.budgets.length})',
-                  icon: Icons.list,
-                  filter: BudgetFilter.all,
-                  theme: theme,
-                  isDark: isDark,
-                ),
+                const SizedBox(height: 14),
+                _SummaryCard(state: state),
+                const SizedBox(height: 16),
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
+}
 
-  Widget _buildChoiceChip({
-    required String label,
-    required IconData icon,
-    required BudgetFilter filter,
-    required ThemeData theme,
-    required bool isDark,
-  }) {
-    final isSelected = _selectedFilter == filter;
+// ── Collapsed header ──
+class _CollapsedHeader extends StatelessWidget {
+  final BudgetState state;
+  final Color bgColor;
+  final Color primary;
+  final double topPad;
+  final ThemeData theme;
+  final TextEditingController searchController;
 
-    return FilterChip(
-      label: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 16,
-            color: isSelected
-                ? theme.colorScheme.onPrimary
-                : theme.colorScheme.primary,
+  const _CollapsedHeader({
+    required this.state,
+    required this.bgColor,
+    required this.primary,
+    required this.topPad,
+    required this.theme,
+    required this.searchController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    return Container(
+      decoration: BoxDecoration(
+        color: primary,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          SizedBox(width: 6),
-          Text(label),
         ],
       ),
-      selected: isSelected,
-      onSelected: (selected) {
-        setState(() {
-          _selectedFilter = filter;
-        });
-      },
-      backgroundColor: isDark
-          ? theme.colorScheme.surface
-          : theme.colorScheme.primary.withValues(alpha: 0.05),
-      selectedColor: theme.colorScheme.primary,
-      checkmarkColor: theme.colorScheme.onPrimary,
-      labelStyle: TextStyle(
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-        color: isSelected
-            ? theme.colorScheme.onPrimary
-            : theme.colorScheme.onSurface,
+      padding: EdgeInsets.only(top: topPad),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 250),
+        child: state.searchOpen
+            ? Padding(
+                key: const ValueKey('search'),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  children: [
+                    _IconBtn(
+                      icon: Icons.arrow_back_rounded,
+                      onTap: () {
+                        searchController.clear();
+                        context.read<BudgetBloc>().add(BudgetSearchClosed());
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _SearchField(
+                        controller: searchController,
+                        autofocus: true,
+                        onChanged: (v) => context.read<BudgetBloc>().add(
+                          BudgetSearchChanged(v),
+                        ),
+                        onClose: () {
+                          searchController.clear();
+                          context.read<BudgetBloc>().add(BudgetSearchClosed());
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ),
+              )
+            : Padding(
+                key: const ValueKey('title'),
+                padding: const EdgeInsets.only(left: 22, right: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        t.myBudgets,
+                        style: AppTextStyles.h5.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    _IconBtn(
+                      icon: Icons.search_rounded,
+                      onTap: () =>
+                          context.read<BudgetBloc>().add(BudgetSearchOpened()),
+                    ),
+                    const SizedBox(width: 6),
+                  ],
+                ),
+              ),
       ),
-      elevation: isSelected ? 2 : 0,
-      pressElevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(
-          color: isSelected
-              ? theme.colorScheme.primary
-              : theme.colorScheme.outline.withValues(alpha: 0.3),
-          width: 1.5,
+    );
+  }
+}
+
+// ─────────────────────────────────────────
+// Pinned filter tab bar
+// ─────────────────────────────────────────
+class _FilterHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final BudgetState state;
+  final bool isDark;
+
+  _FilterHeaderDelegate({required this.state, required this.isDark});
+
+  static const double _height = 56.0;
+
+  @override
+  double get minExtent => _height;
+  @override
+  double get maxExtent => _height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final theme = Theme.of(context);
+    return Material(
+      color: isDark ? theme.colorScheme.background : const Color(0xFFF2F4F8),
+      elevation: overlapsContent ? 3 : 0,
+      shadowColor: Colors.black.withValues(alpha: 0.08),
+      child: SizedBox(
+        height: _height,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              // BudgetFilter.values is now [all, active, expired, archived]
+              // so All comes first automatically
+              children: BudgetFilter.values.map((filter) {
+                final isSelected = state.activeFilter == filter;
+                final count = _countFor(filter, state);
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: _FilterChip(
+                    filter: filter,
+                    count: count,
+                    isSelected: isSelected,
+                    isDark: isDark,
+                    theme: theme,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  List<BudgetModel> _getFilteredBudgets(BudgetState state) {
-    switch (_selectedFilter) {
-      case BudgetFilter.active:
-        return state.activeBudgets;
-      case BudgetFilter.expired:
-        return state.budgets
-            .where((b) => b.isExpired && !b.isArchived)
-            .toList();
-      case BudgetFilter.archived:
-        return state.archivedBudgets;
+  static int _countFor(BudgetFilter filter, BudgetState state) {
+    switch (filter) {
       case BudgetFilter.all:
-        return state.budgets;
+        return state.budgets.length;
+      case BudgetFilter.active:
+        return state.activeBudgets.length;
+      case BudgetFilter.expired:
+        return state.expiredBudgets.length;
+      case BudgetFilter.archived:
+        return state.archivedBudgets.length;
     }
   }
 
-  Widget _buildBudgetList(List<BudgetModel> budgets, ThemeData theme) {
-    return ListView.builder(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 80),
-      itemCount: budgets.length,
-      itemBuilder: (context, index) {
-        return BudgetCard(
-          budget: budgets[index],
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => BudgetDetailsFace(budget: budgets[index]),
+  @override
+  bool shouldRebuild(_FilterHeaderDelegate old) =>
+      old.state != state || old.isDark != isDark;
+}
+
+class _FilterChip extends StatelessWidget {
+  final BudgetFilter filter;
+  final int count;
+  final bool isSelected;
+  final bool isDark;
+  final ThemeData theme;
+
+  const _FilterChip({
+    required this.filter,
+    required this.count,
+    required this.isSelected,
+    required this.isDark,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = theme.colorScheme.primary;
+    return GestureDetector(
+      onTap: () => context.read<BudgetBloc>().add(BudgetFilterChanged(filter)),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? primary
+              : (isDark ? theme.colorScheme.surface : Colors.white),
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(
+            color: isSelected
+                ? primary
+                : theme.colorScheme.outline.withValues(alpha: 0.18),
+            width: 1.5,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.28),
+                    blurRadius: 10,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(_icon, size: 13, color: isSelected ? Colors.white : primary),
+            const SizedBox(width: 6),
+            Text(
+              _getLabel(context),
+              style: AppTextStyles.labelSmall.copyWith(
+                color: isSelected
+                    ? Colors.white
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.75),
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildEmptyState(ThemeData theme, bool isDark) {
-    String message;
-    IconData icon;
-
-    switch (_selectedFilter) {
-      case BudgetFilter.active:
-        message = 'No active budgets yet.\nCreate one to start tracking!';
-        icon = Icons.add_card;
-        break;
-      case BudgetFilter.expired:
-        message = 'No expired budgets';
-        icon = Icons.event_busy;
-        break;
-      case BudgetFilter.archived:
-        message = 'No archived budgets';
-        icon = Icons.archive;
-        break;
-      case BudgetFilter.all:
-        message = 'No budgets yet.\nCreate your first budget!';
-        icon = Icons.account_balance_wallet;
-        break;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
             ),
-            child: Icon(
-              icon,
-              size: 64,
-              color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            const SizedBox(width: 7),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? Colors.white.withValues(alpha: 0.22)
+                    : primary.withValues(alpha: 0.09),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                '$count',
+                style: AppTextStyles.overline.copyWith(
+                  color: isSelected ? Colors.white : primary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 24),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildErrorState(ThemeData theme, String? errorMessage) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+  IconData get _icon {
+    switch (filter) {
+      case BudgetFilter.all:
+        return Icons.grid_view_rounded;
+      case BudgetFilter.active:
+        return Icons.trending_up_rounded;
+      case BudgetFilter.expired:
+        return Icons.event_busy_rounded;
+      case BudgetFilter.archived:
+        return Icons.archive_rounded;
+    }
+  }
+
+  String _getLabel(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    switch (filter) {
+      case BudgetFilter.all:
+        return t.all;
+      case BudgetFilter.active:
+        return t.active;
+      case BudgetFilter.expired:
+        return t.expired;
+      case BudgetFilter.archived:
+        return t.archived;
+    }
+  }
+}
+
+// ─────────────────────────────────────────
+// Search result banner
+// ─────────────────────────────────────────
+class _SearchBanner extends StatelessWidget {
+  final BudgetState state;
+  const _SearchBanner({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+      child: Row(
         children: [
-          Icon(Icons.error_outline, size: 64, color: theme.colorScheme.error),
-          SizedBox(height: 16),
+          Icon(Icons.search_rounded, size: 13, color: primary),
+          const SizedBox(width: 5),
           Text(
-            errorMessage ?? 'Something went wrong',
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.error,
-            ),
+            '"${state.searchQuery}" · ${state.filteredBudgets.length} result${state.filteredBudgets.length == 1 ? '' : 's'}',
+            style: AppTextStyles.labelSmall.copyWith(color: primary),
           ),
-          SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              context.read<BudgetBloc>().add(LoadBudgetsEvent());
-            },
-            child: Text('Retry'),
+          const Spacer(),
+          GestureDetector(
+            onTap: () => context.read<BudgetBloc>().add(BudgetSearchClosed()),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: primary.withValues(alpha: 0.25)),
+              ),
+              child: Text(
+                'Clear',
+                style: AppTextStyles.overline.copyWith(
+                  color: primary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -374,312 +627,424 @@ class _BudgetsFaceState extends State<BudgetsFace> {
   }
 }
 
-enum BudgetFilter { active, expired, archived, all }
+// ─────────────────────────────────────────
+// Search field (glass style)
+// ─────────────────────────────────────────
+class _SearchField extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClose;
+  final bool autofocus;
 
-// enum BudgetFilter { active, expired, archived, all }
+  const _SearchField({
+    super.key,
+    required this.controller,
+    required this.onChanged,
+    required this.onClose,
+    this.autofocus = false,
+  });
 
-// class BudgetsFace extends StatefulWidget {
-//   const BudgetsFace({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.28)),
+      ),
+      child: ValueListenableBuilder<TextEditingValue>(
+        valueListenable: controller,
+        builder: (context, value, _) {
+          return TextField(
+            controller: controller,
+            autofocus: autofocus,
+            style: AppTextStyles.bodySmall.copyWith(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Search budgets…',
+              hintStyle: AppTextStyles.bodySmall.copyWith(
+                color: Colors.white.withValues(alpha: 0.5),
+              ),
+              prefixIcon: Icon(
+                Icons.search_rounded,
+                color: Colors.white.withValues(alpha: 0.65),
+                size: 17,
+              ),
+              suffixIcon: value.text.isNotEmpty
+                  ? GestureDetector(
+                      onTap: onClose,
+                      child: Icon(
+                        Icons.close_rounded,
+                        color: Colors.white.withValues(alpha: 0.65),
+                        size: 17,
+                      ),
+                    )
+                  : null,
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(vertical: 11),
+            ),
+            onChanged: onChanged,
+          );
+        },
+      ),
+    );
+  }
+}
 
-//   @override
-//   State<BudgetsFace> createState() => _BudgetsFaceState();
-// }
+// ─────────────────────────────────────────
+// Remaining widgets (unchanged from original)
+// ─────────────────────────────────────────
+class _IconBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
 
-// class _BudgetsFaceState extends State<BudgetsFace> {
-//   BudgetFilter _selectedFilter = BudgetFilter.active;
+  const _IconBtn({required this.icon, required this.onTap});
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     context.read<BudgetBloc>().add(LoadBudgetsEvent());
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 38,
+        height: 38,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.25),
+            width: 1,
+          ),
+        ),
+        child: Icon(icon, size: 18, color: Colors.white),
+      ),
+    );
+  }
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     final colorScheme = theme.colorScheme;
-//     final isDark = theme.brightness == Brightness.dark;
+class _SummaryCard extends StatelessWidget {
+  final BudgetState state;
+  const _SummaryCard({required this.state});
 
-//     return Container(
-//       decoration: BoxDecoration(
-//         gradient: LinearGradient(
-//           begin: Alignment.topCenter,
-//           end: Alignment.bottomCenter,
-//           colors: isDark
-//               ? [colorScheme.background, colorScheme.surface]
-//               : [
-//                   colorScheme.primary.withValues(alpha: 0.03),
-//                   colorScheme.surface,
-//                 ],
-//         ),
-//       ),
-//       child: Column(
-//         children: [
-//           _buildHeader(theme, colorScheme, isDark),
-//           _buildFilterSection(),
-//           Expanded(child: _buildContent()),
-//         ],
-//       ),
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final totalBudgeted = state.activeBudgets.fold<double>(
+      0,
+      (s, b) => s + b.totalAmount,
+    );
+    final totalSpent = state.activeBudgets.fold<double>(
+      0,
+      (s, b) => s + b.spentAmount,
+    );
+    final totalRemaining = totalBudgeted - totalSpent;
+    final progress = totalBudgeted > 0
+        ? (totalSpent / totalBudgeted).clamp(0.0, 1.0)
+        : 0.0;
+    final isOver = totalSpent > totalBudgeted;
 
-//   Widget _buildHeader(ThemeData theme, ColorScheme colorScheme, bool isDark) {
-//     return BlocBuilder<BudgetBloc, BudgetState>(
-//       builder: (context, state) {
-//         return Container(
-//           padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
-//           decoration: BoxDecoration(
-//             gradient: LinearGradient(
-//               begin: Alignment.topLeft,
-//               end: Alignment.bottomRight,
-//               colors: isDark
-//                   ? [
-//                       colorScheme.surface,
-//                       colorScheme.surface.withValues(alpha: 0.9),
-//                     ]
-//                   : [
-//                       colorScheme.primary.withValues(alpha: 0.08),
-//                       colorScheme.primary.withValues(alpha: 0.03),
-//                     ],
-//             ),
-//             borderRadius: const BorderRadius.only(
-//               bottomLeft: Radius.circular(30),
-//               bottomRight: Radius.circular(30),
-//             ),
-//           ),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Text(
-//                     'Budgets',
-//                     style: theme.textTheme.headlineLarge?.copyWith(
-//                       fontWeight: FontWeight.bold,
-//                       color: colorScheme.onSurface,
-//                     ),
-//                   ),
-//                   const SizedBox(height: 4),
-//                   Container(
-//                     padding: const EdgeInsets.symmetric(
-//                       horizontal: 10,
-//                       vertical: 4,
-//                     ),
-//                     decoration: BoxDecoration(
-//                       color: colorScheme.primary.withValues(alpha: 0.1),
-//                       borderRadius: BorderRadius.circular(12),
-//                       border: Border.all(
-//                         color: colorScheme.primary.withValues(alpha: 0.3),
-//                       ),
-//                     ),
-//                     child: Text(
-//                       '${state.activeBudgets?.length ?? 0} active',
-//                       style: TextStyle(
-//                         color: colorScheme.primary,
-//                         fontSize: 12,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               Row(
-//                 children: [
-//                   IconButton(
-//                     icon: Icon(Icons.search, color: colorScheme.primary),
-//                     onPressed: () {},
-//                   ),
-//                   IconButton(
-//                     icon: Icon(Icons.add_circle, color: colorScheme.primary),
-//                     onPressed: () {},
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         );
-//       },
-//     );
-//   }
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.22),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.totalRemaining,
+                    style: AppTextStyles.captionSmall.copyWith(
+                      color: Colors.white.withValues(alpha: 0.7),
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '\$${totalRemaining.abs().toStringAsFixed(0)}',
+                    style: AppTextStyles.currencyLarge.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '${t.ofa} \$${totalBudgeted.toStringAsFixed(0)}',
+                    style: AppTextStyles.captionSmall.copyWith(
+                      color: Colors.white.withValues(alpha: 0.65),
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isOver
+                          ? Colors.red.withValues(alpha: 0.3)
+                          : Colors.white.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      isOver
+                          ? t.overBudget
+                          : '${(progress * 100).toStringAsFixed(0)}% ${t.used}',
+                      style: AppTextStyles.overline.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: progress,
+              minHeight: 7,
+              backgroundColor: Colors.white.withValues(alpha: 0.2),
+              valueColor: AlwaysStoppedAnimation<Color>(
+                isOver ? const Color(0xFFFF6B6B) : Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              _Pill(
+                label: t.spent,
+                value: '\$${totalSpent.toStringAsFixed(0)}',
+                icon: Icons.arrow_upward_rounded,
+              ),
+              const SizedBox(width: 10),
+              _Pill(
+                label: t.budgets,
+                value: '${state.activeBudgets.length} ${t.active}',
+                icon: Icons.account_balance_wallet_outlined,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-//   Widget _buildFilterSection() {
-//     return BlocBuilder<BudgetBloc, BudgetState>(
-//       builder: (context, state) {
-//         return BudgetFilterChips(
-//           selectedFilter: _selectedFilter.name,
-//           onFilterChanged: (filter) {
-//             setState(() {
-//               _selectedFilter = BudgetFilter.values.firstWhere(
-//                 (e) => e.name == filter,
-//               );
-//             });
-//           },
-//           filterCounts: {
-//             'active': state.activeBudgets?.length ?? 0,
-//             'expired':
-//                 state.budgets
-//                     ?.where((b) => b.isExpired && !b.isArchived)
-//                     .length ??
-//                 0,
-//             'archived': state.archivedBudgets?.length ?? 0,
-//             'all': state.budgets?.length ?? 0,
-//           },
-//         );
-//       },
-//     );
-//   }
+class _Pill extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
 
-//   Widget _buildContent() {
-//     return BlocBuilder<BudgetBloc, BudgetState>(
-//       builder: (context, state) {
-//         if (state.status.toString().contains('loading')) {
-//           return Center(
-//             child: CircularProgressIndicator(
-//               color: Theme.of(context).colorScheme.primary,
-//             ),
-//           );
-//         }
+  const _Pill({required this.label, required this.value, required this.icon});
 
-//         if (state.status.toString().contains('error')) {
-//           return _buildErrorState(state.errorMessage);
-//         }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: Colors.white.withValues(alpha: 0.75)),
+          const SizedBox(width: 7),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: AppTextStyles.overline.copyWith(
+                  color: Colors.white.withValues(alpha: 0.65),
+                ),
+              ),
+              Text(
+                value,
+                style: AppTextStyles.labelSmall.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-//         final budgets = _getFilteredBudgets(state);
+class _BudgetList extends StatelessWidget {
+  final List<BudgetModel> budgets;
+  const _BudgetList({required this.budgets});
 
-//         if (budgets.isEmpty) {
-//           return _buildEmptyState();
-//         }
+  @override
+  Widget build(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: BudgetCard(
+              budget: budgets[index],
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BudgetDetailsFace(budget: budgets[index]),
+                ),
+              ),
+            ),
+          ),
+          childCount: budgets.length,
+        ),
+      ),
+    );
+  }
+}
 
-//         return _buildBudgetList(budgets);
-//       },
-//     );
-//   }
+class _LoadingView extends StatelessWidget {
+  const _LoadingView();
+  @override
+  Widget build(BuildContext context) => Center(
+    child: CircularProgressIndicator(
+      color: Theme.of(context).colorScheme.primary,
+      strokeWidth: 2.5,
+    ),
+  );
+}
 
-//   List _getFilteredBudgets(dynamic state) {
-//     switch (_selectedFilter) {
-//       case BudgetFilter.active:
-//         return state.activeBudgets ?? [];
-//       case BudgetFilter.expired:
-//         return (state.budgets ?? [])
-//             .where((b) => b.isExpired && !b.isArchived)
-//             .toList();
-//       case BudgetFilter.archived:
-//         return state.archivedBudgets ?? [];
-//       case BudgetFilter.all:
-//         return state.budgets ?? [];
-//     }
-//   }
+class _EmptyView extends StatelessWidget {
+  final BudgetFilter filter;
+  const _EmptyView({required this.filter});
 
-//   Widget _buildBudgetList(List budgets) {
-//     return ListView.builder(
-//       padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
-//       itemCount: budgets.length,
-//       itemBuilder: (context, index) {
-//         return BudgetCard(
-//           budget: budgets[index],
-//           onTap: () {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (_) => BudgetDetailsFace(budget: budgets[index]),
-//               ),
-//             );
-//           },
-//         );
-//       },
-//     );
-//   }
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final (icon, title, subtitle) = switch (filter) {
+      BudgetFilter.all => (
+        Icons.wallet,
+        'No budgets yet',
+        'Create your first budget below',
+      ),
+      BudgetFilter.active => (
+        Icons.add_card_rounded,
+        'No active budgets',
+        'Tap "New Budget" to get started',
+      ),
+      BudgetFilter.expired => (
+        Icons.event_busy_rounded,
+        'No expired budgets',
+        'All your budgets are on track!',
+      ),
+      BudgetFilter.archived => (
+        Icons.archive_rounded,
+        'Nothing archived',
+        'Archived budgets will show here',
+      ),
+    };
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 90,
+              height: 90,
+              decoration: BoxDecoration(
+                color: primary.withValues(alpha: 0.08),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 40,
+                color: primary.withValues(alpha: 0.55),
+              ),
+            ),
+            const SizedBox(height: 22),
+            Text(
+              title,
+              style: AppTextStyles.h5.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-//   Widget _buildEmptyState() {
-//     final theme = Theme.of(context);
-//     final colorScheme = theme.colorScheme;
+class _ErrorView extends StatelessWidget {
+  final String? message;
+  const _ErrorView({this.message});
 
-//     String message;
-//     IconData icon;
-
-//     switch (_selectedFilter) {
-//       case BudgetFilter.active:
-//         message = 'No active budgets yet.\nCreate one to start tracking!';
-//         icon = Icons.add_card;
-//         break;
-//       case BudgetFilter.expired:
-//         message = 'No expired budgets';
-//         icon = Icons.event_busy;
-//         break;
-//       case BudgetFilter.archived:
-//         message = 'No archived budgets';
-//         icon = Icons.archive;
-//         break;
-//       case BudgetFilter.all:
-//         message = 'No budgets yet.\nCreate your first budget!';
-//         icon = Icons.account_balance_wallet;
-//         break;
-//     }
-
-//     return Center(
-//       child: Padding(
-//         padding: const EdgeInsets.all(40),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Container(
-//               padding: const EdgeInsets.all(32),
-//               decoration: BoxDecoration(
-//                 color: colorScheme.primary.withValues(alpha: 0.1),
-//                 shape: BoxShape.circle,
-//                 border: Border.all(
-//                   color: colorScheme.primary.withValues(alpha: 0.3),
-//                   width: 2,
-//                 ),
-//               ),
-//               child: Icon(
-//                 icon,
-//                 size: 64,
-//                 color: colorScheme.primary.withValues(alpha: 0.5),
-//               ),
-//             ),
-//             const SizedBox(height: 24),
-//             Text(
-//               message,
-//               textAlign: TextAlign.center,
-//               style: TextStyle(
-//                 fontSize: 16,
-//                 color: colorScheme.onSurface.withValues(alpha: 0.6),
-//                 height: 1.5,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildErrorState(String? errorMessage) {
-//     final theme = Theme.of(context);
-//     final colorScheme = theme.colorScheme;
-
-//     return Center(
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Icon(Icons.error_outline, size: 64, color: const Color(0xFFef4444)),
-//           const SizedBox(height: 16),
-//           Text(
-//             errorMessage ?? 'Something went wrong',
-//             style: TextStyle(
-//               color: colorScheme.onSurface.withValues(alpha: 0.7),
-//             ),
-//           ),
-//           const SizedBox(height: 16),
-//           ElevatedButton(
-//             onPressed: () {
-//               context.read<BudgetBloc>().add(LoadBudgetsEvent());
-//             },
-//             child: const Text('Retry'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.error_outline_rounded,
+              size: 56,
+              color: theme.colorScheme.error,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              message ?? 'Something went wrong',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: theme.colorScheme.error,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            TextButton.icon(
+              onPressed: () =>
+                  context.read<BudgetBloc>().add(LoadBudgetsEvent()),
+              icon: const Icon(Icons.refresh_rounded),
+              label: Text('Retry', style: AppTextStyles.labelLarge),
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -5,8 +5,9 @@ import 'package:expense_mate/core/utils/enum.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_bloc.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_state.dart';
-import 'package:expense_mate/features/budgets/presentation/components/budget_card_summary.dart';
-import 'package:expense_mate/features/budgets/presentation/components/budget_transcation_card.dart';
+import 'package:expense_mate/features/budgets/presentation/components/budget_detail/budget_card_summary.dart';
+import 'package:expense_mate/features/budgets/presentation/components/budget_detail/budget_transcation_card.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,6 +76,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
     final progressPercentage = state.progressPercentage ?? 0.0;
 
     return CustomScrollView(
+      physics: const ClampingScrollPhysics(),
       slivers: [
         _buildSliverAppBar(
           context,
@@ -102,61 +104,80 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
     final isOverBudget = remainingAmount < 0;
 
     return SliverAppBar(
-      leading: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor)
-          .tap(() {
-            Navigator.pop(context);
-          }),
+      // leading: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor)
+      //     .tap(() {
+      //       Navigator.pop(context);
+      //     }),
       pinned: true,
-      expandedHeight: 360,
+      expandedHeight: 280,
+      stretch: false,
+      collapsedHeight: 64,
       elevation: 0,
+      //  automaticallyImplyLeading: false,
       backgroundColor: colorScheme.background,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.refresh),
-          onPressed: () {
-            context.read<BudgetDetailsBloc>().add(
-              RefreshBudgetDetailsEvent(widget.budget.id),
-            );
-          },
-        ),
-        IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-      ],
+
+      // actions: [
+      //   IconButton(
+      //     icon: const Icon(Icons.refresh),
+      //     onPressed: () {
+      //       context.read<BudgetDetailsBloc>().add(
+      //         RefreshBudgetDetailsEvent(widget.budget.id),
+      //       );
+      //     },
+      //   ),
+      //   IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
+      // ],
+      // REPLACE the entire LayoutBuilder content:
+      // In _buildSliverAppBar, wrap the entire LayoutBuilder return:
       flexibleSpace: LayoutBuilder(
         builder: (context, constraints) {
-          final shrinkOffset = 360 - constraints.maxHeight;
-          final collapsed = shrinkOffset > 200;
+          final t = AppLocalizations.of(context)!;
+          final current = constraints.maxHeight;
+          final topPad = MediaQuery.of(context).padding.top;
+          final collapsedHeight = 64.0 + topPad;
+          final progress =
+              ((260 - constraints.maxHeight) / (260 - collapsedHeight)).clamp(
+                0.0,
+                1.0,
+              );
 
-          return FlexibleSpaceBar(
-            titlePadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
-            title: collapsed
-                ? _buildCollapsedTitle(
+          final expandedOpacity = (1.0 - progress).clamp(0.0, 1.0);
+          final collapsedOpacity = ((progress - 0.20) / 0.30).clamp(0.0, 1.0);
+
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              if (expandedOpacity > 0)
+                Opacity(
+                  opacity: expandedOpacity,
+                  child: BlocBuilder<BudgetDetailsBloc, BudgetDetailsState>(
+                    builder: (context, state) {
+                      return BudgetSummaryCard(
+                        budgetName: state.budget?.name ?? t.budgets,
+                        totalAmount:
+                            state.budget?.totalAmount.toDouble() ?? 0.0,
+                        totalSpent: state.budget?.spentAmount.toDouble() ?? 0.0,
+                        remainingAmount:
+                            (state.budget?.totalAmount.toDouble() ?? 0.0) -
+                            (state.budget?.spentAmount.toDouble() ?? 0.0),
+                        progressPercentage:
+                            state.budget?.spentPercentage ?? 0.0,
+                        availableHeight: current,
+                      );
+                    },
+                  ),
+                ),
+              if (collapsedOpacity > 0)
+                Opacity(
+                  opacity: collapsedOpacity,
+                  child: _buildCollapsedTitle(
                     context,
                     remainingAmount,
                     progressPercentage,
                     isOverBudget,
-                  )
-                : null,
-            background: Padding(
-              padding: const EdgeInsets.only(top: 80),
-              child: BlocBuilder<BudgetDetailsBloc, BudgetDetailsState>(
-                builder: (context, state) {
-                  return BudgetSummaryCard(
-                    budgetName: state.budget?.name ?? 'Budget',
-                    totalAmount: state.budget?.totalAmount.toDouble() ?? 0.0,
-                    totalSpent: state.budget?.spentAmount.toDouble() ?? 0.0,
-
-                    remainingAmount:
-                        (state.budget?.totalAmount.toDouble() ?? 0.0) -
-                        (state.budget?.spentAmount.toDouble() ?? 0.0),
-
-                    progressPercentage: state.budget?.spentPercentage ?? 0.0,
-                  );
-                },
-              ),
-            ),
+                  ),
+                ),
+            ],
           );
         },
       ),
@@ -170,41 +191,50 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
     bool isOverBudget,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Remaining: \$${_formatAmount(remainingAmount.abs())}',
-          style: TextStyle(
-            fontSize: 16,
-            color: isOverBudget
-                ? const Color(0xFFef4444)
-                : colorScheme.onBackground,
-            fontWeight: FontWeight.bold,
-          ),
-        ).alignCenter(),
-        const SizedBox(height: 4),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(4),
-          child: LinearProgressIndicator(
-            value: progressPercentage.clamp(0.0, 1.0),
-            minHeight: 4,
-            backgroundColor: colorScheme.onSurface.withValues(alpha: 0.2),
-            valueColor: AlwaysStoppedAnimation<Color>(
-              isOverBudget
-                  ? const Color(0xFFef4444)
-                  : progressPercentage > 0.8
-                  ? const Color(0xFFf59e0b)
-                  : const Color(0xFF10b981),
+    final topPad = MediaQuery.of(context).padding.top;
+    final collapsedHeight = 64.0 + topPad; // ← exact collapsed bar height
+    final t = AppLocalizations.of(context)!;
+    return SizedBox(
+      // ← constrain to collapsed height
+      height: collapsedHeight,
+      child: Container(
+        color: Theme.of(context).primaryColor,
+        padding: EdgeInsets.only(top: topPad),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '${t.remaining}: \$${_formatAmount(remainingAmount.abs())}',
+              style: TextStyle(
+                fontSize: 16,
+                color: isOverBudget ? const Color(0xFFef4444) : Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 6),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progressPercentage.clamp(0.0, 1.0),
+                  minHeight: 6,
+                  backgroundColor: colorScheme.onSurface.withValues(alpha: 0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    isOverBudget
+                        ? const Color(0xFFef4444)
+                        : progressPercentage > 0.8
+                        ? const Color(0xFFf59e0b)
+                        : const Color(0xFF10b981),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
-
   // Widget _buildTransactionFilters(BuildContext context, dynamic state) {
   //   return SliverToBoxAdapter(
   //     child: BudgetFilterChips(
@@ -269,7 +299,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
   Widget _buildEmptyTransactions(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
+    final t = AppLocalizations.of(context)!;
     return SliverFillRemaining(
       child: Center(
         child: Padding(
@@ -295,7 +325,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
               ),
               const SizedBox(height: 24),
               Text(
-                'No transactions yet',
+                t.noTransactionsYet,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -304,7 +334,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Tap + to add your first transaction',
+                t.tapToAddTransaction,
                 style: TextStyle(
                   fontSize: 14,
                   color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -319,7 +349,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
 
   Widget _buildErrorView(BuildContext context, dynamic state) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final t = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -327,7 +357,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
           Icon(Icons.error_outline, size: 64, color: const Color(0xFFef4444)),
           const SizedBox(height: 16),
           Text(
-            state.errorMessage ?? 'An error occurred',
+            state.errorMessage ?? t.anErrorOccurred,
             style: TextStyle(
               color: colorScheme.onSurface.withValues(alpha: 0.7),
             ),
@@ -348,7 +378,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
 
   Widget _buildFAB(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final t = AppLocalizations.of(context)!;
     return FloatingActionButton.extended(
       elevation: 4,
       backgroundColor: colorScheme.primary,
@@ -370,7 +400,7 @@ class _BudgetDetailsFaceState extends State<BudgetDetailsFace> {
       },
       icon: Icon(Icons.add, color: colorScheme.onPrimary),
       label: Text(
-        'Add Transaction',
+        t.addTransaction,
         style: TextStyle(
           color: colorScheme.onPrimary,
           fontWeight: FontWeight.w600,

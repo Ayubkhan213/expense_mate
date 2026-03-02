@@ -1,19 +1,14 @@
-import 'package:expense_mate/core/domain/repository/debt_repository.dart';
-import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
+import 'package:expense_mate/features/home/domain/repository/home_repository.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_event.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final TransactionRepository _transactionRepo;
-  final DebtRepository _debtRepo;
+  final HomeRepository _homeRepo;
 
-  HomeBloc({
-    required TransactionRepository transactionRepo,
-    required DebtRepository debtRepo,
-  }) : _transactionRepo = transactionRepo,
-       _debtRepo = debtRepo,
-       super(const HomeState()) {
+  HomeBloc({required HomeRepository homeRepo})
+    : _homeRepo = homeRepo,
+      super(const HomeState()) {
     on<LoadHomeData>(_onLoadHomeData);
     on<TabChanged>(_onTabChanged);
     on<RefreshHomeData>(_onRefreshHomeData);
@@ -32,20 +27,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final endDate = DateTime(now.year, now.month + 1, 0);
 
       // Load data
-      final transactions = _transactionRepo.getPureTransactions(limit: 10);
-      final debts = _debtRepo.getActiveDebts();
+      final transactions = _homeRepo.getPureTransactions(limit: 10);
+      final debts = _homeRepo.getActiveDebts();
 
       // Calculate stats
-      final totalIncome = _transactionRepo.getTotalIncome(
+      final totalIncome = _homeRepo.getTotalIncome(
         startDate: startDate,
         endDate: endDate,
       );
-      final totalExpense = _transactionRepo.getTotalExpense(
+      final totalExpense = _homeRepo.getTotalExpense(
         startDate: startDate,
         endDate: endDate,
       );
-      final totalDebtOwed = _debtRepo.getTotalBorrowed();
-      final totalDebtLent = _debtRepo.getTotalLent();
+      final totalDebtOwed = _homeRepo.getTotalBorrowed();
+      final totalDebtLent = _homeRepo.getTotalLent();
       final totalBalance =
           totalIncome - totalExpense - totalDebtOwed + totalDebtLent;
 

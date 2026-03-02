@@ -1,4 +1,5 @@
 import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
@@ -13,6 +14,7 @@ class PaymentMethodSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Wrap(
@@ -21,28 +23,28 @@ class PaymentMethodSelector extends StatelessWidget {
         children: [
           PaymentMethodChip(
             icon: Icons.money,
-            label: 'Cash',
+            label: t.cash,
             selected: selectedMethod == PaymentMethod.cash,
             value: PaymentMethod.cash,
             onTap: onMethodChanged,
           ),
           PaymentMethodChip(
             icon: Icons.credit_card,
-            label: 'Card',
+            label: t.card,
             selected: selectedMethod == PaymentMethod.card,
             value: PaymentMethod.card,
             onTap: onMethodChanged,
           ),
           PaymentMethodChip(
             icon: Icons.account_balance,
-            label: 'Bank',
+            label: t.bank,
             selected: selectedMethod == PaymentMethod.bank,
             value: PaymentMethod.bank,
             onTap: onMethodChanged,
           ),
           PaymentMethodChip(
             icon: Icons.wallet,
-            label: 'Wallet',
+            label: t.wallet,
             selected: selectedMethod == PaymentMethod.wallet,
             value: PaymentMethod.wallet,
             onTap: onMethodChanged,

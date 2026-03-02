@@ -20,3 +20,12 @@ class DeleteRecurring extends RecurringListEvent {
 }
 
 class ProcessDueRecurring extends RecurringListEvent {}
+
+class RecurringSearchOpened extends RecurringListEvent {}
+
+class RecurringSearchClosed extends RecurringListEvent {}
+
+class RecurringSearchChanged extends RecurringListEvent {
+  final String query;
+  RecurringSearchChanged(this.query);
+}

@@ -13,7 +13,7 @@ class RecurringFrequencyDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<AddEditRecurringBloc>();
-
+    final tr = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class RecurringFrequencyDropdown extends StatelessWidget {
           isExpanded: true,
           isDense: true,
           icon: const Icon(Icons.expand_more, size: 18),
-          items: _buildItems(theme),
+          items: _buildItems(theme, tr),
           onChanged: (val) {
             if (val != null) bloc.add(FrequencyChanged(val));
           },
@@ -37,7 +37,10 @@ class RecurringFrequencyDropdown extends StatelessWidget {
     );
   }
 
-  List<DropdownMenuItem<RecurrenceFrequency>> _buildItems(ThemeData theme) {
+  List<DropdownMenuItem<RecurrenceFrequency>> _buildItems(
+    ThemeData theme,
+    AppLocalizations tr,
+  ) {
     return [
       RecurrenceFrequency.daily,
       RecurrenceFrequency.weekly,
@@ -53,7 +56,7 @@ class RecurringFrequencyDropdown extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                _getFrequencyLabel(freq),
+                _getFrequencyLabel(freq, tr),
                 style: theme.textTheme.bodySmall,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -64,20 +67,20 @@ class RecurringFrequencyDropdown extends StatelessWidget {
     }).toList();
   }
 
-  String _getFrequencyLabel(RecurrenceFrequency freq) {
+  String _getFrequencyLabel(RecurrenceFrequency freq, AppLocalizations t) {
     switch (freq) {
       case RecurrenceFrequency.daily:
-        return 'Daily';
+        return t.daily;
       case RecurrenceFrequency.weekly:
-        return 'Weekly';
+        return t.weekly;
       case RecurrenceFrequency.biweekly:
-        return 'Bi-weekly';
+        return t.biweekly;
       case RecurrenceFrequency.monthly:
-        return 'Monthly';
+        return t.monthly;
       case RecurrenceFrequency.quarterly:
-        return 'Quarterly';
+        return t.quarterly;
       case RecurrenceFrequency.yearly:
-        return 'Yearly';
+        return t.yearly;
     }
   }
 }

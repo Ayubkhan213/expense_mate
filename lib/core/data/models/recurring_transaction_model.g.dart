@@ -28,7 +28,7 @@ class RecurringTransactionModelAdapter
       startDate: fields[7] as DateTime,
       endDate: fields[8] as DateTime?,
       nextOccurrence: fields[9] as DateTime,
-      generatedTransactionIds: (fields[10] as List).cast<String>(),
+      generatedTransactionIds: (fields[10] as List?)?.cast<String>(),
       isActive: fields[11] as bool,
       dayOfMonth: fields[12] as int,
       dayOfWeek: fields[13] as int?,

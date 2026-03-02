@@ -299,6 +299,7 @@
 //     return NumberFormat('#,##0.00').format(amount.abs());
 //   }
 // }
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -327,6 +328,7 @@ class FinancialSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -389,7 +391,7 @@ class FinancialSummaryCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Total Balance',
+                  t.totalBalance,
                   style: TextStyle(
                     color: onCardSubtle,
                     fontSize: 13,
@@ -428,7 +430,7 @@ class FinancialSummaryCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _StatItem(
-                    label: 'Income',
+                    label: t.income,
                     amount: totalIncome,
                     icon: Icons.arrow_downward_rounded,
                     accentColor: incomeColor,
@@ -440,7 +442,7 @@ class FinancialSummaryCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatItem(
-                    label: 'Expense',
+                    label: t.expense,
                     amount: totalExpense,
                     icon: Icons.arrow_upward_rounded,
                     accentColor: expenseColor,
@@ -459,7 +461,7 @@ class FinancialSummaryCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _StatItem(
-                    label: 'You Owe',
+                    label: t.youOwe,
                     amount: totalDebtOwed,
                     icon: Icons.trending_down_rounded,
                     accentColor: expenseColor,
@@ -471,7 +473,7 @@ class FinancialSummaryCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatItem(
-                    label: "You're Owed",
+                    label: t.youreOwed,
                     amount: totalDebtLent,
                     icon: Icons.trending_up_rounded,
                     accentColor: incomeColor,
@@ -569,7 +571,7 @@ class _StatItem extends StatelessWidget {
     final Color labelTextColor = onCard.withValues(alpha: 0.70);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: boxBg,
         borderRadius: BorderRadius.circular(14),
@@ -592,6 +594,7 @@ class _StatItem extends StatelessWidget {
                 ),
                 child: Icon(icon, color: Colors.white, size: 13),
               ),
+
               const SizedBox(width: 7),
               Expanded(
                 child: Text(

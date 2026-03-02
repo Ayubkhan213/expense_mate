@@ -1,4 +1,5 @@
 import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:expense_mate/l10n/app_localizations.dart' show AppLocalizations;
 import 'package:flutter/material.dart';
 
 class RecurringDetailStats extends StatelessWidget {
@@ -16,7 +17,7 @@ class RecurringDetailStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -24,7 +25,7 @@ class RecurringDetailStats extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Statistics',
+              t.statistics,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -34,7 +35,7 @@ class RecurringDetailStats extends StatelessWidget {
               children: [
                 Expanded(
                   child: _StatCard(
-                    label: 'Transactions',
+                    label: t.transactions,
                     value: transactionCount.toString(),
                     icon: Icons.history,
                     color: Colors.blue,
@@ -43,7 +44,7 @@ class RecurringDetailStats extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _StatCard(
-                    label: 'Total Amount',
+                    label: t.totalAmount,
                     value: totalSpent.toStringAsFixed(2),
                     icon: Icons.attach_money,
                     color: isIncome ? Colors.green : Colors.red,

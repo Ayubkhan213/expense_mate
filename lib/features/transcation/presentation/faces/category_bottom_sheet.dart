@@ -206,6 +206,7 @@ class _CategoryBottomSheetContent extends StatelessWidget {
     CategoryBottomSheetState state,
     CategoryBottomSheetBloc bloc,
   ) {
+    final t = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
@@ -224,7 +225,7 @@ class _CategoryBottomSheetContent extends StatelessWidget {
             ),
             CalculatorButton(
               text: state.selectedDateTime == null
-                  ? 'Today'
+                  ? t.today
                   : DateFormat('d/M/yy').format(state.selectedDateTime),
               onTap: () => bloc.add(DatePressed(context)),
             ),

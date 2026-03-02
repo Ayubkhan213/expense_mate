@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -11,7 +12,7 @@ class MonthlyTrendChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     if (monthlyTrends.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -25,14 +26,14 @@ class MonthlyTrendChart extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Monthly Trends',
+              t.monthlyTrends,
               style: AppTextStyles.h4.copyWith(
                 color: theme.textTheme.titleLarge?.color,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Income vs Expense over time',
+              t.incomeVsExpense,
               style: AppTextStyles.caption.copyWith(
                 color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               ),
@@ -50,7 +51,7 @@ class MonthlyTrendChart extends StatelessWidget {
                     touchTooltipData: BarTouchTooltipData(
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         final month = monthlyTrends[groupIndex].month;
-                        final label = rodIndex == 0 ? 'Income' : 'Expense';
+                        final label = rodIndex == 0 ? t.income : t.expense;
                         return BarTooltipItem(
                           '$month\n$label\n\$${rod.toY.toStringAsFixed(0)}',
                           AppTextStyles.labelSmall.copyWith(
@@ -123,9 +124,9 @@ class MonthlyTrendChart extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildLegendItem(Colors.green, 'Income'),
+                _buildLegendItem(Colors.green, t.income),
                 const SizedBox(width: 24),
-                _buildLegendItem(Colors.red, 'Expense'),
+                _buildLegendItem(Colors.red, t.expense),
               ],
             ),
           ],

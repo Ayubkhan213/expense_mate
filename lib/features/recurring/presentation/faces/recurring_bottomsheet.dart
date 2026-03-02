@@ -1,9 +1,7 @@
-import 'package:expense_mate/core/data/data_sources/local/recurring_local_data_source.dart';
 import 'package:expense_mate/core/data/models/category_hive_model.dart';
 import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
 import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart';
 import 'package:expense_mate/features/recurring/data/repositort_imp/recurring_repo_impl.dart';
-import 'package:expense_mate/features/recurring/domain/repository.dart';
 import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_bloc.dart';
 import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
 import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
@@ -13,10 +11,10 @@ import 'package:expense_mate/features/recurring/presentation/component/recurring
 import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_frequency_dropdown.dart';
 import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_note_field.dart';
 import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_payment_dropdown.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// BLoC-based Recurring Transaction Bottom Sheet
 class RecurringTransactionBottomSheet {
   static void show(
     BuildContext context,
@@ -55,7 +53,7 @@ class _RecurringBottomSheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
+    final t = AppLocalizations.of(context)!;
     return BlocConsumer<AddEditRecurringBloc, AddEditRecurringState>(
       listener: _handleStateChanges,
       builder: (context, state) {
@@ -83,7 +81,7 @@ class _RecurringBottomSheetContent extends StatelessWidget {
                     children: [
                       RecurringCompactDisplay(category: category, state: state),
                       const SizedBox(height: 12),
-                      _buildSettingsRow(state),
+                      _buildSettingsRow(state, t),
                       const SizedBox(height: 8),
                       RecurringDateRow(state: state),
                       const SizedBox(height: 8),
@@ -114,7 +112,7 @@ class _RecurringBottomSheetContent extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsRow(AddEditRecurringState state) {
+  Widget _buildSettingsRow(AddEditRecurringState state, AppLocalizations t) {
     return Row(
       children: [
         Expanded(child: RecurringFrequencyDropdown(frequency: state.frequency)),

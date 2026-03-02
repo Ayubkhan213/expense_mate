@@ -18,10 +18,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analytics => 'Analytics';
 
   @override
-  String get records => 'Records';
+  String get records => 'records';
 
   @override
-  String get transactions => 'Transactions';
+  String get transactions => 'transactions';
 
   @override
   String get budgets => 'Budgets';
@@ -45,10 +45,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lent => 'Lent';
 
   @override
-  String get borrowedFrom => 'Borrowed From';
+  String get borrowedFrom => 'Borrowed from';
 
   @override
-  String get lentTo => 'Lent To';
+  String get lentTo => 'Lent to';
 
   @override
   String get personName => 'Person Name';
@@ -546,7 +546,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUp => 'Sign Up';
 
   @override
-  String get dontHaveAccount => 'Don\'t have an account?';
+  String get dontHaveAccount => 'Don\"t have an account?';
 
   @override
   String get onboardingTitle1 => 'Track Your Expenses';
@@ -586,4 +586,823 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selectExpenseCategory => 'Select Expense Category';
+
+  @override
+  String get errorPrefix => 'Error';
+
+  @override
+  String get balancePrefix => 'Balance';
+
+  @override
+  String get recentTransactions => 'Recent Transactions';
+
+  @override
+  String get viewAll => 'View All →';
+
+  @override
+  String get activeDebts => 'Active Debts';
+
+  @override
+  String get addDebt => 'Add Debt';
+
+  @override
+  String get totalBalance => 'Total Balance';
+
+  @override
+  String get youOwe => 'You Owe';
+
+  @override
+  String get youreOwed => 'You\"re Owed';
+
+  @override
+  String get debtTransactions => 'Debt Transactions';
+
+  @override
+  String get allTransactions => 'All Transactions';
+
+  @override
+  String get searchByPerson => 'Search by person or category…';
+
+  @override
+  String get searchByCategory => 'Search by category…';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get dateRange => 'Date Range';
+
+  @override
+  String get clearAll => 'Clear all';
+
+  @override
+  String get noDebtTransactions => 'No debt transactions found';
+
+  @override
+  String get noTransactions => 'No transactions found';
+
+  @override
+  String get tryAdjustingFilters => 'Try adjusting your filters';
+
+  @override
+  String get debtTransaction => 'Debt Transaction';
+
+  @override
+  String get settled => 'Settled';
+
+  @override
+  String get daysOverdue => 'days overdue';
+
+  @override
+  String get transaction => 'Transaction';
+
+  @override
+  String get noActiveDebts => 'No active debts';
+
+  @override
+  String get debtManagementStarts => 'Your debt management starts here';
+
+  @override
+  String get noTransactionsYet => 'No transactions yet';
+
+  @override
+  String get startTracking => 'Start tracking your expenses';
+
+  @override
+  String get paymentHistory => 'Payment History';
+
+  @override
+  String get payments => 'payments';
+
+  @override
+  String get addPayment => 'Add Payment';
+
+  @override
+  String get fullyPaidOff => 'Fully paid off 🎉';
+
+  @override
+  String get repaid => '% repaid';
+
+  @override
+  String get cleared => 'Cleared';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get totalDebt => 'Total Debt';
+
+  @override
+  String get paidOff => 'Paid off!';
+
+  @override
+  String get remainingAmount => 'remaining';
+
+  @override
+  String get percentPaid => '% Paid';
+
+  @override
+  String get due => 'Due:';
+
+  @override
+  String get addPaymentTitle => 'Add Payment';
+
+  @override
+  String get enterPaymentAmount => 'Enter payment amount';
+
+  @override
+  String get pleaseEnterAmount => 'Please enter amount';
+
+  @override
+  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+
+  @override
+  String get amountExceedsDebt => 'Amount exceeds remaining debt';
+
+  @override
+  String get paymentDate => 'Payment Date';
+
+  @override
+  String get noteOptional => 'Note (Optional)';
+
+  @override
+  String get addANote => 'Add a note';
+
+  @override
+  String get savePayment => 'Save Payment';
+
+  @override
+  String get deletePayment => 'Delete Payment';
+
+  @override
+  String get deletePaymentConfirm => 'Are you sure you want to delete this payment? This action cannot be undone.';
+
+  @override
+  String get deleteTooltip => 'Delete payment';
+
+  @override
+  String get noPaymentsYet => 'No Payments Yet';
+
+  @override
+  String get addFirstPayment => 'Tap the + button below to add your first payment';
+
+  @override
+  String get trackRepayments => 'Track your debt repayments easily';
+
+  @override
+  String get myBudgets => 'My Budgets';
+
+  @override
+  String get searchBudgets => 'Search budgets…';
+
+  @override
+  String get clear => 'Clear';
+
+  @override
+  String get expired => 'Expired';
+
+  @override
+  String get archived => 'Archived';
+
+  @override
+  String get totalRemaining => 'Total Remaining';
+
+  @override
+  String get overBudget => 'Over Budget';
+
+  @override
+  String get used => '% used';
+
+  @override
+  String get spent => 'spent';
+
+  @override
+  String get noBudgetsYet => 'No budgets yet';
+
+  @override
+  String get createFirstBudget => 'Create your first budget below';
+
+  @override
+  String get noActiveBudgets => 'No active budgets';
+
+  @override
+  String get tapNewBudget => 'Tap \"New Budget\" to get started';
+
+  @override
+  String get noExpiredBudgets => 'No expired budgets';
+
+  @override
+  String get allBudgetsOnTrack => 'All your budgets are on track!';
+
+  @override
+  String get nothingArchived => 'Nothing archived';
+
+  @override
+  String get archivedWillShowHere => 'Archived budgets will show here';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get overBy => 'Over by';
+
+  @override
+  String get daysLeft => 'days left';
+
+  @override
+  String get expiredDaysAgo => 'days ago';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get newBudget => 'New Budget';
+
+  @override
+  String get monthlyBudget => 'Monthly Budget';
+
+  @override
+  String get projectBudget => 'Project Budget';
+
+  @override
+  String get customBudget => 'Custom Budget';
+
+  @override
+  String get budgetName => 'Budget Name';
+
+  @override
+  String get budgetNameHint => 'e.g., Monthly Groceries';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get end => 'End';
+
+  @override
+  String get days => 'days';
+
+  @override
+  String get color => 'Color';
+
+  @override
+  String get icon => 'Icon';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get dates => 'Dates';
+
+  @override
+  String get style => 'Style';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get quickSelect => 'Quick Select';
+
+  @override
+  String get budgetType => 'Budget Type';
+
+  @override
+  String get monthly => 'Monthly';
+
+  @override
+  String get project => 'Project';
+
+  @override
+  String get custom => 'Custom';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get pleaseEnterBudgetName => 'Please enter a budget name';
+
+  @override
+  String get totalBudget => 'Total Budget';
+
+  @override
+  String get overBudgetLabel => 'Over Budget!';
+
+  @override
+  String get nearLimit => 'Near Limit';
+
+  @override
+  String get percentUsed => '% Used';
+
+  @override
+  String get remainingCollapsed => 'Remaining:';
+
+  @override
+  String get tapToAddTransaction => 'Tap + to add your first transaction';
+
+  @override
+  String get addTransaction => 'Add Transaction';
+
+  @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
+  String get more => 'more';
+
+  @override
+  String get ofa => 'of';
+
+  @override
+  String get wedding => 'Wedding';
+
+  @override
+  String get homeRenovation => 'Home Renovation';
+
+  @override
+  String get carPurchase => 'Car Purchase';
+
+  @override
+  String get customBudgetLabel => 'Custom Budget';
+
+  @override
+  String get noRecurringTransactions => 'No recurring transactions';
+
+  @override
+  String get setUpAutomatic => 'Set up automatic transactions for\nregular income and expenses';
+
+  @override
+  String get addFirstRecurring => 'Add Your First Recurring';
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get tryDifferentFilter => 'Try a different search or filter';
+
+  @override
+  String get monthlyNet => 'Monthly Net';
+
+  @override
+  String get dueSoon => 'Due Soon';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get resume => 'Resume';
+
+  @override
+  String get deleteRecurringTitle => 'Delete Recurring Transaction';
+
+  @override
+  String get dueNow => 'Due Now';
+
+  @override
+  String get daily => 'Daily';
+
+  @override
+  String get weekly => 'Weekly';
+
+  @override
+  String get biweekly => 'Bi-weekly';
+
+  @override
+  String get quarterly => 'Quarterly';
+
+  @override
+  String get yearly => 'Yearly';
+
+  @override
+  String get recurringIncome => 'Recurring Income';
+
+  @override
+  String get recurringExpense => 'Recurring Expense';
+
+  @override
+  String get noEnd => 'No End';
+
+  @override
+  String get addNoteOptional => 'Add note (optional)';
+
+  @override
+  String get recurringCreated => 'Recurring transaction created!';
+
+  @override
+  String get recurringUpdated => 'Recurring transaction updated!';
+
+  @override
+  String get ledger => 'Ledger';
+
+  @override
+  String get insights => 'Insights';
+
+  @override
+  String get paused => 'Paused';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get frequency => 'Frequency';
+
+  @override
+  String get startDate => 'Start Date';
+
+  @override
+  String get endDate => 'End Date';
+
+  @override
+  String get never => 'Never';
+
+  @override
+  String get nextOccurrence => 'Next Occurrence';
+
+  @override
+  String get dayOfMonth => 'Day of Month';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get monthlyEstimate => 'Monthly Estimate';
+
+  @override
+  String get perMonth => 'per month';
+
+  @override
+  String get statistics => 'Statistics';
+
+  @override
+  String get totalAmount => 'Total Amount';
+
+  @override
+  String get noTransactionsGenerated => 'No transactions generated yet';
+
+  @override
+  String get generatedTransactions => 'Generated Transactions';
+
+  @override
+  String get transactionsThisPeriod => 'transactions this period';
+
+  @override
+  String get netBalance => 'Net Balance';
+
+  @override
+  String get surplus => 'Surplus';
+
+  @override
+  String get deficit => 'Deficit';
+
+  @override
+  String get week => 'Week';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get threeMonths => '3 Months';
+
+  @override
+  String get sixMonths => '6 Months';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get allTime => 'All Time';
+
+  @override
+  String get financialOverview => 'Financial Overview';
+
+  @override
+  String get budgetOverview => 'Budget Overview';
+
+  @override
+  String get overallUtilization => 'Overall Utilization';
+
+  @override
+  String get totalBudgets => 'Total Budgets';
+
+  @override
+  String get expenseByCategory => 'Expense by Category';
+
+  @override
+  String get noExpenseData => 'No expense data available';
+
+  @override
+  String get monthlyTrends => 'Monthly Trends';
+
+  @override
+  String get incomeVsExpense => 'Income vs Expense over time';
+
+  @override
+  String get debtOverview => 'Debt Overview';
+
+  @override
+  String get activeDebt => 'active';
+
+  @override
+  String get paymentMethods => 'Payment Methods';
+
+  @override
+  String get paymentDistribution => 'Distribution of payment methods';
+
+  @override
+  String get topExpenses => 'Top Expenses';
+
+  @override
+  String get top => 'Top';
+
+  @override
+  String get avgDaily => 'Avg Daily';
+
+  @override
+  String get avgTransaction => 'Avg Transaction';
+
+  @override
+  String get savingsRate => 'Savings Rate';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get sectionAppearance => 'APPEARANCE';
+
+  @override
+  String get sectionAccount => 'ACCOUNT';
+
+  @override
+  String get sectionData => 'DATA';
+
+  @override
+  String get sectionSupport => 'SUPPORT';
+
+  @override
+  String get menuTheme => 'Theme';
+
+  @override
+  String get menuThemeSubtitle => 'Customize app appearance';
+
+  @override
+  String get menuLanguage => 'Language';
+
+  @override
+  String get menuLanguageSubtitle => 'Change app language';
+
+  @override
+  String get menuDarkMode => 'Dark Mode';
+
+  @override
+  String get menuDarkModeEnabled => 'Enabled';
+
+  @override
+  String get menuDarkModeDisabled => 'Disabled';
+
+  @override
+  String get menuEditProfile => 'Edit Profile';
+
+  @override
+  String get menuEditProfileSubtitle => 'Update your information';
+
+  @override
+  String get menuPrivacy => 'Privacy & Security';
+
+  @override
+  String get menuPrivacySubtitle => 'Manage your privacy settings';
+
+  @override
+  String get menuNotifications => 'Notifications';
+
+  @override
+  String get menuNotificationsSubtitle => 'Configure notification preferences';
+
+  @override
+  String get menuDailyNotification => 'Daily Notification';
+
+  @override
+  String get menuDailyNotificationSubtitle => 'Set daily reminder';
+
+  @override
+  String get menuBackup => 'Backup & Restore';
+
+  @override
+  String get menuBackupSubtitle => 'Backup your data';
+
+  @override
+  String get menuExport => 'Export Data';
+
+  @override
+  String get menuExportSubtitle => 'Download your data';
+
+  @override
+  String get menuHelp => 'Help & Support';
+
+  @override
+  String get menuHelpSubtitle => 'Get help with the app';
+
+  @override
+  String get menuAbout => 'About';
+
+  @override
+  String get menuAboutVersion => 'Version';
+
+  @override
+  String get btnLogout => 'Log Out';
+
+  @override
+  String get dialogLogoutTitle => 'Logout';
+
+  @override
+  String get dialogLogoutMessage => 'Are you sure you want to logout?';
+
+  @override
+  String get dialogEditNameTitle => 'Edit Name';
+
+  @override
+  String get dialogEditNameLabel => 'Name';
+
+  @override
+  String get btnCancel => 'Cancel';
+
+  @override
+  String get btnSave => 'Save';
+
+  @override
+  String get btnLogoutConfirm => 'Logout';
+
+  @override
+  String get imagePickerTakePhoto => 'Take Photo';
+
+  @override
+  String get imagePickerGallery => 'Choose from Gallery';
+
+  @override
+  String get imagePickerRemove => 'Remove Photo';
+
+  @override
+  String get aboutAppName => 'Expense Mate';
+
+  @override
+  String get aboutAppDescription => 'A professional expense tracking application';
+
+  @override
+  String get dailyNotificationTitle => 'Daily Notification';
+
+  @override
+  String get notificationActive => 'Notification Active';
+
+  @override
+  String get noNotificationSet => 'No Notification Set';
+
+  @override
+  String get notificationDailyAt => 'Daily at';
+
+  @override
+  String get notificationTime => 'Notification Time';
+
+  @override
+  String get notificationTitleLabel => 'Notification Title';
+
+  @override
+  String get notificationTitleHint => 'Enter notification title';
+
+  @override
+  String get notificationMessageLabel => 'Notification Message';
+
+  @override
+  String get notificationMessageHint => 'Enter notification message';
+
+  @override
+  String get notificationImageOptional => 'Notification Image (Optional)';
+
+  @override
+  String get notificationAddImage => 'Add Image';
+
+  @override
+  String get notificationChangeImage => 'Change Image';
+
+  @override
+  String get notificationRemoveImage => 'Remove';
+
+  @override
+  String get btnSendTest => 'Send Test Notification';
+
+  @override
+  String get btnAddToSchedule => 'Add to Schedule List';
+
+  @override
+  String get btnSaveAllSchedules => 'Save All Schedules';
+
+  @override
+  String get scheduledNotifications => 'Scheduled Notifications';
+
+  @override
+  String get cancelNotificationTooltip => 'Cancel Notification';
+
+  @override
+  String get infoHowItWorks => 'How it works';
+
+  @override
+  String get infoLine1 => 'Notification will repeat daily at the selected time';
+
+  @override
+  String get infoLine2 => 'Works even when the app is closed';
+
+  @override
+  String get infoLine3 => 'Images are displayed in expanded notification';
+
+  @override
+  String get infoLine4 => 'Large images are automatically resized';
+
+  @override
+  String get templateTitle => 'Choose Theme Template';
+
+  @override
+  String get themeLabel => 'Theme';
+
+  @override
+  String get themeApplied => 'applied';
+
+  @override
+  String get darkLightSwitch => 'Dark / Light';
+
+  @override
+  String get languageTitle => 'Choose Language';
+
+  @override
+  String get langEnglish => 'English';
+
+  @override
+  String get langArabic => 'Arabic';
+
+  @override
+  String get langUrdu => 'Urdu';
+
+  @override
+  String get langFrench => 'French';
+
+  @override
+  String get langSelected => 'selected';
+
+  @override
+  String get analyticsTitle => 'Analytics';
+
+  @override
+  String get totalTransactions => 'Transactions';
+
+  @override
+  String get paymentMethodDistribution => 'Distribution of payment methods';
+
+  @override
+  String get periodWeek => 'Week';
+
+  @override
+  String get periodMonth => 'Month';
+
+  @override
+  String get period3Months => '3 Months';
+
+  @override
+  String get period6Months => '6 Months';
+
+  @override
+  String get periodYear => 'Year';
+
+  @override
+  String get periodAll => 'All Time';
+
+  @override
+  String get recurringTitle => 'Recurring';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterActive => 'Active';
+
+  @override
+  String get filterExpired => 'Expired';
+
+  @override
+  String get filterArchived => 'Archived';
+
+  @override
+  String get searchHint => 'Search…';
+
+  @override
+  String get results => 'results';
+
+  @override
+  String get result => 'result';
+
+  @override
+  String get deleteConfirm => 'Are you sure you want to delete';
+
+  @override
+  String get add => 'Add';
 }

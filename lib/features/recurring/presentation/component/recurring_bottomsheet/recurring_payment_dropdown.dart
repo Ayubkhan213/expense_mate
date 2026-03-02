@@ -13,7 +13,7 @@ class RecurringPaymentDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<AddEditRecurringBloc>();
-
+    final t = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -28,7 +28,7 @@ class RecurringPaymentDropdown extends StatelessWidget {
           isExpanded: true,
           isDense: true,
           icon: const Icon(Icons.expand_more, size: 18),
-          items: _buildItems(theme),
+          items: _buildItems(theme, t),
           onChanged: (val) {
             if (val != null) bloc.add(PaymentMethodChanged(val));
           },
@@ -37,7 +37,10 @@ class RecurringPaymentDropdown extends StatelessWidget {
     );
   }
 
-  List<DropdownMenuItem<PaymentMethod>> _buildItems(ThemeData theme) {
+  List<DropdownMenuItem<PaymentMethod>> _buildItems(
+    ThemeData theme,
+    AppLocalizations t,
+  ) {
     return PaymentMethod.values.map((method) {
       return DropdownMenuItem(
         value: method,
@@ -47,7 +50,7 @@ class RecurringPaymentDropdown extends StatelessWidget {
             const SizedBox(width: 6),
             Expanded(
               child: Text(
-                _getPaymentLabel(method),
+                _getPaymentLabel(method, t),
                 style: theme.textTheme.bodySmall,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -58,16 +61,16 @@ class RecurringPaymentDropdown extends StatelessWidget {
     }).toList();
   }
 
-  String _getPaymentLabel(PaymentMethod method) {
+  String _getPaymentLabel(PaymentMethod method, AppLocalizations t) {
     switch (method) {
       case PaymentMethod.cash:
-        return 'Cash';
+        return t.cash;
       case PaymentMethod.card:
-        return 'Card';
+        return t.card;
       case PaymentMethod.bank:
-        return 'Bank';
+        return t.bank;
       case PaymentMethod.wallet:
-        return 'Wallet';
+        return t.wallet;
       default:
         return 'Other';
     }

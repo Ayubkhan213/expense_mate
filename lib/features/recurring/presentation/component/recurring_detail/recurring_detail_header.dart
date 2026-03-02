@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/enums.dart';
 import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RecurringDetailHeader extends StatelessWidget {
@@ -11,7 +12,7 @@ class RecurringDetailHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isIncome = transaction.type == TransactionType.income;
-
+    final t = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -29,6 +30,7 @@ class RecurringDetailHeader extends StatelessWidget {
                 size: 48,
               ),
             ),
+
             const SizedBox(height: 16),
             Text(
               transaction.categoryKey.toUpperCase(),
@@ -55,7 +57,7 @@ class RecurringDetailHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                transaction.isActive ? 'Active' : 'Inactive',
+                transaction.isActive ? t.active : t.inactive,
                 style: TextStyle(
                   color: transaction.isActive ? Colors.green : Colors.grey,
                   fontWeight: FontWeight.bold,

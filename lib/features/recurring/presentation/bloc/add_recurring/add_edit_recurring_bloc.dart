@@ -249,7 +249,7 @@ class AddEditRecurringBloc
       }
 
       // Trigger immediate processing
-      await RecurringBackgroundService.processNow();
+      await RecurringBackgroundService.processRecurringTransactions();
 
       emit(state.copyWith(status: RecurringFormStatus.success));
     } catch (e) {

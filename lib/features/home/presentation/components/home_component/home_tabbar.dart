@@ -1,5 +1,6 @@
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_state.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,6 +16,7 @@ class HomeTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -23,7 +25,7 @@ class HomeTabBar extends StatelessWidget {
       builder: (context, state) {
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 16),
-          padding: EdgeInsets.all(4),
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           decoration: BoxDecoration(
             color: isDark
                 ? colorScheme.surface
@@ -38,7 +40,7 @@ class HomeTabBar extends StatelessWidget {
             children: [
               Expanded(
                 child: _TabButton(
-                  label: '💰 Transactions',
+                  label: '💰 ${t.transactions}',
                   isSelected: selectedTab == HomeTab.transactions,
                   onTap: () => onTabChanged(HomeTab.transactions),
                   colorScheme: colorScheme,
@@ -47,7 +49,7 @@ class HomeTabBar extends StatelessWidget {
               ),
               Expanded(
                 child: _TabButton(
-                  label: '💸 Debts',
+                  label: '💸  ${t.debt}',
                   isSelected: selectedTab == HomeTab.debts,
                   onTap: () => onTabChanged(HomeTab.debts),
                   colorScheme: colorScheme,

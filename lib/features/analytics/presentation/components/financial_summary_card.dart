@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class FinancialSummaryCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class FinancialSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       elevation: 2,
@@ -20,7 +21,7 @@ class FinancialSummaryCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Financial Overview',
+              t.financialOverview,
               style: AppTextStyles.h4.copyWith(
                 color: theme.textTheme.titleLarge?.color,
               ),
@@ -28,7 +29,7 @@ class FinancialSummaryCard extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Net Balance - Large Display
-            _buildNetBalanceSection(theme),
+            _buildNetBalanceSection(theme, t),
 
             const SizedBox(height: 24),
 
@@ -37,7 +38,7 @@ class FinancialSummaryCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildAmountCard(
-                    'Income',
+                    t.income,
                     summary.totalIncome,
                     Colors.green,
                     Icons.arrow_downward,
@@ -46,7 +47,7 @@ class FinancialSummaryCard extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildAmountCard(
-                    'Expense',
+                    t.expense,
                     summary.totalExpense,
                     Colors.red,
                     Icons.arrow_upward,
@@ -58,14 +59,14 @@ class FinancialSummaryCard extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Statistics Grid
-            _buildStatisticsGrid(theme),
+            _buildStatisticsGrid(theme, t),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNetBalanceSection(ThemeData theme) {
+  Widget _buildNetBalanceSection(ThemeData theme, AppLocalizations t) {
     final isPositive = summary.netBalance >= 0;
     final balanceColor = isPositive ? Colors.green : Colors.red;
 
@@ -79,7 +80,7 @@ class FinancialSummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Net Balance',
+            t.netBalance,
             style: AppTextStyles.subtitle2.copyWith(
               color: theme.textTheme.bodyMedium?.color?.withOpacity(0.7),
             ),
@@ -148,14 +149,14 @@ class FinancialSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatisticsGrid(ThemeData theme) {
+  Widget _buildStatisticsGrid(ThemeData theme, AppLocalizations t) {
     return Column(
       children: [
         Row(
           children: [
             Expanded(
               child: _buildStatItem(
-                'Transactions',
+                t.transactions,
                 summary.totalTransactions.toString(),
                 Icons.receipt_long,
                 theme,
@@ -164,7 +165,7 @@ class FinancialSummaryCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: _buildStatItem(
-                'Avg Daily',
+                t.avgDaily,
                 '\$${summary.averageDailyExpense.toStringAsFixed(0)}',
                 Icons.calendar_today,
                 theme,
@@ -177,7 +178,7 @@ class FinancialSummaryCard extends StatelessWidget {
           children: [
             Expanded(
               child: _buildStatItem(
-                'Avg Transaction',
+                t.avgTransaction,
                 '\$${summary.averageTransactionAmount.toStringAsFixed(0)}',
                 Icons.payments,
                 theme,
@@ -186,7 +187,7 @@ class FinancialSummaryCard extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: _buildStatItem(
-                'Savings Rate',
+                t.savingsRate,
                 '${summary.savingsRate.toStringAsFixed(1)}%',
                 Icons.savings,
                 theme,

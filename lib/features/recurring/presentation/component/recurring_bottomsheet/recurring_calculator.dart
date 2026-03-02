@@ -12,18 +12,20 @@ class RecurringCalculator extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<AddEditRecurringBloc>();
+    final t = AppLocalizations.of(context)!;
 
     return Column(
       children: [
-        _buildCalcRow(['7', '8', '9', 'Date'], theme, bloc, context),
-        _buildCalcRow(['4', '5', '6', '+'], theme, bloc, context),
-        _buildCalcRow(['1', '2', '3', '-'], theme, bloc, context),
+        _buildCalcRow(['7', '8', '9', t.date], theme, bloc, context, t),
+        _buildCalcRow(['4', '5', '6', '+'], theme, bloc, context, t),
+        _buildCalcRow(['1', '2', '3', '-'], theme, bloc, context, t),
 
         _buildCalcRow(
           ['.', '0', '⌫', _getActionButton()],
           theme,
           bloc,
           context,
+          t,
         ),
       ],
     );
@@ -34,6 +36,7 @@ class RecurringCalculator extends StatelessWidget {
     ThemeData theme,
     AddEditRecurringBloc bloc,
     BuildContext context,
+    AppLocalizations t,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
@@ -42,7 +45,7 @@ class RecurringCalculator extends StatelessWidget {
           return Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 3),
-              child: _buildCalcButton(btn, theme, bloc, context),
+              child: _buildCalcButton(btn, theme, bloc, context, t),
             ),
           );
         }).toList(),
@@ -55,11 +58,12 @@ class RecurringCalculator extends StatelessWidget {
     ThemeData theme,
     AddEditRecurringBloc bloc,
     BuildContext context,
+    AppLocalizations t,
   ) {
     Color? color;
     VoidCallback? onTap;
 
-    if (text == 'Date') {
+    if (text == t.date) {
       color = Colors.blue;
       onTap = () => _selectDate(bloc, context);
     } else if (text == '+' || text == '-') {

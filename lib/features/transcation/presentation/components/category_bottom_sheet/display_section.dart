@@ -1,3 +1,4 @@
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -88,6 +89,7 @@ class _DebtBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final isBorrowed = debtType.toString().contains('borrowed');
     final isExpense = transactionType.toString().contains('expense');
     final badgeColor = isDebt
@@ -110,7 +112,7 @@ class _DebtBadge extends StatelessWidget {
             Text(isExpense ? '💰' : '💸', style: const TextStyle(fontSize: 12)),
             const SizedBox(width: 4),
             Text(
-              isExpense ? 'Borrowed' : 'Lent',
+              isExpense ? t.borrowed : t.lent,
               style: TextStyle(
                 color: badgeColor,
                 fontSize: 11,

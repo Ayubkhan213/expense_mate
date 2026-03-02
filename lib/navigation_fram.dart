@@ -113,7 +113,7 @@ class MainFrame extends StatelessWidget {
             },
             icon: const Icon(Icons.add, size: 24),
             label: Text(
-              isTransactionsTab ? t.transactions : 'Add Debt',
+              isTransactionsTab ? t.transactions : t.addDebt,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
           );

@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/enums.dart';
 import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RecurringDetailInfo extends StatelessWidget {
@@ -10,7 +11,7 @@ class RecurringDetailInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -18,7 +19,7 @@ class RecurringDetailInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Details',
+              t.details,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -26,33 +27,33 @@ class RecurringDetailInfo extends StatelessWidget {
             const SizedBox(height: 16),
             _DetailRow(
               icon: Icons.repeat,
-              label: 'Frequency',
-              value: _getFrequencyText(transaction.frequency),
+              label: t.frequency,
+              value: _getFrequencyText(transaction.frequency, t),
             ),
             const Divider(),
             _DetailRow(
               icon: Icons.payment,
-              label: 'Payment Method',
-              value: _getPaymentMethodText(transaction.paymentMethod),
+              label: t.paymentMethod,
+              value: _getPaymentMethodText(transaction.paymentMethod, t),
             ),
             const Divider(),
             _DetailRow(
               icon: Icons.calendar_today,
-              label: 'Start Date',
+              label: t.startDate,
               value: _formatDate(transaction.startDate),
             ),
             const Divider(),
             _DetailRow(
               icon: Icons.event,
-              label: 'End Date',
+              label: t.endDate,
               value: transaction.endDate != null
                   ? _formatDate(transaction.endDate!)
-                  : 'Never',
+                  : t.never,
             ),
             const Divider(),
             _DetailRow(
               icon: Icons.schedule,
-              label: 'Next Occurrence',
+              label: t.nextOccurrence,
               value: _formatDate(transaction.nextOccurrence),
               valueColor: transaction.isDue ? Colors.orange : null,
             ),
@@ -62,7 +63,7 @@ class RecurringDetailInfo extends StatelessWidget {
               const Divider(),
               _DetailRow(
                 icon: Icons.today,
-                label: 'Day of Month',
+                label: t.dayOfMonth,
                 value: transaction.dayOfMonth.toString(),
               ),
             ],
@@ -70,7 +71,7 @@ class RecurringDetailInfo extends StatelessWidget {
               const Divider(),
               _DetailRow(
                 icon: Icons.note,
-                label: 'Note',
+                label: t.note,
                 value: transaction.note!,
               ),
             ],
@@ -80,33 +81,33 @@ class RecurringDetailInfo extends StatelessWidget {
     );
   }
 
-  String _getFrequencyText(RecurrenceFrequency frequency) {
+  String _getFrequencyText(RecurrenceFrequency frequency, AppLocalizations t) {
     switch (frequency) {
       case RecurrenceFrequency.daily:
-        return 'Daily';
+        return t.daily;
       case RecurrenceFrequency.weekly:
-        return 'Weekly';
+        return t.weekly;
       case RecurrenceFrequency.biweekly:
-        return 'Bi-weekly';
+        return t.biweekly;
       case RecurrenceFrequency.monthly:
-        return 'Monthly';
+        return t.monthly;
       case RecurrenceFrequency.quarterly:
-        return 'Quarterly';
+        return t.quarterly;
       case RecurrenceFrequency.yearly:
-        return 'Yearly';
+        return t.yearly;
     }
   }
 
-  String _getPaymentMethodText(PaymentMethod method) {
+  String _getPaymentMethodText(PaymentMethod method, AppLocalizations t) {
     switch (method) {
       case PaymentMethod.cash:
-        return 'Cash';
+        return t.cash;
       case PaymentMethod.card:
-        return 'Card';
+        return t.card;
       case PaymentMethod.bank:
-        return 'Bank';
+        return t.bank;
       case PaymentMethod.wallet:
-        return 'Wallet';
+        return t.wallet;
     }
   }
 

@@ -29,6 +29,26 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     on<CreateBudgetEvent>(_onCreateBudget);
     on<UpdateBudgetEvent>(_onUpdateBudget);
     on<DeleteBudgetEvent>(_onDeleteBudget);
+    on<BudgetFilterChanged>(_onFilterChanged);
+    on<BudgetSearchOpened>(_onSearchOpened);
+    on<BudgetSearchClosed>(_onSearchClosed);
+    on<BudgetSearchChanged>(_onSearchChanged);
+  }
+
+  void _onSearchOpened(BudgetSearchOpened event, Emitter<BudgetState> emit) {
+    emit(state.copyWith(searchOpen: true));
+  }
+
+  void _onSearchClosed(BudgetSearchClosed event, Emitter<BudgetState> emit) {
+    emit(state.copyWith(searchOpen: false, searchQuery: ''));
+  }
+
+  void _onSearchChanged(BudgetSearchChanged event, Emitter<BudgetState> emit) {
+    emit(state.copyWith(searchQuery: event.query));
+  }
+
+  void _onFilterChanged(BudgetFilterChanged event, Emitter<BudgetState> emit) {
+    emit(state.copyWith(activeFilter: event.filter));
   }
 
   Future<void> _onLoadBudgets(
@@ -87,7 +107,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     );
 
     final result = await createBudgetUseCase(params);
-
+    print(result);
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -96,6 +116,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         ),
       ),
       (budget) {
+        print('-------- Success -------------');
         add(LoadBudgetsEvent());
         emit(state.copyWith(successMessage: 'Budget created successfully'));
       },

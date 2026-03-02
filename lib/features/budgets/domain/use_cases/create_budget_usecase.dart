@@ -24,6 +24,7 @@ class CreateBudgetUseCase implements UseCase<BudgetModel, CreateBudgetParams> {
       category: params.category,
       icon: params.icon,
       colorCode: params.colorCode,
+      isActive: true,
     );
     return repository.createBudget(budget);
   }

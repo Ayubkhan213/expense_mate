@@ -14,6 +14,7 @@ class BudgetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final color = Color(budget.colorCode ?? theme.colorScheme.primary.value);
@@ -86,7 +87,9 @@ class BudgetCard extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    budget.name,
+                                    context.tr(
+                                      budget.name,
+                                    ), // ✅ translate name if it's a category key
                                     style: theme.textTheme.titleLarge?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: theme.colorScheme.onSurface,
@@ -97,7 +100,7 @@ class BudgetCard extends StatelessWidget {
                                 ),
                                 // Type Badge
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 12,
                                     vertical: 6,
                                   ),
@@ -106,7 +109,10 @@ class BudgetCard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    budget.type.name.toUpperCase(),
+                                    _getBudgetTypeLabel(
+                                      context,
+                                      budget.type,
+                                    ).toUpperCase(), //
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
@@ -140,6 +146,7 @@ class BudgetCard extends StatelessWidget {
                       ),
                     ],
                   ),
+
                   SizedBox(height: 20),
 
                   // Amount Display
@@ -150,7 +157,7 @@ class BudgetCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Spent',
+                            t.spent,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface.withOpacity(
                                 0.6,
@@ -173,7 +180,7 @@ class BudgetCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            isOverBudget ? 'Over by' : 'Remaining',
+                            isOverBudget ? t.overBy : t.remaining,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface.withOpacity(
                                 0.6,
@@ -215,7 +222,7 @@ class BudgetCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${percentage.toStringAsFixed(1)}% used',
+                            '${percentage.toStringAsFixed(1)}% ${t.used}',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: isOverBudget
                                   ? theme.colorScheme.error
@@ -237,7 +244,7 @@ class BudgetCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: 4),
                                 Text(
-                                  '$daysLeft days left',
+                                  '$daysLeft ${t.daysLeft}',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: daysLeft <= 7
                                         ? Colors.orange
@@ -252,7 +259,7 @@ class BudgetCard extends StatelessWidget {
                             )
                           else
                             Text(
-                              'Expired ${(-daysLeft)} days ago',
+                              '${t.expired} ${(-daysLeft)} ${t.expiredDaysAgo}',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.error,
                                 fontWeight: FontWeight.bold,
@@ -290,7 +297,7 @@ class BudgetCard extends StatelessWidget {
                       ),
                       SizedBox(width: 6),
                       Text(
-                        '${budget.transactionIds.length} transactions',
+                        '${budget.transactionIds.length} ${t.transactions}',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.7,
@@ -301,13 +308,12 @@ class BudgetCard extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      print(1111111);
                       Navigator.pushNamed(context, RouteName.budgetDetails);
                     },
                     child: Row(
                       children: [
                         Text(
-                          'View Details',
+                          t.viewDetails,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: color,
                             fontWeight: FontWeight.bold,
@@ -325,5 +331,17 @@ class BudgetCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _getBudgetTypeLabel(BuildContext context, BudgetType type) {
+    final t = AppLocalizations.of(context)!;
+    switch (type) {
+      case BudgetType.monthly:
+        return t.monthly;
+      case BudgetType.project:
+        return t.project;
+      case BudgetType.custom:
+        return t.custom;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/debt_model.dart';
 import 'package:expense_mate/core/navigation/route_name.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,6 +11,7 @@ class DebtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
@@ -69,8 +71,8 @@ class DebtCard extends StatelessWidget {
                   children: [
                     Text(
                       debtType.toString().contains('borrowed')
-                          ? 'Borrowed from ${debt.personName}'
-                          : 'Lent to ${debt.personName}',
+                          ? '${t.borrowedFrom} ${debt.personName}'
+                          : '${t.lentTo} ${debt.personName}',
                       style: TextStyle(
                         color: colorScheme.onSurface,
                         fontSize: 15,
@@ -79,7 +81,7 @@ class DebtCard extends StatelessWidget {
                     ),
                     SizedBox(height: 2),
                     Text(
-                      '\$${debt.remainingAmount.toStringAsFixed(2)} remaining',
+                      '\$${debt.remainingAmount.toStringAsFixed(2)} ${t.remaining}',
                       style: TextStyle(
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                         fontSize: 12,
@@ -123,7 +125,7 @@ class DebtCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${debt.paymentPercentage.toStringAsFixed(0)}% paid',
+                '${debt.paymentPercentage.toStringAsFixed(0)}% ${t.paid}',
                 style: TextStyle(
                   color: color,
                   fontSize: 12,
@@ -132,7 +134,7 @@ class DebtCard extends StatelessWidget {
               ),
               if (isOverdue)
                 Text(
-                  '⚠️ ${debt.daysOverdue} days overdue',
+                  '⚠️ ${debt.daysOverdue} ${t.daysOverdue}',
                   style: TextStyle(
                     color: Colors.red,
                     fontSize: 12,
@@ -141,7 +143,7 @@ class DebtCard extends StatelessWidget {
                 )
               else
                 Text(
-                  'Due: ${DateFormat('MMM dd').format(debt.expectedReturnDate)}',
+                  '${t.due}: ${DateFormat('MMM dd').format(debt.expectedReturnDate)}',
                   style: TextStyle(
                     color: colorScheme.onSurface.withValues(alpha: 0.5),
                     fontSize: 12,

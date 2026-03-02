@@ -61,12 +61,13 @@ class RecurringTransactionModel extends HiveObject {
     required this.startDate,
     this.endDate,
     required this.nextOccurrence,
-    this.generatedTransactionIds = const [],
+    List<String>? generatedTransactionIds,
     this.isActive = true,
     this.dayOfMonth = 1,
     this.dayOfWeek,
     DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+  }) : generatedTransactionIds = generatedTransactionIds ?? [],
+       createdAt = createdAt ?? DateTime.now();
 
   bool get hasEnded => endDate != null && DateTime.now().isAfter(endDate!);
   bool get isDue => DateTime.now().isAfter(nextOccurrence);

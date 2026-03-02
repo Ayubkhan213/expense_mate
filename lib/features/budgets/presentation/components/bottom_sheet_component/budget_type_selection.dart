@@ -1,163 +1,143 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:flutter/material.dart';
 // import 'package:expense_mate/core/data/models/budget_model.dart';
+// import 'package:expense_mate/l10n/app_localizations.dart';
+// import 'package:flutter/material.dart';
 
-class BudgetTypeSelector extends StatelessWidget {
-  final dynamic selectedType;
-  final Color accentColor;
-  final Function(dynamic) onTypeChanged;
+// class BudgetTypeSelector extends StatelessWidget {
+//   final dynamic selectedType;
+//   final Color accentColor;
+//   final Function(dynamic) onTypeChanged;
 
-  const BudgetTypeSelector({
-    super.key,
-    required this.selectedType,
-    required this.accentColor,
-    required this.onTypeChanged,
-  });
+//   const BudgetTypeSelector({
+//     super.key,
+//     required this.selectedType,
+//     required this.accentColor,
+//     required this.onTypeChanged,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final colorScheme = theme.colorScheme;
+//     final t = AppLocalizations.of(context)!; // ✅
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Budget Type',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            _buildTypeChip(
-              context,
-              'monthly',
-              'Monthly',
-              Icons.calendar_month,
-              colorScheme,
-            ),
-            const SizedBox(width: 8),
-            _buildTypeChip(
-              context,
-              'project',
-              'Project',
-              Icons.flag,
-              colorScheme,
-            ),
-            const SizedBox(width: 8),
-            _buildTypeChip(
-              context,
-              'custom',
-              'Custom',
-              Icons.tune,
-              colorScheme,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           t.budgetType, // ✅ was 'Budget Type'
+//           style: TextStyle(
+//             fontSize: 16,
+//             fontWeight: FontWeight.w600,
+//             color: colorScheme.onSurface,
+//           ),
+//         ),
+//         const SizedBox(height: 12),
+//         Row(
+//           children: [
+//             _buildTypeChip(
+//               context,
+//               t.monthly,
+//               t.monthly,
+//               Icons.calendar_month,
+//               colorScheme,
+//             ), //
+//             const SizedBox(width: 8),
+//             _buildTypeChip(
+//               context,
+//               t.project,
 
-  Widget _buildTypeChip(
-    BuildContext context,
-    String typeStr,
-    String label,
-    IconData icon,
-    ColorScheme colorScheme,
-  ) {
-    // Check if selected by comparing enum string representation
-    final isSelected = selectedType.toString().toLowerCase().contains(typeStr);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+//               t.project,
+//               Icons.flag,
+//               colorScheme,
+//             ), // ✅
+//             const SizedBox(width: 8),
+//             _buildTypeChip(
+//               context,
+//               t.custom,
+//               t.custom,
+//               Icons.tune,
+//               colorScheme,
+//             ), //
+//           ],
+//         ),
+//       ],
+//     );
+//   }
 
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          // Pass the actual enum value, not string
-          dynamic budgetType;
-          switch (typeStr) {
-            case 'monthly':
-              budgetType = _getBudgetType('monthly');
-              break;
-            case 'project':
-              budgetType = _getBudgetType('project');
-              break;
-            case 'custom':
-              budgetType = _getBudgetType('custom');
-              break;
-          }
-          onTypeChanged(budgetType);
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? accentColor
-                : (isDark ? colorScheme.surface : Colors.grey[100]),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected
-                  ? accentColor
-                  : colorScheme.onSurface.withValues(alpha: 0.1),
-              width: 1.5,
-            ),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: accentColor.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
-          ),
-          child: Column(
-            children: [
-              Icon(
-                icon,
-                color: isSelected
-                    ? Colors.white
-                    : colorScheme.onSurface.withValues(alpha: 0.6),
-                size: 24,
-              ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : colorScheme.onSurface.withValues(alpha: 0.6),
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+//   Widget _buildTypeChip(
+//     BuildContext context,
+//     String typeStr,
+//     String label,
+//     IconData icon,
+//     ColorScheme colorScheme,
+//   ) {
+//     final isSelected = selectedType.toString().toLowerCase().contains(typeStr);
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-  // Helper method to get enum from string
-  // Replace this with your actual BudgetType enum
-  dynamic _getBudgetType(String type) {
-    // This should match your actual enum structure
-    // For now, returning a mock - replace with:
-    switch (type) {
-      case 'monthly':
-        return BudgetType.monthly;
-      case 'project':
-        return BudgetType.project;
-      case 'custom':
-        return BudgetType.custom;
-    }
+//     return Expanded(
+//       child: GestureDetector(
+//         onTap: () => onTypeChanged(_getBudgetType(typeStr)),
+//         child: AnimatedContainer(
+//           duration: const Duration(milliseconds: 200),
+//           padding: const EdgeInsets.symmetric(vertical: 14),
+//           decoration: BoxDecoration(
+//             color: isSelected
+//                 ? accentColor
+//                 : (isDark ? colorScheme.surface : Colors.grey[100]),
+//             borderRadius: BorderRadius.circular(12),
+//             border: Border.all(
+//               color: isSelected
+//                   ? accentColor
+//                   : colorScheme.onSurface.withValues(alpha: 0.1),
+//               width: 1.5,
+//             ),
+//             boxShadow: isSelected
+//                 ? [
+//                     BoxShadow(
+//                       color: accentColor.withValues(alpha: 0.3),
+//                       blurRadius: 8,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                   ]
+//                 : null,
+//           ),
+//           child: Column(
+//             children: [
+//               Icon(
+//                 icon,
+//                 color: isSelected
+//                     ? Colors.white
+//                     : colorScheme.onSurface.withValues(alpha: 0.6),
+//                 size: 24,
+//               ),
+//               const SizedBox(height: 6),
+//               Text(
+//                 label, //  already translated, passed from build()
+//                 style: TextStyle(
+//                   color: isSelected
+//                       ? Colors.white
+//                       : colorScheme.onSurface.withValues(alpha: 0.6),
+//                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+//                   fontSize: 12,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-    // Temporary solution - you need to import your BudgetType enum
-    // and use the actual enum values
-    return type; // REPLACE THIS with actual enum
-  }
-}
+//   dynamic _getBudgetType(String type) {
+//     switch (type) {
+//       case 'monthly':
+//         return BudgetType.monthly;
+//       case 'project':
+//         return BudgetType.project;
+//       case 'custom':
+//         return BudgetType.custom;
+//       default:
+//         return BudgetType.custom;
+//     }
+//   }
+// }

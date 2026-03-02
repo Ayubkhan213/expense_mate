@@ -1,7 +1,9 @@
+import 'package:expense_mate/core/data/models/budget_model.dart';
 import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 extension TranslationHelper on BuildContext {
+  // ── Category translator ──────────────────────────────
   String tr(String key) {
     final l = AppLocalizations.of(this)!;
     final map = {
@@ -87,10 +89,11 @@ extension TranslationHelper on BuildContext {
       'spa': l.spa,
       'skincare': l.skincare,
       'pets': l.pets,
-      'petFood': l.petFood, 'vet': l.vet,
+      'petFood': l.petFood,
+      'vet': l.vet,
       'petSupplies': l.petSupplies,
-      'saving': l.savings,
-      'investmen': l.investment,
+      'savings': l.savings, // ✅ fixed typo: was 'saving'
+      'investment': l.investment, // ✅ fixed typo: was 'investmen'
       'loanPayment': l.loanPayment,
       'creditCard': l.creditCard,
       'bankFees': l.bankFees,
@@ -102,7 +105,7 @@ extension TranslationHelper on BuildContext {
       'software': l.software,
       'maintenance': l.maintenance,
       'legal': l.legal,
-      'otherExpense': l.otherIncome,
+      'otherExpense': l.otherExpense, // ✅ fixed: was pointing to otherIncome
       'cashback': l.cashback,
       'grant': l.grant,
       'scholarship': l.scholarship,
@@ -118,9 +121,50 @@ extension TranslationHelper on BuildContext {
       'cryptocurrency': l.cryptocurrency,
       'capitalGains': l.capitalGains,
       'realEstate': l.realEstate,
-      'savings': l.savings,
-      // '': l.,
+      'wedding': l.wedding,
+      'homeRenovation': l.homeRenovation,
+      'carPurchase': l.carPurchase,
+      'customBudgetLabel': l.customBudgetLabel,
     };
-    return map[key] ?? key;
+
+    // Try exact key first, then lowercase fallback
+    return map[key] ?? map[key.toLowerCase()] ?? key;
+  }
+
+  // ── Payment method translator ────────────────────────
+  String trMethod(String method) {
+    final l = AppLocalizations.of(this)!;
+    switch (method.toLowerCase().trim()) {
+      case 'cash':
+        return l.cash;
+      case 'card':
+        return l.card;
+      case 'bank':
+        return l.bank;
+      case 'wallet':
+        return l.wallet;
+      default:
+        return method;
+    }
+  }
+
+  Map<BudgetType, List<String>> get budgetCategoryPresets {
+    return {
+      BudgetType.monthly: [
+        tr('groceries'), // 'this.tr(...)' — no context needed
+        tr('transport'),
+        tr('entertainment'),
+        tr('bills'),
+        tr('shopping'),
+      ],
+      BudgetType.project: [
+        tr('wedding'),
+        tr('vacation'),
+        tr('homeRenovation'),
+        tr('education'),
+        tr('carPurchase'),
+      ],
+      BudgetType.custom: [tr('customBudgetLabel')],
+    };
   }
 }

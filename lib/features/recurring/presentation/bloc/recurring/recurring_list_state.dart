@@ -12,12 +12,16 @@ class RecurringListLoaded extends RecurringListState {
   final List<RecurringTransactionModel> filtered;
   final RecurringFilterType currentFilter;
   final RecurringStats stats;
+  final bool searchOpen; // ← drives search field visibility
+  final String searchQuery; // ← current search text
 
   RecurringListLoaded({
     required this.all,
     required this.filtered,
     required this.currentFilter,
     required this.stats,
+    this.searchOpen = false,
+    this.searchQuery = '',
   });
 
   RecurringListLoaded copyWith({
@@ -25,12 +29,16 @@ class RecurringListLoaded extends RecurringListState {
     List<RecurringTransactionModel>? filtered,
     RecurringFilterType? currentFilter,
     RecurringStats? stats,
+    bool? searchOpen,
+    String? searchQuery,
   }) {
     return RecurringListLoaded(
       all: all ?? this.all,
       filtered: filtered ?? this.filtered,
       currentFilter: currentFilter ?? this.currentFilter,
       stats: stats ?? this.stats,
+      searchOpen: searchOpen ?? this.searchOpen,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }

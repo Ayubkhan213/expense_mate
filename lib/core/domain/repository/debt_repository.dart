@@ -11,7 +11,7 @@ abstract class DebtRepository {
   DebtModel? getDebtByTransactionId(String transactionId);
 
   List<DebtModel> getAllDebts();
-  List<DebtModel> getActiveDebts();
+  // List<DebtModel> getActiveDebts();
   List<DebtModel> getSettledDebts();
   List<DebtModel> getDebtsByType(DebtType type);
   List<DebtModel> getOverdueDebts();
@@ -27,8 +27,8 @@ abstract class DebtRepository {
   Future<void> deleteDebt(String id);
 
   // STATISTICS
-  double getTotalBorrowed();
-  double getTotalLent();
+  // double getTotalBorrowed();
+  // double getTotalLent();
   double getTotalOverdue();
   int getActiveDebtCount();
 }

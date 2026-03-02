@@ -27,7 +27,7 @@ class RecurringCompactDisplay extends StatelessWidget {
         children: [
           _buildIcon(),
           const SizedBox(width: 12),
-          _buildCategoryInfo(theme, isIncome),
+          _buildCategoryInfo(theme, isIncome, context),
           _buildAmount(theme),
         ],
       ),
@@ -49,19 +49,24 @@ class RecurringCompactDisplay extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryInfo(ThemeData theme, bool isIncome) {
+  Widget _buildCategoryInfo(
+    ThemeData theme,
+    bool isIncome,
+    BuildContext context,
+  ) {
+    final t = AppLocalizations.of(context)!;
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            category.key,
+            context.tr(category.key),
             style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
-            'Recurring ${isIncome ? 'Income' : 'Expense'}',
+            '${t.recurring} ${isIncome ? t.income : t.expense}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: isIncome ? Colors.green : Colors.red,
               fontSize: 11,

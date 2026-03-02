@@ -1,5 +1,7 @@
+import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -11,7 +13,7 @@ class CategoryChartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     if (categoryBreakdown.isEmpty) {
       return _buildEmptyState(theme);
     }
@@ -25,7 +27,7 @@ class CategoryChartCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Expense by Category',
+              context.tr(t.expenseByCategory),
               style: AppTextStyles.h4.copyWith(
                 color: theme.textTheme.titleLarge?.color,
               ),
@@ -59,7 +61,7 @@ class CategoryChartCard extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Category Details List
-            _buildCategoryList(theme),
+            _buildCategoryList(theme, context, t),
           ],
         ),
       ),
@@ -104,7 +106,7 @@ class CategoryChartCard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  category.categoryKey,
+                  context.tr(category.categoryKey),
                   style: AppTextStyles.labelSmall,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -117,7 +119,11 @@ class CategoryChartCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryList(ThemeData theme) {
+  Widget _buildCategoryList(
+    ThemeData theme,
+    BuildContext context,
+    AppLocalizations t,
+  ) {
     return Column(
       children: categoryBreakdown.take(8).map((category) {
         return Padding(
@@ -146,13 +152,13 @@ class CategoryChartCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      category.categoryKey,
+                      context.tr(category.categoryKey),
                       style: AppTextStyles.bodyMedium.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      '${category.transactionCount} transactions',
+                      '${category.transactionCount} ${t.transactions} ',
                       style: AppTextStyles.caption.copyWith(
                         color: theme.textTheme.bodyMedium?.color?.withOpacity(
                           0.6,

@@ -1,10 +1,9 @@
 import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/data_sources/local/budget_local_data_source.dart';
+
 import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/recurring_local_data_source.dart';
+
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/repository_imp/debt_repository.dart';
-import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
+
 import 'package:expense_mate/core/di/injection_container.dart';
 import 'package:expense_mate/core/services/hive_box_manager.dart';
 import 'package:expense_mate/features/analytics/data/repository_impl/analytics_repository_impl.dart';
@@ -16,13 +15,17 @@ import 'package:expense_mate/features/budgets/domain/use_cases/create_budget_use
 import 'package:expense_mate/features/budgets/domain/use_cases/delete_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/get_all_budgets_usecase.dart';
 import 'package:expense_mate/features/budgets/domain/use_cases/get_budget_detail_usease.dart';
-import 'package:expense_mate/features/budgets/domain/use_cases/get_transactions_by_budget_usecase.dart';
+
 import 'package:expense_mate/features/budgets/domain/use_cases/update_budget_usecase.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_bloc.dart';
 import 'package:expense_mate/features/home/data/data_source/home_datasource.dart';
 import 'package:expense_mate/features/home/data/repository_impl/home_repository_imp.dart';
 import 'package:expense_mate/features/home/domain/usecases/get_debtpayment_by_debtid_usecase.dart';
+import 'package:expense_mate/features/home/presentation/bloc/all_debt_bloc/all_debt_bloc.dart';
+import 'package:expense_mate/features/home/presentation/bloc/all_debt_bloc/all_debt_event.dart';
+import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_bloc.dart';
+import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_event.dart';
 import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_event.dart';
@@ -41,10 +44,11 @@ class AppProviders {
     BlocProvider<ThemeBloc>(create: (_) => sl<ThemeBloc>()),
     BlocProvider<HomeBloc>(
       create: (_) => HomeBloc(
-        transactionRepo: TransactionRepositoryImp(
+        homeRepo: HomeRepositoryImp(
+          homeDatasource: HomeDatasourceImp(),
           localDataSource: TransactionLocalDataSourceImpl(),
+          debtDataSource: DebtLocalDataSourceImpl(),
         ),
-        debtRepo: DebtRepositoryImp(localDataSource: DebtLocalDataSourceImpl()),
       )..add(RefreshHomeData()),
     ),
     BlocProvider<LanguageBloc>(create: (_) => sl<LanguageBloc>()),
@@ -92,7 +96,11 @@ class AppProviders {
     BlocProvider<DebtRepaymentBloc>(
       create: (context) => DebtRepaymentBloc(
         getDebtPaymentsByDebtIdUseCase: GetDebtPaymentsByDebtIdUseCase(
-          repository: HomeRepositoryImp(homeDatasource: HomeDatasourceImp()),
+          repository: HomeRepositoryImp(
+            homeDatasource: HomeDatasourceImp(),
+            localDataSource: TransactionLocalDataSourceImpl(),
+            debtDataSource: DebtLocalDataSourceImpl(),
+          ),
         ),
       ),
     ),
@@ -134,6 +142,25 @@ class AppProviders {
       create: (_) => NotificationBloc()
         ..add(LoadNotificationSettings())
         ..add(LoadAllSchedules()),
+    ),
+
+    BlocProvider<AllTransactionsBloc>(
+      create: (_) => AllTransactionsBloc(
+        repository: HomeRepositoryImp(
+          homeDatasource: HomeDatasourceImp(),
+          localDataSource: TransactionLocalDataSourceImpl(),
+          debtDataSource: DebtLocalDataSourceImpl(),
+        ),
+      )..add(LoadAllTransactions()),
+    ),
+    BlocProvider<AllDebtTransactionsBloc>(
+      create: (_) => AllDebtTransactionsBloc(
+        repository: HomeRepositoryImp(
+          homeDatasource: HomeDatasourceImp(),
+          localDataSource: TransactionLocalDataSourceImpl(),
+          debtDataSource: DebtLocalDataSourceImpl(),
+        ),
+      )..add(LoadAllDebtTransactions()),
     ),
   ];
 }

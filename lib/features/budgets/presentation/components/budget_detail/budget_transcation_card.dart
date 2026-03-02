@@ -1,8 +1,10 @@
+import 'package:expense_mate/core/utils/translation_helper.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class BudgetTransactionCard extends StatelessWidget {
-  final dynamic transaction; // Replace with TransactionModel
+  final dynamic transaction;
   final VoidCallback? onTap;
 
   const BudgetTransactionCard({
@@ -16,6 +18,7 @@ class BudgetTransactionCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final t = AppLocalizations.of(context)!;
 
     final firstItem = transaction.items?.isNotEmpty == true
         ? transaction.items.first
@@ -25,6 +28,16 @@ class BudgetTransactionCard extends StatelessWidget {
     final date = transaction.date ?? DateTime.now();
     final paymentMethod = transaction.paymentMethod;
     final itemCount = transaction.items?.length ?? 0;
+
+    // ✅ translate category
+    final categoryLabel = firstItem?.category != null
+        ? context.tr(firstItem!.category.toString())
+        : t.transaction;
+
+    // ✅ translate payment method
+    final methodLabel = context.trMethod(
+      paymentMethod.toString().split('.').last,
+    );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -84,7 +97,7 @@ class BudgetTransactionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        firstItem?.category?.toString() ?? 'Transaction',
+                        categoryLabel, // ✅ translated
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -122,7 +135,7 @@ class BudgetTransactionCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              _getMethodName(paymentMethod),
+                              methodLabel, // ✅ translated
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -162,7 +175,7 @@ class BudgetTransactionCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '+${itemCount - 1} more',
+                          '+${itemCount - 1} ${t.more}', // ✅ translated
                           style: TextStyle(
                             fontSize: 10,
                             color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -188,11 +201,6 @@ class BudgetTransactionCard extends StatelessWidget {
     if (methodStr.contains('bank')) return Icons.account_balance;
     if (methodStr.contains('wallet')) return Icons.wallet;
     return Icons.receipt;
-  }
-
-  String _getMethodName(dynamic method) {
-    final methodStr = method.toString().split('.').last;
-    return methodStr[0].toUpperCase() + methodStr.substring(1);
   }
 
   String _formatAmount(double amount) {

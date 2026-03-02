@@ -1,7 +1,4 @@
-// Main Budget BLoC Events
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/navigation_fram.dart';
 
 abstract class BudgetEvent extends Equatable {
   const BudgetEvent();
@@ -14,13 +11,13 @@ class LoadBudgetsEvent extends BudgetEvent {}
 
 class CreateBudgetEvent extends BudgetEvent {
   final String name;
-  final BudgetType type;
+  final dynamic type;
   final double totalAmount;
   final DateTime startDate;
   final DateTime endDate;
   final String? category;
-  final String? icon;
-  final int? colorCode;
+  final String icon;
+  final int colorCode;
 
   const CreateBudgetEvent({
     required this.name,
@@ -29,8 +26,8 @@ class CreateBudgetEvent extends BudgetEvent {
     required this.startDate,
     required this.endDate,
     this.category,
-    this.icon,
-    this.colorCode,
+    required this.icon,
+    required this.colorCode,
   });
 
   @override
@@ -73,9 +70,28 @@ class UpdateBudgetEvent extends BudgetEvent {
 
 class DeleteBudgetEvent extends BudgetEvent {
   final String budgetId;
-
   const DeleteBudgetEvent(this.budgetId);
-
   @override
   List<Object?> get props => [budgetId];
+}
+
+enum BudgetFilter { all, active, expired, archived } // ← all is FIRST now
+
+class BudgetFilterChanged extends BudgetEvent {
+  final BudgetFilter filter;
+  const BudgetFilterChanged(this.filter);
+  @override
+  List<Object?> get props => [filter];
+}
+
+// ── Search events ──
+class BudgetSearchOpened extends BudgetEvent {}
+
+class BudgetSearchClosed extends BudgetEvent {}
+
+class BudgetSearchChanged extends BudgetEvent {
+  final String query;
+  const BudgetSearchChanged(this.query);
+  @override
+  List<Object?> get props => [query];
 }

@@ -1,5 +1,7 @@
+import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +17,7 @@ class TopTransactionsCard extends StatelessWidget {
     if (topTransactions.isEmpty) {
       return const SizedBox.shrink();
     }
+    final t = AppLocalizations.of(context)!;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -28,13 +31,13 @@ class TopTransactionsCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Top Expenses',
+                  t.topExpenses,
                   style: AppTextStyles.h4.copyWith(
                     color: theme.textTheme.titleLarge?.color,
                   ),
                 ),
                 Text(
-                  'Top ${topTransactions.length}',
+                  '${t.top} ${topTransactions.length}',
                   style: AppTextStyles.caption.copyWith(
                     color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
                   ),
@@ -47,7 +50,12 @@ class TopTransactionsCard extends StatelessWidget {
             ...topTransactions.asMap().entries.map((entry) {
               final index = entry.key;
               final transaction = entry.value;
-              return _buildTransactionItem(index + 1, transaction, theme);
+              return _buildTransactionItem(
+                index + 1,
+                transaction,
+                theme,
+                context,
+              );
             }),
           ],
         ),
@@ -59,6 +67,7 @@ class TopTransactionsCard extends StatelessWidget {
     int rank,
     TopTransaction transaction,
     ThemeData theme,
+    BuildContext context,
   ) {
     final dateFormat = DateFormat('MMM dd, yyyy');
     final formattedDate = dateFormat.format(transaction.date);
@@ -110,7 +119,7 @@ class TopTransactionsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _capitalize(transaction.categoryKey),
+                    _capitalize(context.tr(transaction.categoryKey)),
                     style: AppTextStyles.bodyMedium.copyWith(
                       fontWeight: FontWeight.w500,
                     ),

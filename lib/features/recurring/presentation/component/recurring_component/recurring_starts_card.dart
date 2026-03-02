@@ -1,4 +1,5 @@
 import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Stats card showing active, due soon, and monthly estimates
@@ -10,7 +11,7 @@ class RecurringStatsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
@@ -35,14 +36,14 @@ class RecurringStatsCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _StatItem(
-                  label: 'Active',
+                  label: t.active,
                   value: stats.totalActive.toString(),
                   icon: Icons.check_circle,
                 ),
               ),
               Expanded(
                 child: _StatItem(
-                  label: 'Due Soon',
+                  label: t.dueSoon,
                   value: stats.dueThisWeek.toString(),
                   icon: Icons.schedule,
                 ),
@@ -72,13 +73,13 @@ class RecurringStatsCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          _buildNetMonthly(stats.netMonthly),
+          _buildNetMonthly(stats.netMonthly, t),
         ],
       ),
     );
   }
 
-  Widget _buildNetMonthly(double netMonthly) {
+  Widget _buildNetMonthly(double netMonthly, AppLocalizations t) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(

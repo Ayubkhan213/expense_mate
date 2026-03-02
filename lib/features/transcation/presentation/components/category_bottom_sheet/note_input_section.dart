@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:expense_mate/core/app_export.dart';
 
-class NoteInputField extends StatelessWidget {
+class NoteInputField extends StatefulWidget {
   final String note;
   final Function(String) onNoteChanged;
   final VoidCallback onImagePick;
@@ -13,15 +13,37 @@ class NoteInputField extends StatelessWidget {
   });
 
   @override
+  State<NoteInputField> createState() => _NoteInputFieldState();
+}
+
+class _NoteInputFieldState extends State<NoteInputField> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.note); // ✅ created once
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-
+    final locale = Localizations.localeOf(context);
+    final isRTL = locale.languageCode == 'ar' || locale.languageCode == 'ur';
     return TextField(
-      controller: TextEditingController(text: note),
-      onChanged: onNoteChanged,
+      controller: _controller, // ✅ stable controller
+      onChanged: widget.onNoteChanged,
+      textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
       style: TextStyle(color: colorScheme.onSurface),
+      textAlign: isRTL ? TextAlign.right : TextAlign.left,
       decoration: InputDecoration(
         hintText: 'Note: Enter a note...',
         hintStyle: TextStyle(
@@ -31,7 +53,7 @@ class NoteInputField extends StatelessWidget {
         fillColor: isDark ? colorScheme.surface : Colors.grey[100],
         suffixIcon: IconButton(
           icon: Icon(Icons.image, color: colorScheme.primary),
-          onPressed: onImagePick,
+          onPressed: widget.onImagePick,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

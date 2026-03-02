@@ -15,7 +15,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get home => 'ہوم';
 
   @override
-  String get analytics => 'تجزیات';
+  String get analytics => 'تجزیہ';
 
   @override
   String get records => 'ریکارڈز';
@@ -30,7 +30,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get income => 'آمدنی';
 
   @override
-  String get expense => 'خرچہ';
+  String get expense => 'اخراجات';
 
   @override
   String get profile => 'پروفائل';
@@ -39,10 +39,10 @@ class AppLocalizationsUr extends AppLocalizations {
   String get changeTheme => 'تھیم تبدیل کریں';
 
   @override
-  String get borrowed => 'قرض لیا';
+  String get borrowed => 'قرضہ لیا';
 
   @override
-  String get lent => 'قرض دیا';
+  String get lent => 'قرضہ دیا';
 
   @override
   String get borrowedFrom => 'سے قرض لیا';
@@ -78,7 +78,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get remaining => 'باقی';
 
   @override
-  String get overdue => 'تاخیر';
+  String get overdue => 'میعاد گزری';
 
   @override
   String get cash => 'نقد';
@@ -90,7 +90,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get bank => 'بینک';
 
   @override
-  String get wallet => 'بٹوہ';
+  String get wallet => 'والیٹ';
 
   @override
   String get paymentMethod => 'ادائیگی کا طریقہ';
@@ -586,4 +586,823 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get selectExpenseCategory => 'اخراجات کی قسم منتخب کریں';
+
+  @override
+  String get errorPrefix => 'خرابی';
+
+  @override
+  String get balancePrefix => 'بیلنس';
+
+  @override
+  String get recentTransactions => 'حالیہ لین دین';
+
+  @override
+  String get viewAll => 'سب دیکھیں ←';
+
+  @override
+  String get activeDebts => 'فعال قرضے';
+
+  @override
+  String get addDebt => 'قرض شامل کریں';
+
+  @override
+  String get totalBalance => 'کل بیلنس';
+
+  @override
+  String get youOwe => 'آپ کا قرض';
+
+  @override
+  String get youreOwed => 'آپ کا حق';
+
+  @override
+  String get debtTransactions => 'قرض کے لین دین';
+
+  @override
+  String get allTransactions => 'تمام لین دین';
+
+  @override
+  String get searchByPerson => 'شخص یا زمرے سے تلاش کریں…';
+
+  @override
+  String get searchByCategory => 'زمرے سے تلاش کریں…';
+
+  @override
+  String get all => 'سب';
+
+  @override
+  String get dateRange => 'تاریخ کی حد';
+
+  @override
+  String get clearAll => 'سب صاف کریں';
+
+  @override
+  String get noDebtTransactions => 'کوئی قرض کا لین دین نہیں';
+
+  @override
+  String get noTransactions => 'کوئی لین دین نہیں';
+
+  @override
+  String get tryAdjustingFilters => 'فلٹر تبدیل کر کے دیکھیں';
+
+  @override
+  String get debtTransaction => 'قرض کا لین دین';
+
+  @override
+  String get settled => 'طے شدہ';
+
+  @override
+  String get daysOverdue => 'دن تاخیر';
+
+  @override
+  String get transaction => 'لین دین';
+
+  @override
+  String get noActiveDebts => 'کوئی فعال قرض نہیں';
+
+  @override
+  String get debtManagementStarts => 'آپ کے قرض کا انتظام یہاں سے شروع ہوتا ہے';
+
+  @override
+  String get noTransactionsYet => 'ابھی تک کوئی لین دین نہیں';
+
+  @override
+  String get startTracking => 'اپنے اخراجات ٹریک کرنا شروع کریں';
+
+  @override
+  String get paymentHistory => 'ادائیگی کی تاریخ';
+
+  @override
+  String get payments => 'ادائیگیاں';
+
+  @override
+  String get addPayment => 'ادائیگی شامل کریں';
+
+  @override
+  String get fullyPaidOff => 'مکمل ادا شدہ 🎉';
+
+  @override
+  String get repaid => '% واپس کیا';
+
+  @override
+  String get cleared => 'مکمل';
+
+  @override
+  String get active => 'فعال';
+
+  @override
+  String get totalDebt => 'کل قرض';
+
+  @override
+  String get paidOff => 'ادا ہو گیا!';
+
+  @override
+  String get remainingAmount => 'باقی';
+
+  @override
+  String get percentPaid => '% ادا';
+
+  @override
+  String get due => 'آخری تاریخ:';
+
+  @override
+  String get addPaymentTitle => 'ادائیگی شامل کریں';
+
+  @override
+  String get enterPaymentAmount => 'ادائیگی کی رقم درج کریں';
+
+  @override
+  String get pleaseEnterAmount => 'براہ کرم رقم درج کریں';
+
+  @override
+  String get pleaseEnterValidAmount => 'براہ کرم درست رقم درج کریں';
+
+  @override
+  String get amountExceedsDebt => 'رقم باقی قرض سے زیادہ ہے';
+
+  @override
+  String get paymentDate => 'ادائیگی کی تاریخ';
+
+  @override
+  String get noteOptional => 'نوٹ (اختیاری)';
+
+  @override
+  String get addANote => 'نوٹ شامل کریں';
+
+  @override
+  String get savePayment => 'ادائیگی محفوظ کریں';
+
+  @override
+  String get deletePayment => 'ادائیگی حذف کریں';
+
+  @override
+  String get deletePaymentConfirm => 'کیا آپ واقعی یہ ادائیگی حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں ہو سکتا۔';
+
+  @override
+  String get deleteTooltip => 'ادائیگی حذف کریں';
+
+  @override
+  String get noPaymentsYet => 'ابھی تک کوئی ادائیگی نہیں';
+
+  @override
+  String get addFirstPayment => 'پہلی ادائیگی شامل کرنے کے لیے نیچے + بٹن دبائیں';
+
+  @override
+  String get trackRepayments => 'اپنے قرض کی ادائیگی آسانی سے ٹریک کریں';
+
+  @override
+  String get myBudgets => 'میرے بجٹ';
+
+  @override
+  String get searchBudgets => 'بجٹ تلاش کریں…';
+
+  @override
+  String get clear => 'صاف کریں';
+
+  @override
+  String get expired => 'میعاد ختم';
+
+  @override
+  String get archived => 'محفوظ شدہ';
+
+  @override
+  String get totalRemaining => 'کل باقی';
+
+  @override
+  String get overBudget => 'بجٹ سے زیادہ';
+
+  @override
+  String get used => '% استعمال';
+
+  @override
+  String get spent => 'خرچ';
+
+  @override
+  String get noBudgetsYet => 'ابھی تک کوئی بجٹ نہیں';
+
+  @override
+  String get createFirstBudget => 'نیچے اپنا پہلا بجٹ بنائیں';
+
+  @override
+  String get noActiveBudgets => 'کوئی فعال بجٹ نہیں';
+
+  @override
+  String get tapNewBudget => 'شروع کرنے کے لیے \"نیا بجٹ\" دبائیں';
+
+  @override
+  String get noExpiredBudgets => 'کوئی میعاد ختم بجٹ نہیں';
+
+  @override
+  String get allBudgetsOnTrack => 'آپ کے تمام بجٹ ٹھیک ہیں!';
+
+  @override
+  String get nothingArchived => 'کچھ محفوظ نہیں';
+
+  @override
+  String get archivedWillShowHere => 'محفوظ شدہ بجٹ یہاں دکھائے جائیں گے';
+
+  @override
+  String get somethingWentWrong => 'کچھ غلط ہو گیا';
+
+  @override
+  String get retry => 'دوبارہ کوشش کریں';
+
+  @override
+  String get overBy => 'زیادہ';
+
+  @override
+  String get daysLeft => 'دن باقی';
+
+  @override
+  String get expiredDaysAgo => 'دن پہلے';
+
+  @override
+  String get viewDetails => 'تفصیل دیکھیں';
+
+  @override
+  String get newBudget => 'نیا بجٹ';
+
+  @override
+  String get monthlyBudget => 'ماہانہ بجٹ';
+
+  @override
+  String get projectBudget => 'پروجیکٹ بجٹ';
+
+  @override
+  String get customBudget => 'کسٹم بجٹ';
+
+  @override
+  String get budgetName => 'بجٹ کا نام';
+
+  @override
+  String get budgetNameHint => 'مثال: ماہانہ اخراجات';
+
+  @override
+  String get start => 'شروع';
+
+  @override
+  String get end => 'ختم';
+
+  @override
+  String get days => 'دن';
+
+  @override
+  String get color => 'رنگ';
+
+  @override
+  String get icon => 'آئیکن';
+
+  @override
+  String get name => 'نام';
+
+  @override
+  String get dates => 'تاریخیں';
+
+  @override
+  String get style => 'انداز';
+
+  @override
+  String get category => 'زمرہ';
+
+  @override
+  String get quickSelect => 'فوری انتخاب';
+
+  @override
+  String get budgetType => 'بجٹ کی قسم';
+
+  @override
+  String get monthly => 'ماہانہ';
+
+  @override
+  String get project => 'پروجیکٹ';
+
+  @override
+  String get custom => 'کسٹم';
+
+  @override
+  String get duration => 'مدت';
+
+  @override
+  String get pleaseEnterBudgetName => 'براہ کرم بجٹ کا نام درج کریں';
+
+  @override
+  String get totalBudget => 'کل بجٹ';
+
+  @override
+  String get overBudgetLabel => 'بجٹ سے تجاوز!';
+
+  @override
+  String get nearLimit => 'حد کے قریب';
+
+  @override
+  String get percentUsed => '% استعمال';
+
+  @override
+  String get remainingCollapsed => 'باقی:';
+
+  @override
+  String get tapToAddTransaction => 'پہلی ٹرانزیکشن شامل کرنے کے لیے + دبائیں';
+
+  @override
+  String get addTransaction => 'ٹرانزیکشن شامل کریں';
+
+  @override
+  String get anErrorOccurred => 'ایک خرابی پیش آئی';
+
+  @override
+  String get more => 'مزید';
+
+  @override
+  String get ofa => 'میں سے';
+
+  @override
+  String get wedding => 'شادی';
+
+  @override
+  String get homeRenovation => 'گھر کی تزئین';
+
+  @override
+  String get carPurchase => 'گاڑی کی خریداری';
+
+  @override
+  String get customBudgetLabel => 'کسٹم بجٹ';
+
+  @override
+  String get noRecurringTransactions => 'کوئی بار بار ٹرانزیکشن نہیں';
+
+  @override
+  String get setUpAutomatic => 'باقاعدہ آمدنی اور اخراجات کے لیے\nخودکار ٹرانزیکشن ترتیب دیں';
+
+  @override
+  String get addFirstRecurring => 'پہلی بار بار ٹرانزیکشن شامل کریں';
+
+  @override
+  String get noResultsFound => 'کوئی نتیجہ نہیں ملا';
+
+  @override
+  String get tryDifferentFilter => 'مختلف تلاش یا فلٹر آزمائیں';
+
+  @override
+  String get monthlyNet => 'ماہانہ خالص';
+
+  @override
+  String get dueSoon => 'جلد واجب';
+
+  @override
+  String get inactive => 'غیر فعال';
+
+  @override
+  String get pause => 'روکیں';
+
+  @override
+  String get resume => 'دوبارہ شروع کریں';
+
+  @override
+  String get deleteRecurringTitle => 'بار بار ٹرانزیکشن حذف کریں';
+
+  @override
+  String get dueNow => 'ابھی واجب';
+
+  @override
+  String get daily => 'روزانہ';
+
+  @override
+  String get weekly => 'ہفتہ وار';
+
+  @override
+  String get biweekly => 'ہر دو ہفتے';
+
+  @override
+  String get quarterly => 'سہ ماہی';
+
+  @override
+  String get yearly => 'سالانہ';
+
+  @override
+  String get recurringIncome => 'بار بار آمدنی';
+
+  @override
+  String get recurringExpense => 'بار بار اخراجات';
+
+  @override
+  String get noEnd => 'کوئی اختتام نہیں';
+
+  @override
+  String get addNoteOptional => 'نوٹ شامل کریں (اختیاری)';
+
+  @override
+  String get recurringCreated => 'بار بار ٹرانزیکشن بنائی گئی!';
+
+  @override
+  String get recurringUpdated => 'بار بار ٹرانزیکشن اپ ڈیٹ ہوئی!';
+
+  @override
+  String get ledger => 'کھاتہ';
+
+  @override
+  String get insights => 'تجزیہ';
+
+  @override
+  String get paused => 'روکا گیا';
+
+  @override
+  String get details => 'تفصیلات';
+
+  @override
+  String get frequency => 'تکرار';
+
+  @override
+  String get startDate => 'شروع کی تاریخ';
+
+  @override
+  String get endDate => 'اختتام کی تاریخ';
+
+  @override
+  String get never => 'کبھی نہیں';
+
+  @override
+  String get nextOccurrence => 'اگلی بار';
+
+  @override
+  String get dayOfMonth => 'مہینے کا دن';
+
+  @override
+  String get goBack => 'واپس جائیں';
+
+  @override
+  String get monthlyEstimate => 'ماہانہ تخمینہ';
+
+  @override
+  String get perMonth => 'فی مہینہ';
+
+  @override
+  String get statistics => 'اعداد و شمار';
+
+  @override
+  String get totalAmount => 'کل رقم';
+
+  @override
+  String get noTransactionsGenerated => 'ابھی تک کوئی ٹرانزیکشن نہیں بنی';
+
+  @override
+  String get generatedTransactions => 'بنائی گئی ٹرانزیکشنز';
+
+  @override
+  String get transactionsThisPeriod => 'اس مدت میں لین دین';
+
+  @override
+  String get netBalance => 'خالص بیلنس';
+
+  @override
+  String get surplus => 'فاضل';
+
+  @override
+  String get deficit => 'خسارہ';
+
+  @override
+  String get week => 'ہفتہ';
+
+  @override
+  String get month => 'مہینہ';
+
+  @override
+  String get threeMonths => '3 مہینے';
+
+  @override
+  String get sixMonths => '6 مہینے';
+
+  @override
+  String get year => 'سال';
+
+  @override
+  String get allTime => 'ہر وقت';
+
+  @override
+  String get financialOverview => 'مالی جائزہ';
+
+  @override
+  String get budgetOverview => 'بجٹ کا جائزہ';
+
+  @override
+  String get overallUtilization => 'مجموعی استعمال';
+
+  @override
+  String get totalBudgets => 'کل بجٹ';
+
+  @override
+  String get expenseByCategory => 'زمرے کے مطابق اخراجات';
+
+  @override
+  String get noExpenseData => 'اخراجات کا کوئی ڈیٹا دستیاب نہیں';
+
+  @override
+  String get monthlyTrends => 'ماہانہ رجحانات';
+
+  @override
+  String get incomeVsExpense => 'وقت کے ساتھ آمدنی بنام اخراجات';
+
+  @override
+  String get debtOverview => 'قرض کا جائزہ';
+
+  @override
+  String get activeDebt => 'فعال';
+
+  @override
+  String get paymentMethods => 'ادائیگی کے طریقے';
+
+  @override
+  String get paymentDistribution => 'ادائیگی کے طریقوں کی تقسیم';
+
+  @override
+  String get topExpenses => 'اعلیٰ اخراجات';
+
+  @override
+  String get top => 'سرفہرست';
+
+  @override
+  String get avgDaily => 'یومیہ اوسط';
+
+  @override
+  String get avgTransaction => 'اوسط لین دین';
+
+  @override
+  String get savingsRate => 'بچت کی شرح';
+
+  @override
+  String get profileTitle => 'پروفائل';
+
+  @override
+  String get sectionAppearance => 'ظاہری شکل';
+
+  @override
+  String get sectionAccount => 'اکاؤنٹ';
+
+  @override
+  String get sectionData => 'ڈیٹا';
+
+  @override
+  String get sectionSupport => 'سپورٹ';
+
+  @override
+  String get menuTheme => 'تھیم';
+
+  @override
+  String get menuThemeSubtitle => 'ایپ کی ظاہری شکل کو اپنی مرضی کے مطابق بنائیں';
+
+  @override
+  String get menuLanguage => 'زبان';
+
+  @override
+  String get menuLanguageSubtitle => 'ایپ کی زبان تبدیل کریں';
+
+  @override
+  String get menuDarkMode => 'ڈارک موڈ';
+
+  @override
+  String get menuDarkModeEnabled => 'فعال';
+
+  @override
+  String get menuDarkModeDisabled => 'غیر فعال';
+
+  @override
+  String get menuEditProfile => 'پروفائل میں ترمیم کریں';
+
+  @override
+  String get menuEditProfileSubtitle => 'اپنی معلومات اپ ڈیٹ کریں';
+
+  @override
+  String get menuPrivacy => 'رازداری اور سیکیورٹی';
+
+  @override
+  String get menuPrivacySubtitle => 'رازداری کی ترتیبات کا انتظام کریں';
+
+  @override
+  String get menuNotifications => 'اطلاعات';
+
+  @override
+  String get menuNotificationsSubtitle => 'اطلاعات کی ترجیحات ترتیب دیں';
+
+  @override
+  String get menuDailyNotification => 'روزانہ اطلاع';
+
+  @override
+  String get menuDailyNotificationSubtitle => 'روزانہ یاددہانی سیٹ کریں';
+
+  @override
+  String get menuBackup => 'بیک اپ اور بحالی';
+
+  @override
+  String get menuBackupSubtitle => 'اپنے ڈیٹا کا بیک اپ لیں';
+
+  @override
+  String get menuExport => 'ڈیٹا برآمد کریں';
+
+  @override
+  String get menuExportSubtitle => 'اپنا ڈیٹا ڈاؤن لوڈ کریں';
+
+  @override
+  String get menuHelp => 'مدد اور سپورٹ';
+
+  @override
+  String get menuHelpSubtitle => 'ایپ میں مدد حاصل کریں';
+
+  @override
+  String get menuAbout => 'بارے میں';
+
+  @override
+  String get menuAboutVersion => 'ورژن ';
+
+  @override
+  String get btnLogout => 'لاگ آؤٹ';
+
+  @override
+  String get dialogLogoutTitle => 'لاگ آؤٹ';
+
+  @override
+  String get dialogLogoutMessage => 'کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟';
+
+  @override
+  String get dialogEditNameTitle => 'نام میں ترمیم کریں';
+
+  @override
+  String get dialogEditNameLabel => 'نام';
+
+  @override
+  String get btnCancel => 'منسوخ کریں';
+
+  @override
+  String get btnSave => 'محفوظ کریں';
+
+  @override
+  String get btnLogoutConfirm => 'لاگ آؤٹ';
+
+  @override
+  String get imagePickerTakePhoto => 'تصویر لیں';
+
+  @override
+  String get imagePickerGallery => 'گیلری سے منتخب کریں';
+
+  @override
+  String get imagePickerRemove => 'تصویر ہٹائیں';
+
+  @override
+  String get aboutAppName => 'Expense Mate';
+
+  @override
+  String get aboutAppDescription => 'ایک پیشہ ورانہ اخراجات ٹریکنگ ایپلیکیشن';
+
+  @override
+  String get dailyNotificationTitle => 'روزانہ اطلاع';
+
+  @override
+  String get notificationActive => 'اطلاع فعال ہے';
+
+  @override
+  String get noNotificationSet => 'کوئی اطلاع سیٹ نہیں';
+
+  @override
+  String get notificationDailyAt => 'روزانہ';
+
+  @override
+  String get notificationTime => 'اطلاع کا وقت';
+
+  @override
+  String get notificationTitleLabel => 'اطلاع کا عنوان';
+
+  @override
+  String get notificationTitleHint => 'اطلاع کا عنوان درج کریں';
+
+  @override
+  String get notificationMessageLabel => 'اطلاع کا پیغام';
+
+  @override
+  String get notificationMessageHint => 'اطلاع کا پیغام درج کریں';
+
+  @override
+  String get notificationImageOptional => 'اطلاع کی تصویر (اختیاری)';
+
+  @override
+  String get notificationAddImage => 'تصویر شامل کریں';
+
+  @override
+  String get notificationChangeImage => 'تصویر تبدیل کریں';
+
+  @override
+  String get notificationRemoveImage => 'ہٹائیں';
+
+  @override
+  String get btnSendTest => 'ٹیسٹ اطلاع بھیجیں';
+
+  @override
+  String get btnAddToSchedule => 'شیڈول فہرست میں شامل کریں';
+
+  @override
+  String get btnSaveAllSchedules => 'تمام شیڈول محفوظ کریں';
+
+  @override
+  String get scheduledNotifications => 'شیڈول شدہ اطلاعات';
+
+  @override
+  String get cancelNotificationTooltip => 'اطلاع منسوخ کریں';
+
+  @override
+  String get infoHowItWorks => 'یہ کیسے کام کرتا ہے';
+
+  @override
+  String get infoLine1 => 'اطلاع منتخب وقت پر روزانہ دہرائی جائے گی';
+
+  @override
+  String get infoLine2 => 'ایپ بند ہونے پر بھی کام کرتا ہے';
+
+  @override
+  String get infoLine3 => 'تصاویر پھیلی ہوئی اطلاع میں دکھائی جاتی ہیں';
+
+  @override
+  String get infoLine4 => 'بڑی تصاویر خود بخود تبدیل ہو جاتی ہیں';
+
+  @override
+  String get templateTitle => 'تھیم ٹیمپلیٹ منتخب کریں';
+
+  @override
+  String get themeLabel => 'تھیم';
+
+  @override
+  String get themeApplied => 'لاگو ہو گیا';
+
+  @override
+  String get darkLightSwitch => 'ڈارک / لائٹ';
+
+  @override
+  String get languageTitle => 'زبان منتخب کریں';
+
+  @override
+  String get langEnglish => 'انگریزی';
+
+  @override
+  String get langArabic => 'عربی';
+
+  @override
+  String get langUrdu => 'اردو';
+
+  @override
+  String get langFrench => 'فرانسیسی';
+
+  @override
+  String get langSelected => 'منتخب ہوئی';
+
+  @override
+  String get analyticsTitle => 'تجزیات';
+
+  @override
+  String get totalTransactions => 'لین دین';
+
+  @override
+  String get paymentMethodDistribution => 'ادائیگی کے طریقوں کی تقسیم';
+
+  @override
+  String get periodWeek => 'ہفتہ';
+
+  @override
+  String get periodMonth => 'مہینہ';
+
+  @override
+  String get period3Months => '3 ماہ';
+
+  @override
+  String get period6Months => '6 ماہ';
+
+  @override
+  String get periodYear => 'سال';
+
+  @override
+  String get periodAll => 'تمام وقت';
+
+  @override
+  String get recurringTitle => 'بار بار ہونے والے';
+
+  @override
+  String get filterAll => 'سب';
+
+  @override
+  String get filterActive => 'فعال';
+
+  @override
+  String get filterExpired => 'میعاد ختم';
+
+  @override
+  String get filterArchived => 'محفوظ شدہ';
+
+  @override
+  String get searchHint => 'تلاش…';
+
+  @override
+  String get results => 'نتائج';
+
+  @override
+  String get result => 'نتیجہ';
+
+  @override
+  String get deleteConfirm => 'کیا آپ واقعی حذف کرنا چاہتے ہیں';
+
+  @override
+  String get add => 'شامل کریں';
 }

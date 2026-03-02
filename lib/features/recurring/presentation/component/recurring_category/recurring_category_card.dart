@@ -9,7 +9,7 @@ class RecurringCategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () {
         RecurringTransactionBottomSheet.show(context, category);
@@ -49,7 +49,7 @@ class RecurringCategoryCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
-                category.key,
+                context.tr(category.key),
                 style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -71,7 +71,7 @@ class RecurringCategoryCard extends StatelessWidget {
                   Icon(Icons.repeat, size: 10, color: theme.primaryColor),
                   const SizedBox(width: 2),
                   Text(
-                    'Recurring',
+                    t.recurring,
                     style: theme.textTheme.bodySmall?.copyWith(
                       fontSize: 9,
                       color: theme.primaryColor,

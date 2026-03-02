@@ -1,64 +1,93 @@
-// Budget Status Enum
 import 'package:equatable/equatable.dart';
 import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
 
 enum BudgetStatus { initial, loading, success, error }
 
-// Main Budget State
 class BudgetState extends Equatable {
-  final BudgetStatus status;
   final List<BudgetModel> budgets;
   final List<BudgetModel> activeBudgets;
   final List<BudgetModel> archivedBudgets;
+  final BudgetStatus status;
   final String? errorMessage;
   final String? successMessage;
+  final BudgetFilter activeFilter;
+  final bool searchOpen; // ← search bar visible?
+  final String searchQuery; // ← current search text
 
   const BudgetState({
-    this.status = BudgetStatus.initial,
     this.budgets = const [],
     this.activeBudgets = const [],
     this.archivedBudgets = const [],
+    this.status = BudgetStatus.initial,
     this.errorMessage,
     this.successMessage,
+    this.activeFilter = BudgetFilter.all, // ← default is ALL now
+    this.searchOpen = false,
+    this.searchQuery = '',
   });
-
-  bool get isInitial => status == BudgetStatus.initial;
-  bool get isLoading => status == BudgetStatus.loading;
-  bool get isSuccess => status == BudgetStatus.success;
-  bool get isError => status == BudgetStatus.error;
-  bool get hasData => budgets.isNotEmpty;
 
   factory BudgetState.initial() => const BudgetState();
 
+  List<BudgetModel> get expiredBudgets =>
+      budgets.where((b) => b.isExpired && !b.isArchived).toList();
+
+  /// Base list for the active tab filter
+  List<BudgetModel> get _tabFiltered {
+    switch (activeFilter) {
+      case BudgetFilter.all:
+        return budgets;
+      case BudgetFilter.active:
+        return activeBudgets;
+      case BudgetFilter.expired:
+        return expiredBudgets;
+      case BudgetFilter.archived:
+        return archivedBudgets;
+    }
+  }
+
+  /// Final list — tab filter + search applied together
+  List<BudgetModel> get filteredBudgets {
+    if (searchQuery.isEmpty) return _tabFiltered;
+    final q = searchQuery.toLowerCase();
+    return _tabFiltered.where((b) => b.name.toLowerCase().contains(q)).toList();
+  }
+
   BudgetState copyWith({
-    BudgetStatus? status,
     List<BudgetModel>? budgets,
     List<BudgetModel>? activeBudgets,
     List<BudgetModel>? archivedBudgets,
+    BudgetStatus? status,
     String? errorMessage,
     String? successMessage,
+    BudgetFilter? activeFilter,
+    bool? searchOpen,
+    String? searchQuery,
     bool clearError = false,
-    bool clearSuccess = false,
   }) {
     return BudgetState(
-      status: status ?? this.status,
       budgets: budgets ?? this.budgets,
       activeBudgets: activeBudgets ?? this.activeBudgets,
       archivedBudgets: archivedBudgets ?? this.archivedBudgets,
+      status: status ?? this.status,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      successMessage: clearSuccess
-          ? null
-          : (successMessage ?? this.successMessage),
+      successMessage: successMessage ?? this.successMessage,
+      activeFilter: activeFilter ?? this.activeFilter,
+      searchOpen: searchOpen ?? this.searchOpen,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 
   @override
   List<Object?> get props => [
-    status,
     budgets,
     activeBudgets,
     archivedBudgets,
+    status,
     errorMessage,
     successMessage,
+    activeFilter,
+    searchOpen,
+    searchQuery,
   ];
 }

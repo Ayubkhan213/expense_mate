@@ -1,26 +1,30 @@
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
+import 'package:expense_mate/core/utils/translation_helper.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
 import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
 import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/budget_form.dart';
-import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/budget_type_selection.dart';
-import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/dart_range_selector.dart';
-import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/quick_category_selection.dart';
+import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/budget_setting_row.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
+import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
+import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/budget_compact_display.dart';
+import 'package:expense_mate/features/budgets/presentation/components/bottom_sheet_component/budget_calculator.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddBudgetBottomSheet extends StatelessWidget {
   const AddBudgetBottomSheet({super.key});
 
   static Future<void> show(BuildContext context) {
+    final presets = context.budgetCategoryPresets;
+
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => BlocProvider(
-        create: (context) => BudgetFormBloc(),
+      builder: (_) => BlocProvider(
+        create: (_) => BudgetFormBloc(categoryPresets: presets),
         child: const AddBudgetBottomSheet(),
       ),
     );
@@ -29,90 +33,174 @@ class AddBudgetBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
     return BlocBuilder<BudgetFormBloc, BudgetFormState>(
-      builder: (context, formState) {
+      builder: (context, state) {
         return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.88,
+          ),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
           decoration: BoxDecoration(
-            color: isDark ? colorScheme.background : Colors.white,
+            color: isDark ? theme.colorScheme.background : Colors.white,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           ),
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 12, bottom: 8),
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: colorScheme.onSurface.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          color: colorScheme.onSurface.withValues(alpha: 0.1),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: colorScheme.primary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: colorScheme.primary.withValues(alpha: 0.3),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Icon(
-                            formState.selectedIcon,
-                            color: colorScheme.primary,
-                            size: 28,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Create Budget',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _DragHandle(theme: theme),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Compact header: icon + name + amount display
+                      BudgetCompactDisplay(state: state),
+                      const SizedBox(height: 12),
 
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: BudgetForm(formState: formState),
+                      // Type + Category in one row
+                      BudgetSettingsRow(state: state),
+                      const SizedBox(height: 8),
+
+                      // Calculator pad (handles amount + name + dates + submit)
+                      BudgetCalculator(state: state),
+                      const SizedBox(height: 12),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         );
       },
     );
   }
 }
+
+class _DragHandle extends StatelessWidget {
+  final ThemeData theme;
+  const _DragHandle({required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 4,
+      margin: const EdgeInsets.only(top: 10, bottom: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+        borderRadius: BorderRadius.circular(2),
+      ),
+    );
+  }
+}
+// class AddBudgetBottomSheet extends StatelessWidget {
+//   const AddBudgetBottomSheet({super.key});
+
+//   static Future<void> show(BuildContext context) {
+//     return showModalBottomSheet(
+//       context: context,
+//       isScrollControlled: true,
+//       backgroundColor: Colors.transparent,
+//       builder: (context) => BlocProvider(
+//         create: (context) => BudgetFormBloc(),
+//         child: const AddBudgetBottomSheet(),
+//       ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final theme = Theme.of(context);
+//     final colorScheme = theme.colorScheme;
+//     final isDark = theme.brightness == Brightness.dark;
+
+//     return BlocBuilder<BudgetFormBloc, BudgetFormState>(
+//       builder: (context, formState) {
+//         return Container(
+//           decoration: BoxDecoration(
+//             color: isDark ? colorScheme.background : Colors.white,
+//             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+//           ),
+//           child: Padding(
+//             padding: EdgeInsets.only(
+//               bottom: MediaQuery.of(context).viewInsets.bottom,
+//             ),
+//             child: SingleChildScrollView(
+//               child: Column(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Container(
+//                     margin: const EdgeInsets.only(top: 12, bottom: 8),
+//                     width: 40,
+//                     height: 4,
+//                     decoration: BoxDecoration(
+//                       color: colorScheme.onSurface.withValues(alpha: 0.3),
+//                       borderRadius: BorderRadius.circular(2),
+//                     ),
+//                   ),
+//                   Container(
+//                     padding: const EdgeInsets.symmetric(
+//                       horizontal: 20,
+//                       vertical: 12,
+//                     ),
+//                     decoration: BoxDecoration(
+//                       border: Border(
+//                         bottom: BorderSide(
+//                           color: colorScheme.onSurface.withValues(alpha: 0.1),
+//                           width: 1,
+//                         ),
+//                       ),
+//                     ),
+//                     child: Row(
+//                       children: [
+//                         Container(
+//                           padding: const EdgeInsets.all(12),
+//                           decoration: BoxDecoration(
+//                             color: colorScheme.primary.withValues(alpha: 0.15),
+//                             borderRadius: BorderRadius.circular(12),
+//                             border: Border.all(
+//                               color: colorScheme.primary.withValues(alpha: 0.3),
+//                               width: 1.5,
+//                             ),
+//                           ),
+//                           child: Icon(
+//                             formState.selectedIcon,
+//                             color: colorScheme.primary,
+//                             size: 28,
+//                           ),
+//                         ),
+//                         const SizedBox(width: 12),
+//                         Text(
+//                           'Create Budget',
+//                           style: TextStyle(
+//                             fontSize: 22,
+//                             fontWeight: FontWeight.bold,
+//                             color: colorScheme.onSurface,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   Padding(
+//                     padding: const EdgeInsets.all(20),
+//                     child: BudgetForm(formState: formState),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
 
 
 

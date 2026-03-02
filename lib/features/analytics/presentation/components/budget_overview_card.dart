@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class BudgetOverviewCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class BudgetOverviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     if (budgetAnalysis.totalBudgets == 0) {
       return const SizedBox.shrink();
     }
@@ -27,7 +28,7 @@ class BudgetOverviewCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Budget Overview',
+                  t.budgetOverview,
                   style: AppTextStyles.h4.copyWith(
                     color: theme.textTheme.titleLarge?.color,
                   ),
@@ -42,7 +43,7 @@ class BudgetOverviewCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
-                    '${budgetAnalysis.activeBudgets} Active',
+                    '${budgetAnalysis.activeBudgets} ${t.active}',
                     style: AppTextStyles.labelSmall.copyWith(
                       color: theme.primaryColor,
                       fontWeight: FontWeight.w600,
@@ -55,12 +56,12 @@ class BudgetOverviewCard extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Overall Budget Utilization
-            _buildOverallUtilization(theme),
+            _buildOverallUtilization(theme, t),
 
             const SizedBox(height: 20),
 
             // Budget Statistics
-            _buildBudgetStats(theme),
+            _buildBudgetStats(theme, t),
 
             if (budgetAnalysis.budgetProgresses.isNotEmpty) ...[
               const SizedBox(height: 20),
@@ -69,7 +70,7 @@ class BudgetOverviewCard extends StatelessWidget {
 
               // Individual Budget Progress
               ...budgetAnalysis.budgetProgresses.map(
-                (progress) => _buildBudgetProgressItem(progress, theme),
+                (progress) => _buildBudgetProgressItem(progress, theme, t),
               ),
             ],
           ],
@@ -78,7 +79,7 @@ class BudgetOverviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildOverallUtilization(ThemeData theme) {
+  Widget _buildOverallUtilization(ThemeData theme, AppLocalizations t) {
     final utilization = budgetAnalysis.overallBudgetUtilization;
     final isOverBudget = utilization > 100;
     final progressColor = isOverBudget
@@ -93,7 +94,7 @@ class BudgetOverviewCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Overall Utilization', style: AppTextStyles.subtitle2),
+            Text(t.overallUtilization, style: AppTextStyles.subtitle2),
             Text(
               '${utilization.toStringAsFixed(1)}%',
               style: AppTextStyles.subtitle1.copyWith(
@@ -118,13 +119,13 @@ class BudgetOverviewCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '\$${budgetAnalysis.totalSpentAmount.toStringAsFixed(0)} spent',
+              '\$${budgetAnalysis.totalSpentAmount.toStringAsFixed(0)} ${t.spent}',
               style: AppTextStyles.caption.copyWith(
                 color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               ),
             ),
             Text(
-              'of \$${budgetAnalysis.totalBudgetAmount.toStringAsFixed(0)}',
+              '${t.ofa} \$${budgetAnalysis.totalBudgetAmount.toStringAsFixed(0)}',
               style: AppTextStyles.caption.copyWith(
                 color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               ),
@@ -135,12 +136,12 @@ class BudgetOverviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBudgetStats(ThemeData theme) {
+  Widget _buildBudgetStats(ThemeData theme, AppLocalizations t) {
     return Row(
       children: [
         Expanded(
           child: _buildStatCard(
-            'Total Budgets',
+            t.totalBudget,
             budgetAnalysis.totalBudgets.toString(),
             Icons.account_balance_wallet,
             theme.primaryColor,
@@ -150,7 +151,7 @@ class BudgetOverviewCard extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
-            'Over Budget',
+            t.overBudget,
             budgetAnalysis.overBudgetCount.toString(),
             Icons.warning_amber_rounded,
             budgetAnalysis.overBudgetCount > 0 ? Colors.red : Colors.grey,
@@ -193,7 +194,11 @@ class BudgetOverviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBudgetProgressItem(BudgetProgress progress, ThemeData theme) {
+  Widget _buildBudgetProgressItem(
+    BudgetProgress progress,
+    ThemeData theme,
+    AppLocalizations t,
+  ) {
     final progressColor = progress.isOverBudget
         ? Colors.red
         : progress.percentage > 80
@@ -244,7 +249,7 @@ class BudgetOverviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '\$${progress.spentAmount.toStringAsFixed(0)} of \$${progress.budgetAmount.toStringAsFixed(0)}',
+            '\$${progress.spentAmount.toStringAsFixed(0)} ${t.ofa} \$${progress.budgetAmount.toStringAsFixed(0)}',
             style: AppTextStyles.caption.copyWith(
               color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
             ),

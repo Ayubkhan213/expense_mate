@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/navigation_fram.dart';
 
 abstract class BudgetFormEvent extends Equatable {
   const BudgetFormEvent();
@@ -12,65 +11,67 @@ abstract class BudgetFormEvent extends Equatable {
 
 class BudgetFormTypeChanged extends BudgetFormEvent {
   final BudgetType type;
-
   const BudgetFormTypeChanged(this.type);
-
   @override
   List<Object?> get props => [type];
 }
 
 class BudgetFormCategorySelected extends BudgetFormEvent {
   final String category;
-
   const BudgetFormCategorySelected(this.category);
-
   @override
   List<Object?> get props => [category];
 }
 
 class BudgetFormColorChanged extends BudgetFormEvent {
   final Color color;
-
   const BudgetFormColorChanged(this.color);
-
   @override
   List<Object?> get props => [color];
 }
 
 class BudgetFormIconChanged extends BudgetFormEvent {
   final IconData icon;
-
   const BudgetFormIconChanged(this.icon);
-
   @override
   List<Object?> get props => [icon];
 }
 
 class BudgetFormStartDateChanged extends BudgetFormEvent {
   final DateTime date;
-
   const BudgetFormStartDateChanged(this.date);
-
   @override
   List<Object?> get props => [date];
 }
 
 class BudgetFormEndDateChanged extends BudgetFormEvent {
   final DateTime date;
-
   const BudgetFormEndDateChanged(this.date);
-
   @override
   List<Object?> get props => [date];
 }
 
 class BudgetFormNameChanged extends BudgetFormEvent {
   final String name;
-
   const BudgetFormNameChanged(this.name);
-
   @override
   List<Object?> get props => [name];
 }
+
+// ── NEW ──
+class BudgetFormAmountChanged extends BudgetFormEvent {
+  final String amount;
+  const BudgetFormAmountChanged(this.amount);
+  @override
+  List<Object?> get props => [amount];
+}
+
+class BudgetFormOperationChanged extends BudgetFormEvent {
+  final String operation;
+  const BudgetFormOperationChanged(this.operation);
+  @override
+  List<Object?> get props => [operation];
+}
+// ────────
 
 class BudgetFormReset extends BudgetFormEvent {}

@@ -1,4 +1,6 @@
+import 'package:expense_mate/core/data/models/enums.dart';
 import 'package:expense_mate/core/data/models/transaction_model.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RecurringGeneratedTransactionsList extends StatelessWidget {
@@ -12,7 +14,7 @@ class RecurringGeneratedTransactionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     if (transactions.isEmpty) {
       return Card(
         child: Padding(
@@ -22,7 +24,7 @@ class RecurringGeneratedTransactionsList extends StatelessWidget {
               Icon(Icons.receipt_long, size: 48, color: Colors.grey[400]),
               const SizedBox(height: 16),
               Text(
-                'No transactions generated yet',
+                t.noTransactionsYet,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.grey[600],
                 ),
@@ -40,7 +42,7 @@ class RecurringGeneratedTransactionsList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'Generated Transactions (${transactions.length})',
+              '${t.generatedTransactions}  (${transactions.length})',
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -68,7 +70,7 @@ class RecurringGeneratedTransactionsList extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text(
-                  _getPaymentMethodText(transaction.paymentMethod),
+                  _getPaymentMethodText(transaction.paymentMethod, t),
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
                 trailing: Text(
@@ -87,11 +89,24 @@ class RecurringGeneratedTransactionsList extends StatelessWidget {
     );
   }
 
+  String _getPaymentMethodText(PaymentMethod method, AppLocalizations t) {
+    switch (method) {
+      case PaymentMethod.cash:
+        return t.cash;
+      case PaymentMethod.card:
+        return t.card;
+      case PaymentMethod.bank:
+        return t.bank;
+      case PaymentMethod.wallet:
+        return t.wallet;
+    }
+  }
+
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';
   }
 
-  String _getPaymentMethodText(paymentMethod) {
-    return paymentMethod.toString().split('.').last.toUpperCase();
-  }
+  // String _getPaymentMethodText(paymentMethod) {
+  //   return paymentMethod.toString().split('.').last.toUpperCase();
+  // }
 }

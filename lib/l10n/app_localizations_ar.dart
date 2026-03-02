@@ -18,13 +18,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get analytics => 'التحليلات';
 
   @override
-  String get records => 'السجلات';
+  String get records => 'سجلات';
 
   @override
-  String get transactions => 'المعاملات';
+  String get transactions => 'معاملات';
 
   @override
-  String get budgets => 'الميزانيات';
+  String get budgets => 'ميزانيات';
 
   @override
   String get income => 'الدخل';
@@ -42,7 +42,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get borrowed => 'مقترض';
 
   @override
-  String get lent => 'مقرض';
+  String get lent => 'مُقرَض';
 
   @override
   String get borrowedFrom => 'مقترض من';
@@ -75,7 +75,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get paid => 'مدفوع';
 
   @override
-  String get remaining => 'متبقي';
+  String get remaining => 'المتبقي';
 
   @override
   String get overdue => 'متأخر';
@@ -480,7 +480,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get categoriesSelected => 'فئات محددة';
 
   @override
-  String get total => 'المجموع';
+  String get total => 'الإجمالي';
 
   @override
   String get balance => 'الرصيد';
@@ -586,4 +586,823 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get selectExpenseCategory => 'اختر فئة المصروف';
+
+  @override
+  String get errorPrefix => 'خطأ';
+
+  @override
+  String get balancePrefix => 'الرصيد';
+
+  @override
+  String get recentTransactions => 'المعاملات الأخيرة';
+
+  @override
+  String get viewAll => 'عرض الكل ←';
+
+  @override
+  String get activeDebts => 'الديون النشطة';
+
+  @override
+  String get addDebt => 'إضافة دين';
+
+  @override
+  String get totalBalance => 'الرصيد الإجمالي';
+
+  @override
+  String get youOwe => 'تدين به';
+
+  @override
+  String get youreOwed => 'مستحق لك';
+
+  @override
+  String get debtTransactions => 'معاملات الديون';
+
+  @override
+  String get allTransactions => 'جميع المعاملات';
+
+  @override
+  String get searchByPerson => 'ابحث بالشخص أو الفئة…';
+
+  @override
+  String get searchByCategory => 'بحث حسب الفئة…';
+
+  @override
+  String get all => 'الكل';
+
+  @override
+  String get dateRange => 'نطاق التاريخ';
+
+  @override
+  String get clearAll => 'مسح الكل';
+
+  @override
+  String get noDebtTransactions => 'لا توجد معاملات ديون';
+
+  @override
+  String get noTransactions => 'لا توجد معاملات';
+
+  @override
+  String get tryAdjustingFilters => 'حاول تعديل الفلاتر';
+
+  @override
+  String get debtTransaction => 'معاملة دين';
+
+  @override
+  String get settled => 'مسوّى';
+
+  @override
+  String get daysOverdue => 'أيام متأخرة';
+
+  @override
+  String get transaction => 'معاملة';
+
+  @override
+  String get noActiveDebts => 'لا توجد ديون نشطة';
+
+  @override
+  String get debtManagementStarts => 'إدارة ديونك تبدأ هنا';
+
+  @override
+  String get noTransactionsYet => 'لا توجد معاملات بعد';
+
+  @override
+  String get startTracking => 'ابدأ تتبع مصروفاتك';
+
+  @override
+  String get paymentHistory => 'سجل المدفوعات';
+
+  @override
+  String get payments => 'مدفوعات';
+
+  @override
+  String get addPayment => 'إضافة دفعة';
+
+  @override
+  String get fullyPaidOff => 'مدفوع بالكامل 🎉';
+
+  @override
+  String get repaid => '% مسدد';
+
+  @override
+  String get cleared => 'منتهي';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get totalDebt => 'إجمالي الدين';
+
+  @override
+  String get paidOff => 'تم السداد!';
+
+  @override
+  String get remainingAmount => 'متبقي';
+
+  @override
+  String get percentPaid => '% مدفوع';
+
+  @override
+  String get due => 'الاستحقاق:';
+
+  @override
+  String get addPaymentTitle => 'إضافة دفعة';
+
+  @override
+  String get enterPaymentAmount => 'أدخل مبلغ الدفعة';
+
+  @override
+  String get pleaseEnterAmount => 'يرجى إدخال المبلغ';
+
+  @override
+  String get pleaseEnterValidAmount => 'يرجى إدخال مبلغ صحيح';
+
+  @override
+  String get amountExceedsDebt => 'المبلغ يتجاوز الدين المتبقي';
+
+  @override
+  String get paymentDate => 'تاريخ الدفعة';
+
+  @override
+  String get noteOptional => 'ملاحظة (اختياري)';
+
+  @override
+  String get addANote => 'أضف ملاحظة';
+
+  @override
+  String get savePayment => 'حفظ الدفعة';
+
+  @override
+  String get deletePayment => 'حذف الدفعة';
+
+  @override
+  String get deletePaymentConfirm => 'هل أنت متأكد من حذف هذه الدفعة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get deleteTooltip => 'حذف الدفعة';
+
+  @override
+  String get noPaymentsYet => 'لا توجد دفعات بعد';
+
+  @override
+  String get addFirstPayment => 'اضغط على زر + أدناه لإضافة أول دفعة';
+
+  @override
+  String get trackRepayments => 'تتبع سداد ديونك بسهولة';
+
+  @override
+  String get myBudgets => 'ميزانياتي';
+
+  @override
+  String get searchBudgets => 'ابحث في الميزانيات…';
+
+  @override
+  String get clear => 'مسح';
+
+  @override
+  String get expired => 'منتهية';
+
+  @override
+  String get archived => 'مؤرشفة';
+
+  @override
+  String get totalRemaining => 'إجمالي المتبقي';
+
+  @override
+  String get overBudget => 'تجاوز الميزانية';
+
+  @override
+  String get used => '% مستخدم';
+
+  @override
+  String get spent => 'أُنفق';
+
+  @override
+  String get noBudgetsYet => 'لا توجد ميزانيات بعد';
+
+  @override
+  String get createFirstBudget => 'أنشئ ميزانيتك الأولى أدناه';
+
+  @override
+  String get noActiveBudgets => 'لا توجد ميزانيات نشطة';
+
+  @override
+  String get tapNewBudget => 'اضغط على \"ميزانية جديدة\" للبدء';
+
+  @override
+  String get noExpiredBudgets => 'لا توجد ميزانيات منتهية';
+
+  @override
+  String get allBudgetsOnTrack => 'جميع ميزانياتك في المسار الصحيح!';
+
+  @override
+  String get nothingArchived => 'لا يوجد شيء مؤرشف';
+
+  @override
+  String get archivedWillShowHere => 'الميزانيات المؤرشفة ستظهر هنا';
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get overBy => 'تجاوز بمقدار';
+
+  @override
+  String get daysLeft => 'أيام متبقية';
+
+  @override
+  String get expiredDaysAgo => 'أيام مضت';
+
+  @override
+  String get viewDetails => 'عرض التفاصيل';
+
+  @override
+  String get newBudget => 'ميزانية جديدة';
+
+  @override
+  String get monthlyBudget => 'ميزانية شهرية';
+
+  @override
+  String get projectBudget => 'ميزانية مشروع';
+
+  @override
+  String get customBudget => 'ميزانية مخصصة';
+
+  @override
+  String get budgetName => 'اسم الميزانية';
+
+  @override
+  String get budgetNameHint => 'مثال: مصروف الشهر';
+
+  @override
+  String get start => 'البداية';
+
+  @override
+  String get end => 'النهاية';
+
+  @override
+  String get days => 'أيام';
+
+  @override
+  String get color => 'اللون';
+
+  @override
+  String get icon => 'الأيقونة';
+
+  @override
+  String get name => 'الاسم';
+
+  @override
+  String get dates => 'التواريخ';
+
+  @override
+  String get style => 'المظهر';
+
+  @override
+  String get category => 'الفئة';
+
+  @override
+  String get quickSelect => 'اختيار سريع';
+
+  @override
+  String get budgetType => 'نوع الميزانية';
+
+  @override
+  String get monthly => 'شهري';
+
+  @override
+  String get project => 'مشروع';
+
+  @override
+  String get custom => 'مخصص';
+
+  @override
+  String get duration => 'المدة';
+
+  @override
+  String get pleaseEnterBudgetName => 'يرجى إدخال اسم الميزانية';
+
+  @override
+  String get totalBudget => 'إجمالي الميزانية';
+
+  @override
+  String get overBudgetLabel => 'تجاوز الميزانية!';
+
+  @override
+  String get nearLimit => 'قريب من الحد';
+
+  @override
+  String get percentUsed => '% مستخدم';
+
+  @override
+  String get remainingCollapsed => 'المتبقي:';
+
+  @override
+  String get tapToAddTransaction => 'اضغط + لإضافة أول معاملة';
+
+  @override
+  String get addTransaction => 'إضافة معاملة';
+
+  @override
+  String get anErrorOccurred => 'حدث خطأ';
+
+  @override
+  String get more => 'المزيد';
+
+  @override
+  String get ofa => 'من';
+
+  @override
+  String get wedding => 'زفاف';
+
+  @override
+  String get homeRenovation => 'تجديد المنزل';
+
+  @override
+  String get carPurchase => 'شراء سيارة';
+
+  @override
+  String get customBudgetLabel => 'ميزانية مخصصة';
+
+  @override
+  String get noRecurringTransactions => 'لا توجد معاملات متكررة';
+
+  @override
+  String get setUpAutomatic => 'إعداد معاملات تلقائية للدخل\nوالمصروفات المنتظمة';
+
+  @override
+  String get addFirstRecurring => 'أضف أول معاملة متكررة';
+
+  @override
+  String get noResultsFound => 'لا توجد نتائج';
+
+  @override
+  String get tryDifferentFilter => 'جرب بحثًا أو مرشحًا مختلفًا';
+
+  @override
+  String get monthlyNet => 'صافي شهري';
+
+  @override
+  String get dueSoon => 'مستحق قريباً';
+
+  @override
+  String get inactive => 'غير نشط';
+
+  @override
+  String get pause => 'إيقاف مؤقت';
+
+  @override
+  String get resume => 'استئناف';
+
+  @override
+  String get deleteRecurringTitle => 'حذف المعاملة المتكررة';
+
+  @override
+  String get dueNow => 'مستحق الآن';
+
+  @override
+  String get daily => 'يومي';
+
+  @override
+  String get weekly => 'أسبوعي';
+
+  @override
+  String get biweekly => 'كل أسبوعين';
+
+  @override
+  String get quarterly => 'ربع سنوي';
+
+  @override
+  String get yearly => 'سنوي';
+
+  @override
+  String get recurringIncome => 'دخل متكرر';
+
+  @override
+  String get recurringExpense => 'مصروف متكرر';
+
+  @override
+  String get noEnd => 'بلا نهاية';
+
+  @override
+  String get addNoteOptional => 'أضف ملاحظة (اختياري)';
+
+  @override
+  String get recurringCreated => 'تم إنشاء المعاملة المتكررة!';
+
+  @override
+  String get recurringUpdated => 'تم تحديث المعاملة المتكررة!';
+
+  @override
+  String get ledger => 'السجل';
+
+  @override
+  String get insights => 'التحليلات';
+
+  @override
+  String get paused => 'متوقف';
+
+  @override
+  String get details => 'التفاصيل';
+
+  @override
+  String get frequency => 'التكرار';
+
+  @override
+  String get startDate => 'تاريخ البداية';
+
+  @override
+  String get endDate => 'تاريخ الانتهاء';
+
+  @override
+  String get never => 'أبداً';
+
+  @override
+  String get nextOccurrence => 'التكرار التالي';
+
+  @override
+  String get dayOfMonth => 'يوم الشهر';
+
+  @override
+  String get goBack => 'رجوع';
+
+  @override
+  String get monthlyEstimate => 'التقدير الشهري';
+
+  @override
+  String get perMonth => 'في الشهر';
+
+  @override
+  String get statistics => 'الإحصائيات';
+
+  @override
+  String get totalAmount => 'المبلغ الإجمالي';
+
+  @override
+  String get noTransactionsGenerated => 'لم يتم إنشاء معاملات بعد';
+
+  @override
+  String get generatedTransactions => 'المعاملات المُنشأة';
+
+  @override
+  String get transactionsThisPeriod => 'معاملة في هذه الفترة';
+
+  @override
+  String get netBalance => 'الرصيد الصافي';
+
+  @override
+  String get surplus => 'فائض';
+
+  @override
+  String get deficit => 'عجز';
+
+  @override
+  String get week => 'أسبوع';
+
+  @override
+  String get month => 'شهر';
+
+  @override
+  String get threeMonths => '3 أشهر';
+
+  @override
+  String get sixMonths => '6 أشهر';
+
+  @override
+  String get year => 'سنة';
+
+  @override
+  String get allTime => 'كل الوقت';
+
+  @override
+  String get financialOverview => 'النظرة المالية العامة';
+
+  @override
+  String get budgetOverview => 'نظرة عامة على الميزانية';
+
+  @override
+  String get overallUtilization => 'الاستخدام الإجمالي';
+
+  @override
+  String get totalBudgets => 'إجمالي الميزانيات';
+
+  @override
+  String get expenseByCategory => 'المصروف حسب الفئة';
+
+  @override
+  String get noExpenseData => 'لا توجد بيانات مصروفات';
+
+  @override
+  String get monthlyTrends => 'الاتجاهات الشهرية';
+
+  @override
+  String get incomeVsExpense => 'الدخل مقابل المصروف بمرور الوقت';
+
+  @override
+  String get debtOverview => 'نظرة عامة على الديون';
+
+  @override
+  String get activeDebt => 'نشط';
+
+  @override
+  String get paymentMethods => 'طرق الدفع';
+
+  @override
+  String get paymentDistribution => 'توزيع طرق الدفع';
+
+  @override
+  String get topExpenses => 'أعلى المصروفات';
+
+  @override
+  String get top => 'أعلى';
+
+  @override
+  String get avgDaily => 'متوسط يومي';
+
+  @override
+  String get avgTransaction => 'متوسط المعاملة';
+
+  @override
+  String get savingsRate => 'معدل الادخار';
+
+  @override
+  String get profileTitle => 'الملف الشخصي';
+
+  @override
+  String get sectionAppearance => 'المظهر';
+
+  @override
+  String get sectionAccount => 'الحساب';
+
+  @override
+  String get sectionData => 'البيانات';
+
+  @override
+  String get sectionSupport => 'الدعم';
+
+  @override
+  String get menuTheme => 'السمة';
+
+  @override
+  String get menuThemeSubtitle => 'تخصيص مظهر التطبيق';
+
+  @override
+  String get menuLanguage => 'اللغة';
+
+  @override
+  String get menuLanguageSubtitle => 'تغيير لغة التطبيق';
+
+  @override
+  String get menuDarkMode => 'الوضع الداكن';
+
+  @override
+  String get menuDarkModeEnabled => 'مفعّل';
+
+  @override
+  String get menuDarkModeDisabled => 'معطّل';
+
+  @override
+  String get menuEditProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get menuEditProfileSubtitle => 'تحديث معلوماتك';
+
+  @override
+  String get menuPrivacy => 'الخصوصية والأمان';
+
+  @override
+  String get menuPrivacySubtitle => 'إدارة إعدادات الخصوصية';
+
+  @override
+  String get menuNotifications => 'الإشعارات';
+
+  @override
+  String get menuNotificationsSubtitle => 'تكوين تفضيلات الإشعارات';
+
+  @override
+  String get menuDailyNotification => 'الإشعار اليومي';
+
+  @override
+  String get menuDailyNotificationSubtitle => 'تعيين تذكير يومي';
+
+  @override
+  String get menuBackup => 'النسخ الاحتياطي والاستعادة';
+
+  @override
+  String get menuBackupSubtitle => 'احتياطي بياناتك';
+
+  @override
+  String get menuExport => 'تصدير البيانات';
+
+  @override
+  String get menuExportSubtitle => 'تنزيل بياناتك';
+
+  @override
+  String get menuHelp => 'المساعدة والدعم';
+
+  @override
+  String get menuHelpSubtitle => 'احصل على مساعدة مع التطبيق';
+
+  @override
+  String get menuAbout => 'حول';
+
+  @override
+  String get menuAboutVersion => 'الإصدار ';
+
+  @override
+  String get btnLogout => 'تسجيل الخروج';
+
+  @override
+  String get dialogLogoutTitle => 'تسجيل الخروج';
+
+  @override
+  String get dialogLogoutMessage => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get dialogEditNameTitle => 'تعديل الاسم';
+
+  @override
+  String get dialogEditNameLabel => 'الاسم';
+
+  @override
+  String get btnCancel => 'إلغاء';
+
+  @override
+  String get btnSave => 'حفظ';
+
+  @override
+  String get btnLogoutConfirm => 'تسجيل الخروج';
+
+  @override
+  String get imagePickerTakePhoto => 'التقاط صورة';
+
+  @override
+  String get imagePickerGallery => 'اختيار من المعرض';
+
+  @override
+  String get imagePickerRemove => 'إزالة الصورة';
+
+  @override
+  String get aboutAppName => 'Expense Mate';
+
+  @override
+  String get aboutAppDescription => 'تطبيق احترافي لتتبع المصروفات';
+
+  @override
+  String get dailyNotificationTitle => 'الإشعار اليومي';
+
+  @override
+  String get notificationActive => 'الإشعار نشط';
+
+  @override
+  String get noNotificationSet => 'لم يتم تعيين إشعار';
+
+  @override
+  String get notificationDailyAt => 'يوميًا في';
+
+  @override
+  String get notificationTime => 'وقت الإشعار';
+
+  @override
+  String get notificationTitleLabel => 'عنوان الإشعار';
+
+  @override
+  String get notificationTitleHint => 'أدخل عنوان الإشعار';
+
+  @override
+  String get notificationMessageLabel => 'رسالة الإشعار';
+
+  @override
+  String get notificationMessageHint => 'أدخل رسالة الإشعار';
+
+  @override
+  String get notificationImageOptional => 'صورة الإشعار (اختيارية)';
+
+  @override
+  String get notificationAddImage => 'إضافة صورة';
+
+  @override
+  String get notificationChangeImage => 'تغيير الصورة';
+
+  @override
+  String get notificationRemoveImage => 'إزالة';
+
+  @override
+  String get btnSendTest => 'إرسال إشعار تجريبي';
+
+  @override
+  String get btnAddToSchedule => 'إضافة إلى قائمة الجدول';
+
+  @override
+  String get btnSaveAllSchedules => 'حفظ جميع الجداول';
+
+  @override
+  String get scheduledNotifications => 'الإشعارات المجدولة';
+
+  @override
+  String get cancelNotificationTooltip => 'إلغاء الإشعار';
+
+  @override
+  String get infoHowItWorks => 'كيف يعمل';
+
+  @override
+  String get infoLine1 => 'سيتكرر الإشعار يوميًا في الوقت المحدد';
+
+  @override
+  String get infoLine2 => 'يعمل حتى عند إغلاق التطبيق';
+
+  @override
+  String get infoLine3 => 'تُعرض الصور في الإشعار الموسع';
+
+  @override
+  String get infoLine4 => 'يتم تغيير حجم الصور الكبيرة تلقائيًا';
+
+  @override
+  String get templateTitle => 'اختر قالب السمة';
+
+  @override
+  String get themeLabel => 'السمة';
+
+  @override
+  String get themeApplied => 'تم التطبيق';
+
+  @override
+  String get darkLightSwitch => 'داكن / فاتح';
+
+  @override
+  String get languageTitle => 'اختر اللغة';
+
+  @override
+  String get langEnglish => 'الإنجليزية';
+
+  @override
+  String get langArabic => 'العربية';
+
+  @override
+  String get langUrdu => 'الأردية';
+
+  @override
+  String get langFrench => 'الفرنسية';
+
+  @override
+  String get langSelected => 'تم الاختيار';
+
+  @override
+  String get analyticsTitle => 'التحليلات';
+
+  @override
+  String get totalTransactions => 'المعاملات';
+
+  @override
+  String get paymentMethodDistribution => 'توزيع طرق الدفع';
+
+  @override
+  String get periodWeek => 'أسبوع';
+
+  @override
+  String get periodMonth => 'شهر';
+
+  @override
+  String get period3Months => '3 أشهر';
+
+  @override
+  String get period6Months => '6 أشهر';
+
+  @override
+  String get periodYear => 'سنة';
+
+  @override
+  String get periodAll => 'كل الوقت';
+
+  @override
+  String get recurringTitle => 'المتكررة';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get filterActive => 'نشط';
+
+  @override
+  String get filterExpired => 'منتهي';
+
+  @override
+  String get filterArchived => 'مؤرشف';
+
+  @override
+  String get searchHint => 'بحث…';
+
+  @override
+  String get results => 'نتائج';
+
+  @override
+  String get result => 'نتيجة';
+
+  @override
+  String get deleteConfirm => 'هل أنت متأكد من حذف';
+
+  @override
+  String get add => 'إضافة';
 }

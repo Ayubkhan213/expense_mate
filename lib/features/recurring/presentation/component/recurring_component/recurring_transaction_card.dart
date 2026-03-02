@@ -1,3 +1,5 @@
+import 'package:expense_mate/core/utils/translation_helper.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
 import 'package:expense_mate/core/data/models/enums.dart';
@@ -23,6 +25,7 @@ class RecurringTransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = AppLocalizations.of(context)!;
     final isIncome = transaction.type == TransactionType.income;
 
     return Card(
@@ -35,11 +38,11 @@ class RecurringTransactionCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(theme, isIncome),
+              _buildHeader(theme, isIncome, t, context),
               const SizedBox(height: 12),
-              _buildNextOccurrence(theme),
+              _buildNextOccurrence(theme, t),
               const SizedBox(height: 12),
-              _buildActionButtons(),
+              _buildActionButtons(t),
             ],
           ),
         ),
@@ -47,7 +50,12 @@ class RecurringTransactionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(ThemeData theme, bool isIncome) {
+  Widget _buildHeader(
+    ThemeData theme,
+    bool isIncome,
+    AppLocalizations t,
+    BuildContext context,
+  ) {
     return Row(
       children: [
         Container(
@@ -68,14 +76,15 @@ class RecurringTransactionCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                transaction.categoryKey.toUpperCase(),
+                context.tr(transaction.categoryKey),
+                // transaction.categoryKey.toUpperCase(),
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
-                _getFrequencyText(transaction.frequency),
+                _getFrequencyText(transaction.frequency, t),
                 style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
               ),
             ],
@@ -92,14 +101,14 @@ class RecurringTransactionCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            _buildStatusBadge(),
+            _buildStatusBadge(t),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildStatusBadge() {
+  Widget _buildStatusBadge(AppLocalizations t) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
@@ -109,7 +118,7 @@ class RecurringTransactionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
-        transaction.isActive ? 'Active' : 'Inactive',
+        transaction.isActive ? t.active : t.inactive,
         style: TextStyle(
           color: transaction.isActive ? Colors.green : Colors.grey,
           fontSize: 10,
@@ -119,35 +128,35 @@ class RecurringTransactionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildNextOccurrence(ThemeData theme) {
+  Widget _buildNextOccurrence(ThemeData theme, AppLocalizations t) {
     return Row(
       children: [
         const Icon(Icons.event, size: 16, color: Colors.grey),
         const SizedBox(width: 4),
         Text(
-          'Next: ${_formatDate(transaction.nextOccurrence)}',
+          '${t.next}: ${_formatDate(transaction.nextOccurrence)}',
           style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
         const Spacer(),
-        if (transaction.isDue) _buildDueBadge(),
+        if (transaction.isDue) _buildDueBadge(t),
       ],
     );
   }
 
-  Widget _buildDueBadge() {
+  Widget _buildDueBadge(AppLocalizations t) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.orange.withOpacity(0.1),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.warning_amber, size: 14, color: Colors.orange),
           SizedBox(width: 4),
           Text(
-            'Due Now',
+            t.dueNow,
             style: TextStyle(
               color: Colors.orange,
               fontSize: 10,
@@ -159,7 +168,7 @@ class RecurringTransactionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(AppLocalizations t) {
     return Row(
       children: [
         Expanded(
@@ -169,7 +178,7 @@ class RecurringTransactionCard extends StatelessWidget {
               transaction.isActive ? Icons.pause : Icons.play_arrow,
               size: 16,
             ),
-            label: Text(transaction.isActive ? 'Pause' : 'Resume'),
+            label: Text(transaction.isActive ? t.pause : t.resume),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),
@@ -180,7 +189,7 @@ class RecurringTransactionCard extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: onEdit, // ADD THIS CALLBACK
             icon: const Icon(Icons.edit_outlined, size: 16),
-            label: const Text('Edit'),
+            label: Text(t.edit),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 8),
             ),
@@ -191,7 +200,7 @@ class RecurringTransactionCard extends StatelessWidget {
           child: OutlinedButton.icon(
             onPressed: onDelete,
             icon: const Icon(Icons.delete_outline, size: 16),
-            label: const Text('Delete'),
+            label: Text(t.delete),
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.red,
               padding: const EdgeInsets.symmetric(vertical: 8),
@@ -202,20 +211,20 @@ class RecurringTransactionCard extends StatelessWidget {
     );
   }
 
-  String _getFrequencyText(RecurrenceFrequency frequency) {
+  String _getFrequencyText(RecurrenceFrequency frequency, AppLocalizations t) {
     switch (frequency) {
       case RecurrenceFrequency.daily:
-        return 'Daily';
+        return t.daily;
       case RecurrenceFrequency.weekly:
-        return 'Weekly';
+        return t.weekly;
       case RecurrenceFrequency.biweekly:
-        return 'Bi-weekly';
+        return t.biweekly;
       case RecurrenceFrequency.monthly:
-        return 'Monthly';
+        return t.monthly;
       case RecurrenceFrequency.quarterly:
-        return 'Quarterly';
+        return t.quarterly;
       case RecurrenceFrequency.yearly:
-        return 'Yearly';
+        return t.yearly;
     }
   }
 

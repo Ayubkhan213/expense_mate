@@ -1,3 +1,4 @@
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RecurringDetailMonthlyEstimate extends StatelessWidget {
@@ -13,7 +14,7 @@ class RecurringDetailMonthlyEstimate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final t = AppLocalizations.of(context)!;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -25,7 +26,7 @@ class RecurringDetailMonthlyEstimate extends StatelessWidget {
                 Icon(Icons.trending_up, color: theme.primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  'Monthly Estimate',
+                  t.monthlyEstimate,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -42,7 +43,7 @@ class RecurringDetailMonthlyEstimate extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'per month',
+              t.perMonth,
               style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
             ),
           ],

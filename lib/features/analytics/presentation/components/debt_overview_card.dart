@@ -1,5 +1,6 @@
 import 'package:expense_mate/core/data/models/analytics_data_models.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class DebtOverviewCard extends StatelessWidget {
@@ -9,6 +10,7 @@ class DebtOverviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final hasDebts =
         debtAnalysis.activeBorrowedCount > 0 ||
@@ -27,7 +29,7 @@ class DebtOverviewCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Debt Overview',
+              t.debtOverview,
               style: AppTextStyles.h4.copyWith(
                 color: theme.textTheme.titleLarge?.color,
               ),
@@ -37,7 +39,7 @@ class DebtOverviewCard extends StatelessWidget {
             // Borrowed Section
             if (debtAnalysis.activeBorrowedCount > 0) ...[
               _buildDebtSection(
-                'Borrowed',
+                t.borrowed,
                 debtAnalysis.totalBorrowed,
                 debtAnalysis.borrowedRemaining,
                 debtAnalysis.activeBorrowedCount,
@@ -45,6 +47,7 @@ class DebtOverviewCard extends StatelessWidget {
                 Colors.red,
                 Icons.arrow_downward,
                 theme,
+                t,
               ),
               const SizedBox(height: 16),
             ],
@@ -52,7 +55,7 @@ class DebtOverviewCard extends StatelessWidget {
             // Lent Section
             if (debtAnalysis.activeLentCount > 0) ...[
               _buildDebtSection(
-                'Lent',
+                t.lent,
                 debtAnalysis.totalLent,
                 debtAnalysis.lentRemaining,
                 debtAnalysis.activeLentCount,
@@ -60,6 +63,7 @@ class DebtOverviewCard extends StatelessWidget {
                 Colors.green,
                 Icons.arrow_upward,
                 theme,
+                t,
               ),
             ],
           ],
@@ -77,6 +81,7 @@ class DebtOverviewCard extends StatelessWidget {
     Color color,
     IconData icon,
     ThemeData theme,
+    AppLocalizations t,
   ) {
     final paidAmount = total - remaining;
     final progressPercentage = total > 0 ? (paidAmount / total * 100) : 0;
@@ -115,7 +120,7 @@ class DebtOverviewCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    '$overdueCount Overdue',
+                    '$overdueCount ${t.overdue}',
                     style: AppTextStyles.labelSmall.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -135,7 +140,7 @@ class DebtOverviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Total',
+                      t.total,
                       style: AppTextStyles.caption.copyWith(
                         color: theme.textTheme.bodyMedium?.color?.withOpacity(
                           0.7,
@@ -155,7 +160,7 @@ class DebtOverviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Remaining',
+                      t.remaining,
                       style: AppTextStyles.caption.copyWith(
                         color: theme.textTheme.bodyMedium?.color?.withOpacity(
                           0.7,
@@ -183,7 +188,7 @@ class DebtOverviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Paid',
+                    t.paid,
                     style: AppTextStyles.caption.copyWith(
                       color: theme.textTheme.bodyMedium?.color?.withOpacity(
                         0.7,
@@ -224,7 +229,7 @@ class DebtOverviewCard extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                '$activeCount active ${title.toLowerCase()}',
+                '$activeCount ${t.active}  ${title.toLowerCase()}',
                 style: AppTextStyles.caption.copyWith(
                   color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
                 ),

@@ -40,9 +40,9 @@ abstract class TransactionRepository {
   Future<void> permanentlyDeleteTransaction(String id); // Hard delete
 
   // STATISTICS
-  double getTotalIncome({DateTime? startDate, DateTime? endDate});
+  // double getTotalIncome({DateTime? startDate, DateTime? endDate});
 
-  double getTotalExpense({DateTime? startDate, DateTime? endDate});
+  // double getTotalExpense({DateTime? startDate, DateTime? endDate});
 
   double getBalance({DateTime? startDate, DateTime? endDate});
 
@@ -71,7 +71,7 @@ abstract class TransactionRepository {
   /// Delete a debt
   Future<void> deleteDebt(String id);
   //get pure transcation
-  List<TransactionModel> getPureTransactions({int? limit});
+  // List<TransactionModel> getPureTransactions({int? limit});
 
   Future<TransactionResult> addDebtPayment(DebtPaymentModel payment);
 }

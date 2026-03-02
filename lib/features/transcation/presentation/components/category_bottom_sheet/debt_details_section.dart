@@ -1,7 +1,8 @@
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class DebtDetailsSection extends StatelessWidget {
+class DebtDetailsSection extends StatefulWidget {
   final bool isDebt;
   final dynamic debtType; // DebtType enum
   final String personName;
@@ -20,15 +21,36 @@ class DebtDetailsSection extends StatelessWidget {
   });
 
   @override
+  State<DebtDetailsSection> createState() => _DebtDetailsSectionState();
+}
+
+class _DebtDetailsSectionState extends State<DebtDetailsSection> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.personName);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final isRTL = locale.languageCode == 'ar' || locale.languageCode == 'ur';
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-
+    final t = AppLocalizations.of(context)!;
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      child: isDebt
+      child: widget.isDebt
           ? Container(
               margin: const EdgeInsets.only(top: 8),
               padding: const EdgeInsets.all(12),
@@ -44,9 +66,9 @@ class DebtDetailsSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    debtType.toString().contains('borrowed')
-                        ? '💰 Borrowed From'
-                        : '💸 Lent To',
+                    widget.debtType.toString().contains('borrowed')
+                        ? '💰 ${t.borrowedFrom} '
+                        : '💸 ${t.lentTo}',
                     style: TextStyle(
                       color: colorScheme.primary,
                       fontSize: 14,
@@ -57,8 +79,12 @@ class DebtDetailsSection extends StatelessWidget {
 
                   // Person Name Field
                   TextField(
-                    controller: TextEditingController(text: personName),
-                    onChanged: onPersonNameChanged,
+                    controller: _controller,
+                    onChanged: widget.onPersonNameChanged,
+                    // textDirection: isRTL
+                    //     ? TextDirection.rtl
+                    //     : TextDirection.ltr,
+                    textAlign: isRTL ? TextAlign.right : TextAlign.left,
                     style: TextStyle(color: colorScheme.onSurface),
                     decoration: InputDecoration(
                       hintText: 'Person name...',
@@ -86,7 +112,7 @@ class DebtDetailsSection extends StatelessWidget {
 
                   // Expected Return Date
                   GestureDetector(
-                    onTap: onDatePressed,
+                    onTap: widget.onDatePressed,
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -106,11 +132,11 @@ class DebtDetailsSection extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              expectedReturnDate != null
-                                  ? 'Return by: ${DateFormat('dd MMM yyyy').format(expectedReturnDate!)}'
+                              widget.expectedReturnDate != null
+                                  ? 'Return by: ${DateFormat('dd MMM yyyy').format(widget.expectedReturnDate!)}'
                                   : 'Set expected return date',
                               style: TextStyle(
-                                color: expectedReturnDate != null
+                                color: widget.expectedReturnDate != null
                                     ? colorScheme.onSurface
                                     : colorScheme.onSurface.withValues(
                                         alpha: 0.5,

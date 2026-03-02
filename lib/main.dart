@@ -19,9 +19,8 @@ void main() async {
   // Initialize Daily Notifications
   await DailyNotificationService().initialize();
   await RecurringBackgroundService.initialize();
-
-  // await ThemePersistence.init();
-  // await LanguagePersistence.init();
+  // ✅ Process on every app open (catches missed transactions)
+  await RecurringBackgroundService.processRecurringTransactions();
 
   runApp(const MyApp());
 }
@@ -78,7 +77,7 @@ class MyApp extends StatelessWidget {
 // flutter gen-l10n
 //flutter pub run build_runner build --delete-conflicting-outputs
 // C:\Program Files\Common Files\Oracle\Java\javapath
-
+// final t = AppLocalizations.of(context)!;
 
 
 //Ayub khan
