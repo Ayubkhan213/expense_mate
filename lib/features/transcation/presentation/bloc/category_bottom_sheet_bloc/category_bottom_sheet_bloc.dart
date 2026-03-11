@@ -18,6 +18,7 @@ import 'package:expense_mate/features/transcation/presentation/bloc/category_bot
 import 'package:expense_mate/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class CategoryBottomSheetBloc
@@ -139,10 +140,39 @@ class CategoryBottomSheetBloc
         source: ImageSource.gallery,
       );
       if (pickedFile != null) {
-        emit(state.copyWith(selectedImage: File(pickedFile.path)));
+        // Copy to app's permanent storage
+        final appDir = await getApplicationDocumentsDirectory();
+        final attachmentsDir = Directory('${appDir.path}/attachments');
+        if (!await attachmentsDir.exists()) {
+          await attachmentsDir.create(recursive: true);
+        }
+        final ext = pickedFile.path.split('.').last;
+        final fileName = 'attachment_${const Uuid().v4()}.$ext';
+        final savedFile = await File(
+          pickedFile.path,
+        ).copy('${attachmentsDir.path}/$fileName');
+        emit(state.copyWith(selectedImage: savedFile));
       }
     });
 
+    on<ImagePickedFromCamera>((event, emit) async {
+      final pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+      );
+      if (pickedFile != null) {
+        final appDir = await getApplicationDocumentsDirectory();
+        final attachmentsDir = Directory('${appDir.path}/attachments');
+        if (!await attachmentsDir.exists()) {
+          await attachmentsDir.create(recursive: true);
+        }
+        final ext = pickedFile.path.split('.').last;
+        final fileName = 'attachment_${const Uuid().v4()}.$ext';
+        final savedFile = await File(
+          pickedFile.path,
+        ).copy('${attachmentsDir.path}/$fileName');
+        emit(state.copyWith(selectedImage: savedFile));
+      }
+    });
     on<NoteChanged>((event, emit) {
       emit(state.copyWith(note: event.note));
     });
@@ -164,7 +194,9 @@ class CategoryBottomSheetBloc
         emit(state.copyWith(expectedReturnDate: pickedDate));
       }
     });
-
+    on<ImageRemoved>((event, emit) {
+      emit(state.copyWith(clearSelectedImage: true));
+    });
     // Update DebtToggled to clear debt fields when deselecting
     on<DebtToggled>((event, emit) {
       if (state.transactionType == TransactionType.expense &&
@@ -251,7 +283,7 @@ class CategoryBottomSheetBloc
         budgetId: event.budgetModel.id,
         userId: AppPrefs.instance.userId,
       );
-      print('---------------------!!!!!!!!!111-----------------------');
+
       // 4️ Call UseCase
       TransactionResult transactionResult = await saveBudgetTranscationUsecase(
         transaction: transaction,
@@ -298,40 +330,9 @@ class CategoryBottomSheetBloc
         return;
       }
 
-      // if (state.isDebt) {
-      //   if (state.personName == null || state.personName!.isEmpty) {
-      //     await _emitError(emit, 'Please add person name');
-      //     return;
-      //   }
-
-      //   if (state.expectedReturnDate == null) {
-      //     await _emitError(emit, 'Please add expected return date');
-      //     return;
-      //   }
-      // }
-
       // -------------------- 2️ CREATE DEBT (ONLY IF NEEDED) --------------------
       // String? debtId;
       String transcationId = const Uuid().v4();
-      // if (state.isDebt) {
-      //   debtId = const Uuid().v4();
-
-      //   final debtModel = DebtModel(
-      //     id: debtId,
-      //     transactionId: transcationId, // will link via transaction later
-      //     personName: state.personName!,
-      //     totalAmount: amount,
-      //     debtType: state.debtType!,
-      //     expectedReturnDate: state.expectedReturnDate!,
-      //   );
-
-      //   final debtResult = await addDebtUsecase(debt: debtModel);
-
-      //   if (!debtResult.success) {
-      //     await _emitError(emit, 'Failed to create debt');
-      //     return; //  STOP – no transaction
-      //   }
-      // }
 
       // -------------------- 3️ CREATE TRANSACTION --------------------
       final transaction = TransactionModel(

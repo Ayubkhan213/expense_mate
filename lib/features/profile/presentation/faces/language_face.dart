@@ -1,8 +1,9 @@
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
 
-class LanguageFace extends StatelessWidget {
-  const LanguageFace({super.key});
+class LanguageFace extends StatefulWidget {
+  final bool isFirstLaunch;
+  const LanguageFace({super.key, this.isFirstLaunch = false});
 
   static const _languages = [
     _LanguageOption(
@@ -42,24 +43,116 @@ class LanguageFace extends StatelessWidget {
   ];
 
   @override
+  State<LanguageFace> createState() => _LanguageFaceState();
+}
+
+class _LanguageFaceState extends State<LanguageFace> {
+  late String _selectedCode = LanguagePersistence.getLocale();
+
+  Future<void> _proceedToOnboarding() async {
+    await LanguagePersistence.saveLocale(_selectedCode);
+    if (mounted) {
+      context.read<LanguageBloc>().add(
+        ChangeLanguageEvent(Locale(_selectedCode)),
+      );
+    }
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, RouteName.onBoarding);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final primary = theme.colorScheme.primary;
-    final topPad = MediaQuery.of(context).padding.top;
-    const expandedHeight = 200.0;
-    final collapsedHeight = 64.0 + topPad;
-    final t = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: isDark
-          ? theme.colorScheme.background
-          : const Color(0xFFF2F4F8),
-      body: BlocBuilder<LanguageBloc, LanguageState>(
-        builder: (context, state) {
-          return CustomScrollView(
+    // ─── KEY FIX: BlocBuilder wraps the ENTIRE Scaffold ───────────────────
+    // Previously BlocBuilder only wrapped `body`, so bottomNavigationBar
+    // never rebuilt when the language BLoC state changed.
+    // Now the whole Scaffold (including bottomNavigationBar) rebuilds,
+    // and AppLocalizations.of(context) returns the correct translations.
+    return BlocBuilder<LanguageBloc, LanguageState>(
+      builder: (context, langState) {
+        final theme = Theme.of(context);
+        final isDark = theme.brightness == Brightness.dark;
+        final primary = theme.colorScheme.primary;
+        final topPad = MediaQuery.of(context).padding.top;
+        final t = AppLocalizations.of(context)!;
+
+        const expandedHeight = 200.0;
+        final collapsedHeight = 64.0 + topPad;
+
+        final selectedLang = LanguageFace._languages.firstWhere(
+          (l) => l.code == _selectedCode,
+          orElse: () => LanguageFace._languages[0],
+        );
+
+        return Scaffold(
+          backgroundColor: isDark
+              ? theme.colorScheme.background
+              : const Color(0xFFF2F4F8),
+
+          // ── Bottom bar now inside BlocBuilder → rebuilds on lang change ──
+          bottomNavigationBar: widget.isFirstLaunch
+              ? SafeArea(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? theme.colorScheme.background
+                          : const Color(0xFFF2F4F8),
+                      border: Border(
+                        top: BorderSide(
+                          color: theme.colorScheme.outline.withValues(
+                            alpha: 0.1,
+                          ),
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: primary.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: primary.withValues(alpha: 0.22),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                selectedLang.flag,
+                                style: const TextStyle(fontSize: 20),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                selectedLang.nativeName,
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        _NextButton(
+                          primary: primary,
+                          label: t.next, // ← correct translation every rebuild
+                          onTap: _proceedToOnboarding,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
+
+          body: CustomScrollView(
             physics: const ClampingScrollPhysics(),
             slivers: [
-              // ── Hero SliverAppBar ──
               SliverAppBar(
                 expandedHeight: expandedHeight,
                 collapsedHeight: 64,
@@ -67,15 +160,18 @@ class LanguageFace extends StatelessWidget {
                 elevation: 0,
                 backgroundColor: Colors.transparent,
                 surfaceTintColor: Colors.transparent,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
+                automaticallyImplyLeading: !widget.isFirstLaunch,
+                leading: widget.isFirstLaunch
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back_rounded,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
                 flexibleSpace: LayoutBuilder(
-                  builder: (context, constraints) {
+                  builder: (ctx, constraints) {
                     final current = constraints.maxHeight;
                     final progress =
                         ((expandedHeight - current) /
@@ -91,7 +187,6 @@ class LanguageFace extends StatelessWidget {
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          // Expanded
                           if (expandedOpacity > 0)
                             Opacity(
                               opacity: expandedOpacity,
@@ -99,10 +194,10 @@ class LanguageFace extends StatelessWidget {
                                 primary: primary,
                                 topPad: topPad,
                                 availableHeight: current,
-                                currentCode: state.locale,
+                                currentCode: _selectedCode,
+                                isFirstLaunch: widget.isFirstLaunch,
                               ),
                             ),
-                          // Collapsed
                           if (collapsedOpacity > 0)
                             Opacity(
                               opacity: collapsedOpacity,
@@ -127,15 +222,9 @@ class LanguageFace extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      // Show active flag in collapsed
-                                      if (state.locale.isNotEmpty)
+                                      if (_selectedCode.isNotEmpty)
                                         Text(
-                                          _languages
-                                              .firstWhere(
-                                                (l) => l.code == state.locale,
-                                                orElse: () => _languages[0],
-                                              )
-                                              .flag,
+                                          selectedLang.flag,
                                           style: const TextStyle(fontSize: 22),
                                         ),
                                     ],
@@ -150,12 +239,11 @@ class LanguageFace extends StatelessWidget {
                 ),
               ),
 
-              // ── Section label ──
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
                   child: Text(
-                    'SELECT LANGUAGE',
+                    t.selectLanguage,
                     style: AppTextStyles.overline.copyWith(
                       color: theme.colorScheme.onSurface.withValues(
                         alpha: 0.45,
@@ -167,77 +255,173 @@ class LanguageFace extends StatelessWidget {
                 ),
               ),
 
-              // ── Language cards ──
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final lang = _languages[index];
-                    final isSelected = state.locale == lang.code;
+                    final lang = LanguageFace._languages[index];
+                    final isSelected = _selectedCode == lang.code;
 
                     return _LanguageCard(
                       lang: lang,
                       isSelected: isSelected,
                       isDark: isDark,
                       onTap: () {
-                        context.read<LanguageBloc>().add(
-                          ChangeLanguageEvent(lang.locale),
-                        );
-                        ScaffoldMessenger.of(context)
-                          ..clearSnackBars()
-                          ..showSnackBar(
-                            SnackBar(
-                              content: Row(
-                                children: [
-                                  Text(
-                                    lang.flag,
-                                    style: const TextStyle(fontSize: 18),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    '${lang.englishName} selected',
-                                    style: AppTextStyles.bodySmall.copyWith(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              backgroundColor: primary,
-                              behavior: SnackBarBehavior.floating,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              margin: const EdgeInsets.all(16),
-                              duration: const Duration(seconds: 2),
-                            ),
+                        setState(() => _selectedCode = lang.code);
+
+                        if (!widget.isFirstLaunch) {
+                          // Settings: apply immediately
+                          context.read<LanguageBloc>().add(
+                            ChangeLanguageEvent(lang.locale),
                           );
+                          ScaffoldMessenger.of(context)
+                            ..clearSnackBars()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  children: [
+                                    Text(
+                                      lang.flag,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      '${lang.englishName} selected',
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                backgroundColor: primary,
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                margin: const EdgeInsets.all(16),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                        } else {
+                          // First-launch: fire BLoC so the UI previews the
+                          // selected language immediately (Next btn, header, etc.)
+                          context.read<LanguageBloc>().add(
+                            ChangeLanguageEvent(lang.locale),
+                          );
+                        }
                       },
                     );
-                  }, childCount: _languages.length),
+                  }, childCount: LanguageFace._languages.length),
                 ),
               ),
             ],
-          );
-        },
+          ),
+        );
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Next button
+// ─────────────────────────────────────────────────────────────────────────────
+class _NextButton extends StatefulWidget {
+  final Color primary;
+  final String label;
+  final VoidCallback onTap;
+  const _NextButton({
+    required this.primary,
+    required this.label,
+    required this.onTap,
+  });
+  @override
+  State<_NextButton> createState() => _NextButtonState();
+}
+
+class _NextButtonState extends State<_NextButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 110),
+  );
+  late final Animation<double> _s = Tween<double>(
+    begin: 1.0,
+    end: 0.95,
+  ).animate(_c);
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => _c.forward(),
+      onTapUp: (_) {
+        _c.reverse();
+        widget.onTap();
+      },
+      onTapCancel: () => _c.reverse(),
+      child: ScaleTransition(
+        scale: _s,
+        child: Container(
+          height: 52,
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          decoration: BoxDecoration(
+            color: widget.primary,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: widget.primary.withValues(alpha: 0.35),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.label,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+                size: 18,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
 
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 // Expanded header
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 class _ExpandedHeader extends StatelessWidget {
   final Color primary;
   final double topPad;
   final double availableHeight;
   final String currentCode;
+  final bool isFirstLaunch;
 
   const _ExpandedHeader({
     required this.primary,
     required this.topPad,
     required this.availableHeight,
     required this.currentCode,
+    required this.isFirstLaunch,
   });
 
   @override
@@ -247,6 +431,7 @@ class _ExpandedHeader extends StatelessWidget {
       orElse: () => LanguageFace._languages[0],
     );
     final t = AppLocalizations.of(context)!;
+
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -278,14 +463,12 @@ class _ExpandedHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Title row
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 16, 0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Back button space (leading is handled by SliverAppBar)
-                      const SizedBox(width: 40),
+                      SizedBox(width: isFirstLaunch ? 16 : 40),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,7 +483,7 @@ class _ExpandedHeader extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              'Choose your preferred language',
+                              t.chooseLanguageSubtitle,
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: Colors.white.withValues(alpha: 0.7),
                               ),
@@ -311,10 +494,7 @@ class _ExpandedHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // Current language pill
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Container(
@@ -337,7 +517,7 @@ class _ExpandedHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Current language',
+                              t.currentLanguage,
                               style: AppTextStyles.captionSmall.copyWith(
                                 color: Colors.white.withValues(alpha: 0.65),
                                 letterSpacing: 0.3,
@@ -386,7 +566,6 @@ class _ExpandedHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 16),
               ],
             ),
@@ -397,9 +576,9 @@ class _ExpandedHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 // Language card
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 class _LanguageCard extends StatelessWidget {
   final _LanguageOption lang;
   final bool isSelected;
@@ -462,7 +641,6 @@ class _LanguageCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
                 children: [
-                  // Flag in a subtle container
                   Container(
                     width: 52,
                     height: 52,
@@ -480,10 +658,7 @@ class _LanguageCard extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 14),
-
-                  // Names
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -546,10 +721,7 @@ class _LanguageCard extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 8),
-
-                  // Selection indicator
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: isSelected
@@ -592,9 +764,9 @@ class _LanguageCard extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 // Language option model
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 class _LanguageOption {
   final Locale locale;
   final String code;

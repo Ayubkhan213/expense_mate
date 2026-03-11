@@ -102,7 +102,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Expense Manager'**
+  /// **'Expense Mate'**
   String get appName;
 
   /// No description provided for @home.
@@ -126,7 +126,7 @@ abstract class AppLocalizations {
   /// No description provided for @transactions.
   ///
   /// In en, this message translates to:
-  /// **'transactions'**
+  /// **'Transactions'**
   String get transactions;
 
   /// No description provided for @budgets.
@@ -174,19 +174,19 @@ abstract class AppLocalizations {
   /// No description provided for @borrowedFrom.
   ///
   /// In en, this message translates to:
-  /// **'Borrowed from'**
+  /// **'Borrowed From'**
   String get borrowedFrom;
 
   /// No description provided for @lentTo.
   ///
   /// In en, this message translates to:
-  /// **'Lent to'**
+  /// **'Lent To'**
   String get lentTo;
 
   /// No description provided for @personName.
   ///
   /// In en, this message translates to:
-  /// **'Person Name'**
+  /// **'Person name...'**
   String get personName;
 
   /// No description provided for @returnDate.
@@ -1080,7 +1080,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterPin.
   ///
   /// In en, this message translates to:
-  /// **'Enter Your PIN'**
+  /// **'Enter PIN'**
   String get enterPin;
 
   /// No description provided for @enterPinSubtitle.
@@ -1176,7 +1176,7 @@ abstract class AppLocalizations {
   /// No description provided for @dontHaveAccount.
   ///
   /// In en, this message translates to:
-  /// **'Don\"t have an account?'**
+  /// **'Don\'t have an account?'**
   String get dontHaveAccount;
 
   /// No description provided for @onboardingTitle1.
@@ -1428,7 +1428,7 @@ abstract class AppLocalizations {
   /// No description provided for @payments.
   ///
   /// In en, this message translates to:
-  /// **'payments'**
+  /// **'Payments'**
   String get payments;
 
   /// No description provided for @addPayment.
@@ -2894,6 +2894,870 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add'**
   String get add;
+
+  /// No description provided for @signInToContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to continue managing your expenses'**
+  String get signInToContinue;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'you@example.com'**
+  String get emailHint;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @logIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get logIn;
+
+  /// No description provided for @usePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Use your 4-digit PIN to sign in quickly'**
+  String get usePin;
+
+  /// No description provided for @quickPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick PIN'**
+  String get quickPin;
+
+  /// No description provided for @enterYour4DigitPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 4-digit PIN'**
+  String get enterYour4DigitPin;
+
+  /// No description provided for @singleAccountNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'This app supports a single account. Sign in with your existing account.'**
+  String get singleAccountNotice;
+
+  /// No description provided for @personalInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'PERSONAL INFO'**
+  String get personalInfo;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @enterFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get enterFullName;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @preferredCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'PREFERRED CURRENCY'**
+  String get preferredCurrency;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'SECURITY'**
+  String get security;
+
+  /// No description provided for @minimumSixChars.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum 6 characters'**
+  String get minimumSixChars;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @reEnterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-enter your password'**
+  String get reEnterPassword;
+
+  /// No description provided for @quickLoginPin.
+  ///
+  /// In en, this message translates to:
+  /// **'QUICK LOGIN PIN (OPTIONAL)'**
+  String get quickLoginPin;
+
+  /// No description provided for @pin.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN'**
+  String get pin;
+
+  /// No description provided for @pinHint.
+  ///
+  /// In en, this message translates to:
+  /// **'4-digit code for faster login'**
+  String get pinHint;
+
+  /// No description provided for @securityQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Security Questions'**
+  String get securityQuestions;
+
+  /// No description provided for @extraRecoveryOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra account recovery option'**
+  String get extraRecoveryOption;
+
+  /// No description provided for @securityQuestion1.
+  ///
+  /// In en, this message translates to:
+  /// **'SECURITY QUESTION 1'**
+  String get securityQuestion1;
+
+  /// No description provided for @securityQuestion2.
+  ///
+  /// In en, this message translates to:
+  /// **'SECURITY QUESTION 2'**
+  String get securityQuestion2;
+
+  /// No description provided for @selectAQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a question'**
+  String get selectAQuestion;
+
+  /// No description provided for @yourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Answer'**
+  String get yourAnswer;
+
+  /// No description provided for @typeYourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your answer'**
+  String get typeYourAnswer;
+
+  /// No description provided for @answerCannotBeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer cannot be empty'**
+  String get answerCannotBeEmpty;
+
+  /// No description provided for @recoveryKeysInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery keys will be generated after signup. Save them securely.'**
+  String get recoveryKeysInfo;
+
+  /// No description provided for @agreeToTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'I agree to the '**
+  String get agreeToTerms;
+
+  /// No description provided for @termsAndConditions.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Conditions'**
+  String get termsAndConditions;
+
+  /// No description provided for @and.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get and;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get addPhoto;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Photo'**
+  String get removePhoto;
+
+  /// No description provided for @profilePhotoOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile photo (optional)'**
+  String get profilePhotoOptional;
+
+  /// No description provided for @choosePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Photo'**
+  String get choosePhoto;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @saveYourRecoveryKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Your Recovery Keys'**
+  String get saveYourRecoveryKeys;
+
+  /// No description provided for @recoveryKeysWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Store these keys safely. They are the only way to recover your account if you forget your password.'**
+  String get recoveryKeysWarning;
+
+  /// No description provided for @copyOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy One'**
+  String get copyOne;
+
+  /// No description provided for @copyAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy All'**
+  String get copyAll;
+
+  /// No description provided for @iHaveSavedMyKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'I Have Saved My Keys'**
+  String get iHaveSavedMyKeys;
+
+  /// No description provided for @keyCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Key copied!'**
+  String get keyCopied;
+
+  /// No description provided for @allKeysCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'All keys copied!'**
+  String get allKeysCopied;
+
+  /// No description provided for @accountCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully!'**
+  String get accountCreatedSuccessfully;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @enterEmailToFind.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email address to find your account.'**
+  String get enterEmailToFind;
+
+  /// No description provided for @verifyIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Identity'**
+  String get verifyIdentity;
+
+  /// No description provided for @chooseRecoveryMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how you\'d like to recover your account.'**
+  String get chooseRecoveryMethod;
+
+  /// No description provided for @setNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Set New Password'**
+  String get setNewPassword;
+
+  /// No description provided for @chooseStrongPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a strong password for your account.'**
+  String get chooseStrongPassword;
+
+  /// No description provided for @allDone.
+  ///
+  /// In en, this message translates to:
+  /// **'All Done!'**
+  String get allDone;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been reset successfully.'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @step1of3.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1 of 3 — Find Account'**
+  String get step1of3;
+
+  /// No description provided for @step2of3.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2 of 3 — Verify Identity'**
+  String get step2of3;
+
+  /// No description provided for @step3of3.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 3 of 3 — Set New Password'**
+  String get step3of3;
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete!'**
+  String get complete;
+
+  /// No description provided for @recoveryMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'RECOVERY METHOD'**
+  String get recoveryMethod;
+
+  /// No description provided for @recoveryKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Key'**
+  String get recoveryKey;
+
+  /// No description provided for @securityQA.
+  ///
+  /// In en, this message translates to:
+  /// **'Security Q&A'**
+  String get securityQA;
+
+  /// No description provided for @enterRecoveryKeyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter one of the 8 recovery keys you saved when creating your account.'**
+  String get enterRecoveryKeyHint;
+
+  /// No description provided for @recoveryKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'RECOVERY KEY'**
+  String get recoveryKeyLabel;
+
+  /// No description provided for @recoveryKeyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. ABCD1234'**
+  String get recoveryKeyHint;
+
+  /// No description provided for @verifyKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Key'**
+  String get verifyKey;
+
+  /// No description provided for @answerAtLeastOne.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer at least one security question correctly to reset your password.'**
+  String get answerAtLeastOne;
+
+  /// No description provided for @question1.
+  ///
+  /// In en, this message translates to:
+  /// **'QUESTION 1'**
+  String get question1;
+
+  /// No description provided for @question2.
+  ///
+  /// In en, this message translates to:
+  /// **'QUESTION 2'**
+  String get question2;
+
+  /// No description provided for @verifyAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Answers'**
+  String get verifyAnswers;
+
+  /// No description provided for @identityVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity verified! You can now set a new password.'**
+  String get identityVerified;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'NEW PASSWORD'**
+  String get newPassword;
+
+  /// No description provided for @newPasswordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPasswordLabel;
+
+  /// No description provided for @passwordsMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords match'**
+  String get passwordsMatch;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @findMyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Find My Account'**
+  String get findMyAccount;
+
+  /// No description provided for @fillInDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in your details to get started'**
+  String get fillInDetails;
+
+  /// No description provided for @loginSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Login successful 🎉'**
+  String get loginSuccessful;
+
+  /// No description provided for @pleaseAgreeToTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Please agree to the terms and conditions'**
+  String get pleaseAgreeToTerms;
+
+  /// No description provided for @pleasSelectBothQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both security questions'**
+  String get pleasSelectBothQuestions;
+
+  /// No description provided for @pleaseAnswerBothQuestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Please answer both security questions'**
+  String get pleaseAnswerBothQuestions;
+
+  /// No description provided for @transactionSavedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction saved successfully!'**
+  String get transactionSavedSuccessfully;
+
+  /// No description provided for @setExpectedReturnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Set expected return date'**
+  String get setExpectedReturnDate;
+
+  /// No description provided for @returnBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Return by'**
+  String get returnBy;
+
+  /// No description provided for @enterANote.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Enter a note...'**
+  String get enterANote;
+
+  /// No description provided for @enterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get enterValidEmail;
+
+  /// No description provided for @enterValidName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid name (min 3 chars)'**
+  String get enterValidName;
+
+  /// No description provided for @passwordMinSix.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordMinSix;
+
+  /// No description provided for @passwordsDoNotMatchError.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatchError;
+
+  /// No description provided for @pinMustBeFourDigits.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN must be exactly 4 digits'**
+  String get pinMustBeFourDigits;
+
+  /// No description provided for @pinMustBeNumeric.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN must be numeric'**
+  String get pinMustBeNumeric;
+
+  /// No description provided for @amountCannotBeZero.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount cannot be zero'**
+  String get amountCannotBeZero;
+
+  /// No description provided for @pleaseAddPersonName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add person name'**
+  String get pleaseAddPersonName;
+
+  /// No description provided for @pleaseAddReturnDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add expected return date'**
+  String get pleaseAddReturnDate;
+
+  /// No description provided for @failedToCreateDebt.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to create debt'**
+  String get failedToCreateDebt;
+
+  /// No description provided for @transactionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction failed'**
+  String get transactionFailed;
+
+  /// No description provided for @debtPaymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Debt Payment failed'**
+  String get debtPaymentFailed;
+
+  /// No description provided for @passwordResetSuccessLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully! Please log in.'**
+  String get passwordResetSuccessLogin;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// No description provided for @signUpToGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up to get started'**
+  String get signUpToGetStarted;
+
+  /// No description provided for @transactionSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction saved successfully!'**
+  String get transactionSavedSuccess;
+
+  /// No description provided for @transactionSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save transaction'**
+  String get transactionSaveFailed;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @logoutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logoutConfirmTitle;
+
+  /// No description provided for @logoutConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get logoutConfirmMessage;
+
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'A professional expense tracking application'**
+  String get appDescription;
+
+  /// No description provided for @guestUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest User'**
+  String get guestUser;
+
+  /// No description provided for @placeholderEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'email@example.com'**
+  String get placeholderEmail;
+
+  /// No description provided for @memberSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Member since'**
+  String get memberSince;
+
+  /// No description provided for @updatePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Photo'**
+  String get updatePhoto;
+
+  /// No description provided for @profileUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully ✓'**
+  String get profileUpdatedSuccess;
+
+  /// No description provided for @profileUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update profile'**
+  String get profileUpdateFailed;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @tapToChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to change photo'**
+  String get tapToChangePhoto;
+
+  /// No description provided for @fullNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get fullNameHint;
+
+  /// No description provided for @fullNameError.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 2 characters'**
+  String get fullNameError;
+
+  /// No description provided for @emailError.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid email address'**
+  String get emailError;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChanges;
+
+  /// No description provided for @selectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'SELECT LANGUAGE'**
+  String get selectLanguage;
+
+  /// No description provided for @chooseLanguageSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get chooseLanguageSubtitle;
+
+  /// No description provided for @currentLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Current language'**
+  String get currentLanguage;
+
+  /// No description provided for @languageSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} selected'**
+  String languageSelected(Object name);
+
+  /// No description provided for @splashAppName.
+  ///
+  /// In en, this message translates to:
+  /// **'ExpenseMate'**
+  String get splashAppName;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'SMART MONEY · SMARTER YOU'**
+  String get splashTagline;
+
+  /// No description provided for @transactionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transactionDetails;
+
+  /// No description provided for @tags.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags'**
+  String get tags;
+
+  /// No description provided for @attachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Attachment'**
+  String get attachment;
+
+  /// No description provided for @collapse.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse'**
+  String get collapse;
+
+  /// No description provided for @expand.
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expand;
+
+  /// No description provided for @imageFileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Image file not found'**
+  String get imageFileNotFound;
+
+  /// No description provided for @transactionId.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID'**
+  String get transactionId;
+
+  /// No description provided for @created.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get created;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @transactionIdCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction ID copied'**
+  String get transactionIdCopied;
+
+  /// No description provided for @addNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a note...'**
+  String get addNote;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @chooseSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a source'**
+  String get chooseSource;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from library'**
+  String get chooseFromLibrary;
+
+  /// No description provided for @deleteCurrentAttachment.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the current attachment'**
+  String get deleteCurrentAttachment;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

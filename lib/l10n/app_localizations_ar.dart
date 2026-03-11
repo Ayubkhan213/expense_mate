@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'إدارة المصروفات';
+  String get appName => 'Expense Mate';
 
   @override
   String get home => 'الرئيسية';
@@ -48,10 +48,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get borrowedFrom => 'مقترض من';
 
   @override
-  String get lentTo => 'مقرض إلى';
+  String get lentTo => 'مُقرَض إلى';
 
   @override
-  String get personName => 'اسم الشخص';
+  String get personName => 'اسم الشخص...';
 
   @override
   String get returnDate => 'تاريخ الاسترجاع';
@@ -468,7 +468,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get otherExpense => 'مصروف آخر';
 
   @override
-  String get selectCategory => 'اختر فئة';
+  String get selectCategory => 'اختر الفئة';
 
   @override
   String get single => 'فردي';
@@ -498,7 +498,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get recurring => 'متكرر';
 
   @override
-  String get enterPin => 'أدخل الرقم السري';
+  String get enterPin => 'أدخل الرمز السري';
 
   @override
   String get enterPinSubtitle => 'أدخل رقمك السري المكون من 4 أرقام للمتابعة';
@@ -507,7 +507,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get signIn => 'تسجيل الدخول';
 
   @override
-  String get forgotPassword => 'هل نسيت كلمة المرور؟';
+  String get forgotPassword => 'نسيت كلمة المرور؟';
 
   @override
   String get passwordMinLength => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
@@ -531,7 +531,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get emailAddress => 'عنوان البريد الإلكتروني';
 
   @override
-  String get welcomeBack => 'مرحبًا بعودتك';
+  String get welcomeBack => 'مرحباً بعودتك';
 
   @override
   String get login => 'تسجيل الدخول';
@@ -906,7 +906,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addTransaction => 'إضافة معاملة';
 
   @override
-  String get anErrorOccurred => 'حدث خطأ';
+  String get anErrorOccurred => 'حدث خطأ ما';
 
   @override
   String get more => 'المزيد';
@@ -990,7 +990,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addNoteOptional => 'أضف ملاحظة (اختياري)';
 
   @override
-  String get recurringCreated => 'تم إنشاء المعاملة المتكررة!';
+  String get recurringCreated => 'تمت إضافة المعاملة المتكررة!';
 
   @override
   String get recurringUpdated => 'تم تحديث المعاملة المتكررة!';
@@ -1405,4 +1405,438 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get add => 'إضافة';
+
+  @override
+  String get signInToContinue => 'سجل دخولك لمتابعة إدارة مصروفاتك';
+
+  @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get alreadyHaveAccount => 'لديك حساب بالفعل؟';
+
+  @override
+  String get logIn => 'تسجيل الدخول';
+
+  @override
+  String get usePin => 'استخدم رمزك السري المكون من 4 أرقام لتسجيل الدخول بسرعة';
+
+  @override
+  String get quickPin => 'رمز سريع';
+
+  @override
+  String get enterYour4DigitPin => 'أدخل رمزك السري المكون من 4 أرقام';
+
+  @override
+  String get singleAccountNotice => 'يدعم هذا التطبيق حساباً واحداً فقط. سجل دخولك بحسابك الموجود.';
+
+  @override
+  String get personalInfo => 'المعلومات الشخصية';
+
+  @override
+  String get fullName => 'الاسم الكامل';
+
+  @override
+  String get enterFullName => 'أدخل اسمك الكامل';
+
+  @override
+  String get phoneNumber => 'رقم الهاتف';
+
+  @override
+  String get optional => 'اختياري';
+
+  @override
+  String get preferredCurrency => 'العملة المفضلة';
+
+  @override
+  String get security => 'الأمان';
+
+  @override
+  String get minimumSixChars => '6 أحرف على الأقل';
+
+  @override
+  String get confirmPassword => 'تأكيد كلمة المرور';
+
+  @override
+  String get reEnterPassword => 'أعد إدخال كلمة المرور';
+
+  @override
+  String get quickLoginPin => 'رمز الدخول السريع (اختياري)';
+
+  @override
+  String get pin => 'الرمز السري';
+
+  @override
+  String get pinHint => 'رمز مكون من 4 أرقام لتسجيل دخول أسرع';
+
+  @override
+  String get securityQuestions => 'أسئلة الأمان';
+
+  @override
+  String get extraRecoveryOption => 'خيار إضافي لاستعادة الحساب';
+
+  @override
+  String get securityQuestion1 => 'سؤال الأمان 1';
+
+  @override
+  String get securityQuestion2 => 'سؤال الأمان 2';
+
+  @override
+  String get selectAQuestion => 'اختر سؤالاً';
+
+  @override
+  String get yourAnswer => 'إجابتك';
+
+  @override
+  String get typeYourAnswer => 'اكتب إجابتك';
+
+  @override
+  String get answerCannotBeEmpty => 'لا يمكن ترك الإجابة فارغة';
+
+  @override
+  String get recoveryKeysInfo => 'سيتم إنشاء مفاتيح الاسترداد بعد التسجيل. احفظها بأمان.';
+
+  @override
+  String get agreeToTerms => 'أوافق على ';
+
+  @override
+  String get termsAndConditions => 'الشروط والأحكام';
+
+  @override
+  String get and => 'و';
+
+  @override
+  String get privacyPolicy => 'سياسة الخصوصية';
+
+  @override
+  String get done => 'تم';
+
+  @override
+  String get addPhoto => 'تصویر شامل کریں';
+
+  @override
+  String get removePhoto => 'حذف الصورة';
+
+  @override
+  String get profilePhotoOptional => 'صورة الملف الشخصي (اختياري)';
+
+  @override
+  String get choosePhoto => 'اختر صورة';
+
+  @override
+  String get camera => 'الكاميرا';
+
+  @override
+  String get gallery => 'المعرض';
+
+  @override
+  String get saveYourRecoveryKeys => 'احفظ مفاتيح الاسترداد';
+
+  @override
+  String get recoveryKeysWarning => 'احفظ هذه المفاتيح بأمان. إنها الطريقة الوحيدة لاستعادة حسابك إذا نسيت كلمة المرور.';
+
+  @override
+  String get copyOne => 'نسخ واحد';
+
+  @override
+  String get copyAll => 'نسخ الكل';
+
+  @override
+  String get iHaveSavedMyKeys => 'لقد حفظت مفاتيحي';
+
+  @override
+  String get keyCopied => 'تم نسخ المفتاح!';
+
+  @override
+  String get allKeysCopied => 'تم نسخ جميع المفاتيح!';
+
+  @override
+  String get accountCreatedSuccessfully => 'تم إنشاء الحساب بنجاح!';
+
+  @override
+  String get forgotPasswordTitle => 'نسيت كلمة المرور؟';
+
+  @override
+  String get enterEmailToFind => 'أدخل بريدك الإلكتروني للعثور على حسابك.';
+
+  @override
+  String get verifyIdentity => 'التحقق من الهوية';
+
+  @override
+  String get chooseRecoveryMethod => 'اختر كيفية استعادة حسابك.';
+
+  @override
+  String get setNewPassword => 'تعيين كلمة مرور جديدة';
+
+  @override
+  String get chooseStrongPassword => 'اختر كلمة مرور قوية لحسابك.';
+
+  @override
+  String get allDone => 'تم الأمر!';
+
+  @override
+  String get passwordResetSuccess => 'تمت إعادة تعيين كلمة المرور بنجاح.';
+
+  @override
+  String get step1of3 => 'الخطوة 1 من 3 — البحث عن الحساب';
+
+  @override
+  String get step2of3 => 'الخطوة 2 من 3 — التحقق من الهوية';
+
+  @override
+  String get step3of3 => 'الخطوة 3 من 3 — تعيين كلمة مرور جديدة';
+
+  @override
+  String get complete => 'مكتمل!';
+
+  @override
+  String get recoveryMethod => 'طريقة الاسترداد';
+
+  @override
+  String get recoveryKey => 'مفتاح الاسترداد';
+
+  @override
+  String get securityQA => 'أسئلة وأجوبة الأمان';
+
+  @override
+  String get enterRecoveryKeyHint => 'أدخل أحد مفاتيح الاسترداد الـ8 التي حفظتها عند إنشاء حسابك.';
+
+  @override
+  String get recoveryKeyLabel => 'مفتاح الاسترداد';
+
+  @override
+  String get recoveryKeyHint => 'مثال: ABCD1234';
+
+  @override
+  String get verifyKey => 'التحقق من المفتاح';
+
+  @override
+  String get answerAtLeastOne => 'أجب على سؤال أمان واحد على الأقل بشكل صحيح لإعادة تعيين كلمة المرور.';
+
+  @override
+  String get question1 => 'السؤال 1';
+
+  @override
+  String get question2 => 'السؤال 2';
+
+  @override
+  String get verifyAnswers => 'التحقق من الإجابات';
+
+  @override
+  String get identityVerified => 'تم التحقق من هويتك! يمكنك الآن تعيين كلمة مرور جديدة.';
+
+  @override
+  String get newPassword => 'كلمة المرور الجديدة';
+
+  @override
+  String get newPasswordLabel => 'كلمة مرور جديدة';
+
+  @override
+  String get passwordsMatch => 'كلمتا المرور متطابقتان';
+
+  @override
+  String get passwordsDoNotMatch => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get resetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get findMyAccount => 'البحث عن حسابي';
+
+  @override
+  String get fillInDetails => 'أدخل بياناتك للبدء';
+
+  @override
+  String get loginSuccessful => 'تم تسجيل الدخول بنجاح 🎉';
+
+  @override
+  String get pleaseAgreeToTerms => 'يرجى الموافقة على الشروط والأحكام';
+
+  @override
+  String get pleasSelectBothQuestions => 'يرجى اختيار كلا سؤالي الأمان';
+
+  @override
+  String get pleaseAnswerBothQuestions => 'يرجى الإجابة على كلا السؤالين';
+
+  @override
+  String get transactionSavedSuccessfully => 'تم حفظ المعاملة بنجاح!';
+
+  @override
+  String get setExpectedReturnDate => 'حدد تاريخ الإرجاع المتوقع';
+
+  @override
+  String get returnBy => 'إرجاع بحلول';
+
+  @override
+  String get enterANote => 'ملاحظة: أدخل ملاحظة...';
+
+  @override
+  String get enterValidEmail => 'أدخل عنوان بريد إلكتروني صالح';
+
+  @override
+  String get enterValidName => 'أدخل اسماً صالحاً (3 أحرف على الأقل)';
+
+  @override
+  String get passwordMinSix => 'يجب أن تتكون كلمة المرور من 6 أحرف على الأقل';
+
+  @override
+  String get passwordsDoNotMatchError => 'كلمتا المرور غير متطابقتين';
+
+  @override
+  String get pinMustBeFourDigits => 'يجب أن يتكون الرمز السري من 4 أرقام بالضبط';
+
+  @override
+  String get pinMustBeNumeric => 'يجب أن يكون الرمز السري أرقاماً';
+
+  @override
+  String get amountCannotBeZero => 'لا يمكن أن يكون المبلغ صفراً';
+
+  @override
+  String get pleaseAddPersonName => 'يرجى إضافة اسم الشخص';
+
+  @override
+  String get pleaseAddReturnDate => 'يرجى إضافة تاريخ الإرجاع المتوقع';
+
+  @override
+  String get failedToCreateDebt => 'فشل إنشاء الدين';
+
+  @override
+  String get transactionFailed => 'فشلت المعاملة';
+
+  @override
+  String get debtPaymentFailed => 'فشل سداد الدين';
+
+  @override
+  String get passwordResetSuccessLogin => 'تمت إعادة تعيين كلمة المرور بنجاح! يرجى تسجيل الدخول.';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get signUpToGetStarted => 'سجل للبدء';
+
+  @override
+  String get transactionSavedSuccess => 'تم حفظ المعاملة بنجاح!';
+
+  @override
+  String get transactionSaveFailed => 'فشل في حفظ المعاملة';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get logoutConfirmTitle => 'تسجيل الخروج';
+
+  @override
+  String get logoutConfirmMessage => 'هل أنت متأكد أنك تريد تسجيل الخروج؟';
+
+  @override
+  String get appDescription => 'تطبيق احترافي لتتبع النفقات';
+
+  @override
+  String get guestUser => 'مستخدم ضيف';
+
+  @override
+  String get placeholderEmail => 'email@example.com';
+
+  @override
+  String get memberSince => 'عضو منذ';
+
+  @override
+  String get updatePhoto => 'تحديث الصورة';
+
+  @override
+  String get profileUpdatedSuccess => 'تم تحديث الملف الشخصي بنجاح ✓';
+
+  @override
+  String get profileUpdateFailed => 'فشل في تحديث الملف الشخصي';
+
+  @override
+  String get editProfile => 'تعديل الملف الشخصي';
+
+  @override
+  String get tapToChangePhoto => 'اضغط لتغيير الصورة';
+
+  @override
+  String get fullNameHint => 'أدخل اسمك الكامل';
+
+  @override
+  String get fullNameError => 'يجب أن يتكون الاسم من حرفين على الأقل';
+
+  @override
+  String get emailError => 'أدخل عنوان بريد إلكتروني صحيح';
+
+  @override
+  String get saveChanges => 'حفظ التغييرات';
+
+  @override
+  String get selectLanguage => 'اختر اللغة';
+
+  @override
+  String get chooseLanguageSubtitle => 'اختر لغتك المفضلة';
+
+  @override
+  String get currentLanguage => 'اللغة الحالية';
+
+  @override
+  String languageSelected(Object name) {
+    return 'تم اختيار $name';
+  }
+
+  @override
+  String get splashAppName => 'إكسبنس ميت';
+
+  @override
+  String get splashTagline => 'مال ذكي · أنت أذكى';
+
+  @override
+  String get transactionDetails => 'تفاصيل المعاملة';
+
+  @override
+  String get tags => 'العلامات';
+
+  @override
+  String get attachment => 'مرفق';
+
+  @override
+  String get collapse => 'طي';
+
+  @override
+  String get expand => 'توسيع';
+
+  @override
+  String get imageFileNotFound => 'لم يتم العثور على ملف الصورة';
+
+  @override
+  String get transactionId => 'معرف المعاملة';
+
+  @override
+  String get created => 'تم الإنشاء';
+
+  @override
+  String get type => 'النوع';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get transactionIdCopied => 'تم نسخ معرف المعاملة';
+
+  @override
+  String get addNote => 'نوٹ شامل کریں...';
+
+  @override
+  String get change => 'تبدیل کریں';
+
+  @override
+  String get chooseSource => 'ذریعہ منتخب کریں';
+
+  @override
+  String get takePhoto => 'تصویر لیں';
+
+  @override
+  String get chooseFromLibrary => 'لائبریری سے منتخب کریں';
+
+  @override
+  String get deleteCurrentAttachment => 'موجودہ منسلکہ حذف کریں';
 }

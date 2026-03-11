@@ -87,6 +87,7 @@ class CategoryBottomSheetState extends Equatable {
     bool clearPersonName = false,
     DateTime? expectedReturnDate,
     bool clearExpectedReturnDate = false,
+    bool clearSelectedImage = false,
     PaymentMethod? paymentMethod,
     TransactionStatus? transactionStatus,
     String? errorMessage,
@@ -97,7 +98,9 @@ class CategoryBottomSheetState extends Equatable {
       currentNumber: currentNumber ?? this.currentNumber,
       operation: operation ?? this.operation,
       firstOperand: firstOperand ?? this.firstOperand,
-      selectedImage: selectedImage ?? this.selectedImage,
+      selectedImage: clearSelectedImage
+          ? null
+          : (selectedImage ?? this.selectedImage),
       selectedDateTime: selectedDateTime ?? this.selectedDateTime,
       note: note ?? this.note,
       category: category ?? this.category,

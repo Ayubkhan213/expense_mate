@@ -29,13 +29,18 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       lastLoginAt: fields[9] as DateTime?,
       pin: fields[10] as String?,
       useBiometric: fields[11] as bool,
+      securityQuestion1: fields[12] as String?,
+      securityAnswer1: fields[13] as String?,
+      securityQuestion2: fields[14] as String?,
+      securityAnswer2: fields[15] as String?,
+      recoveryKeys: (fields[16] as List?)?.cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -59,7 +64,17 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       ..writeByte(10)
       ..write(obj.pin)
       ..writeByte(11)
-      ..write(obj.useBiometric);
+      ..write(obj.useBiometric)
+      ..writeByte(12)
+      ..write(obj.securityQuestion1)
+      ..writeByte(13)
+      ..write(obj.securityAnswer1)
+      ..writeByte(14)
+      ..write(obj.securityQuestion2)
+      ..writeByte(15)
+      ..write(obj.securityAnswer2)
+      ..writeByte(16)
+      ..write(obj.recoveryKeys);
   }
 
   @override

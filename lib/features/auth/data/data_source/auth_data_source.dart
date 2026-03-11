@@ -45,7 +45,11 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         throw Exception('User with this email already exists');
       }
 
-      // Save user to Hive
+      // Save user to Hive — all fields including the new ones are stored
+      // automatically because UserModel is a HiveObject with @HiveField(12-16)
+      // for securityQuestion1/2, securityAnswer1/2, and recoveryKeys.
+      // Run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      // to regenerate user_model.g.dart after adding the new HiveFields.
       await _userBox.put(user.id, user);
       return user;
     } catch (e) {
@@ -89,6 +93,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<UserModel> updateUser(UserModel user) async {
     try {
+      // _userBox.put(key, value) — same key as the user's id used in createUser()
       await _userBox.put(user.id, user);
       return user;
     } catch (e) {

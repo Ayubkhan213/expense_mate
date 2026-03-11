@@ -1,6 +1,8 @@
+// lib/features/profile/presentation/bloc/profile_state.dart
+
 import 'package:equatable/equatable.dart';
 
-enum ProfileStatus { initial, loading, loaded, error }
+enum ProfileStatus { initial, loading, loaded, updating, updated, error }
 
 class ProfileState extends Equatable {
   final ProfileStatus status;
@@ -22,14 +24,18 @@ class ProfileState extends Equatable {
     String? userName,
     String? userEmail,
     String? profileImagePath,
+    bool clearProfileImage = false,
     String? errorMessage,
+    bool clearError = false,
   }) {
     return ProfileState(
       status: status ?? this.status,
       userName: userName ?? this.userName,
       userEmail: userEmail ?? this.userEmail,
-      profileImagePath: profileImagePath ?? this.profileImagePath,
-      errorMessage: errorMessage ?? this.errorMessage,
+      profileImagePath: clearProfileImage
+          ? null
+          : (profileImagePath ?? this.profileImagePath),
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 

@@ -43,14 +43,14 @@ import 'package:expense_mate/features/transcation/domain/use_cases/create_recurr
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
 import 'package:expense_mate/core/data/data_sources/local/budget_local_data_source.dart';
 import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/recurring_local_data_source.dart'
-    as rec;
+// import 'package:expense_mate/core/data/data_sources/local/recurring_local_data_source.dart'
+// as rec;
 
 // ================= REPOSITORIES =================
 import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
 // import 'package:expense_mate/core/data/repository_imp/budget_repository.dart';
 import 'package:expense_mate/core/data/repository_imp/debt_repository.dart';
-import 'package:expense_mate/core/data/repository_imp/recurring_repository.dart';
+// import 'package:expense_mate/core/data/repository_imp/recurring_repository.dart';
 import 'package:expense_mate/core/data/repository_imp/category_repository_imp.dart';
 
 import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
@@ -75,20 +75,20 @@ Future<void> initializeDependencies() async {
   );
   sl.registerFactory(() => BudgetFormBloc());
 
-  sl.registerFactory(
-    () => AuthBloc(
-      checkAuthStatusUseCase: sl(),
-      loginWithEmailUseCase: sl(),
-      loginWithPinUseCase: sl(),
-      registerUseCase: sl(),
-      logoutUseCase: sl(),
-      changePasswordUseCase: sl(),
-      getAllAccountsUseCase: sl(),
-      getCurrentLoggedInUserUseCase: sl(),
-      authRepository: sl(),
-      currencyRepository: sl(),
-    ),
-  );
+  // sl.registerFactory(
+  //   () => AuthBloc(
+  //     checkAuthStatusUseCase: sl(),
+  //     loginWithEmailUseCase: sl(),
+  //     loginWithPinUseCase: sl(),
+  //     registerUseCase: sl(),
+  //     logoutUseCase: sl(),
+  //     changePasswordUseCase: sl(),
+  //     getAllAccountsUseCase: sl(),
+  //     getCurrentLoggedInUserUseCase: sl(),
+  //     authRepository: sl(),
+  //     currencyRepository: sl(),
+  //   ),
+  // );
 
   sl.registerFactory(
     () => TranscationBloc(

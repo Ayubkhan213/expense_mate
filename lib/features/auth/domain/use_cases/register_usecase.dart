@@ -14,6 +14,13 @@ class RegisterUseCase {
     String currency = 'USD',
     String? pin,
     bool useBiometric = false,
+    // ── New fields ──
+    String? profileImagePath,
+    String? securityQuestion1,
+    String? securityAnswer1,
+    String? securityQuestion2,
+    String? securityAnswer2,
+    List<String>? recoveryKeys,
   }) async {
     final userId = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -27,6 +34,12 @@ class RegisterUseCase {
       pin: pin,
       useBiometric: useBiometric,
       isLoggedIn: true,
+      profilePicturePath: profileImagePath,
+      securityQuestion1: securityQuestion1,
+      securityAnswer1: securityAnswer1,
+      securityQuestion2: securityQuestion2,
+      securityAnswer2: securityAnswer2,
+      recoveryKeys: recoveryKeys,
     );
 
     return await repository.register(newUser);

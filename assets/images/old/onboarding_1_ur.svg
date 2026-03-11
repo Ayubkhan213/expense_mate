@@ -1,0 +1,101 @@
+<svg viewBox="0 0 390 580" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', 'Noto Nastaliq Urdu', system-ui, sans-serif">
+  <!-- UR SLIDE 1: ہر پیسے کو ٹریک کریں -->
+  <defs>
+    <linearGradient id="bg_ur1" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D4A52"/><stop offset="100%" style="stop-color:#1a3340"/>
+    </linearGradient>
+    <linearGradient id="g_ur" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4CAF82"/><stop offset="100%" style="stop-color:#2d8a5e"/>
+    </linearGradient>
+    <linearGradient id="r_ur" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E05252"/><stop offset="100%" style="stop-color:#c03030"/>
+    </linearGradient>
+    <filter id="sh_ur"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/><feOffset dx="0" dy="6"/><feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="pc_ur1"><rect x="95" y="60" width="200" height="370" rx="28"/></clipPath>
+  </defs>
+
+  <rect width="390" height="580" fill="url(#bg_ur1)"/>
+  <circle cx="330" cy="120" r="90" fill="#4CAF82" opacity="0.07"/>
+  <circle cx="60" cy="200" r="70" fill="#5bb8d4" opacity="0.08"/>
+  <circle cx="320" cy="440" r="60" fill="#E05252" opacity="0.06"/>
+
+  <!-- Phone -->
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="#1a2d35" filter="url(#sh_ur)"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="none" stroke="#4a6a75" stroke-width="1.5"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="#2D4A52" clip-path="url(#pc_ur1)"/>
+  <rect x="168" y="72" width="54" height="11" rx="5.5" fill="#1a2d35"/>
+
+  <!-- Header RTL -->
+  <text x="275" y="95" font-size="9" fill="rgba(255,255,255,0.5)" text-anchor="end">کل بقایا</text>
+  <text x="275" y="120" font-size="22" font-weight="800" fill="#FFFFFF" text-anchor="end">$20,020</text>
+  <rect x="109" y="95" width="46" height="16" rx="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+  <text x="132" y="107" font-size="7" fill="rgba(255,255,255,0.7)" text-anchor="middle">مارچ 2026</text>
+
+  <line x1="109" y1="130" x2="281" y2="130" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+
+  <!-- 4 stat cards (same layout, RTL text) -->
+  <rect x="204" y="138" width="78" height="50" rx="12" fill="rgba(255,255,255,0.07)" stroke="rgba(76,175,130,0.3)" stroke-width="1"/>
+  <rect x="257" y="146" width="18" height="18" rx="6" fill="url(#g_ur)"/>
+  <text x="266" y="158" font-size="9" fill="#FFFFFF" text-anchor="middle">↓</text>
+  <text x="247" y="155" font-size="7.5" fill="rgba(255,255,255,0.65)" text-anchor="end">آمدنی</text>
+  <circle cx="275" cy="177" r="2.5" fill="#4CAF82"/>
+  <text x="269" y="180" font-size="8.5" font-weight="700" fill="#4CAF82" text-anchor="end">+$25,787</text>
+
+  <rect x="108" y="138" width="78" height="50" rx="12" fill="rgba(255,255,255,0.07)" stroke="rgba(224,82,82,0.3)" stroke-width="1"/>
+  <rect x="113" y="146" width="18" height="18" rx="6" fill="url(#r_ur)"/>
+  <text x="122" y="158" font-size="9" fill="#FFFFFF" text-anchor="middle">↑</text>
+  <text x="181" y="155" font-size="7.5" fill="rgba(255,255,255,0.65)" text-anchor="end">خرچ</text>
+  <circle cx="113" cy="177" r="2.5" fill="#E05252"/>
+  <text x="177" y="180" font-size="8.5" font-weight="700" fill="#E05252" text-anchor="end">-$10,400</text>
+
+  <rect x="204" y="196" width="78" height="50" rx="12" fill="rgba(255,255,255,0.07)" stroke="rgba(224,82,82,0.2)" stroke-width="1"/>
+  <text x="278" y="212" font-size="7.5" fill="rgba(255,255,255,0.65)" text-anchor="end">آپ کا قرض</text>
+  <text x="272" y="238" font-size="8.5" font-weight="700" fill="#E05252" text-anchor="end">-$845</text>
+
+  <rect x="108" y="196" width="78" height="50" rx="12" fill="rgba(255,255,255,0.07)" stroke="rgba(76,175,130,0.2)" stroke-width="1"/>
+  <text x="178" y="212" font-size="7.5" fill="rgba(255,255,255,0.65)" text-anchor="end">آپ کو ملنا</text>
+  <text x="174" y="238" font-size="8.5" font-weight="700" fill="#4CAF82" text-anchor="end">+$5,478</text>
+
+  <!-- Tab bar RTL -->
+  <rect x="109" y="255" width="172" height="22" rx="11" fill="rgba(255,255,255,0.06)"/>
+  <rect x="195" y="257" width="84" height="18" rx="9" fill="#2D4A52" stroke="rgba(255,255,255,0.15)" stroke-width="0.8"/>
+  <text x="237" y="270" font-size="7.5" font-weight="700" fill="#FFFFFF" text-anchor="middle">💰 لین دین</text>
+  <text x="153" y="270" font-size="7.5" fill="rgba(255,255,255,0.5)" text-anchor="middle">💵 قرض</text>
+
+  <text x="278" y="289" font-size="8" font-weight="700" fill="rgba(255,255,255,0.9)" text-anchor="end">حالیہ لین دین</text>
+
+  <rect x="109" y="295" width="172" height="34" rx="10" fill="rgba(255,255,255,0.06)"/>
+  <rect x="251" y="301" width="22" height="22" rx="8" fill="rgba(76,175,130,0.2)"/>
+  <text x="262" y="315" font-size="12" text-anchor="middle">💵</text>
+  <text x="243" y="311" font-size="8" font-weight="700" fill="#FFFFFF" text-anchor="end">فری لانس</text>
+  <text x="243" y="321" font-size="6.5" fill="rgba(255,255,255,0.4)" text-anchor="end">7 مارچ • نقد</text>
+  <text x="113" y="315" font-size="9" font-weight="700" fill="#4CAF82">+$55</text>
+
+  <rect x="109" y="333" width="172" height="34" rx="10" fill="rgba(255,255,255,0.06)"/>
+  <rect x="251" y="339" width="22" height="22" rx="8" fill="rgba(224,82,82,0.2)"/>
+  <text x="262" y="353" font-size="12" text-anchor="middle">🚗</text>
+  <text x="243" y="349" font-size="8" font-weight="700" fill="#FFFFFF" text-anchor="end">ٹرانسپورٹ</text>
+  <text x="243" y="359" font-size="6.5" fill="rgba(255,255,255,0.4)" text-anchor="end">7 مارچ • نقد</text>
+  <text x="113" y="349" font-size="9" font-weight="700" fill="#E05252">-$28</text>
+
+  <!-- Bottom nav -->
+  <line x1="109" y1="373" x2="281" y2="373" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <text x="264" y="392" font-size="7.5" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-weight="700">🏠 ہوم</text>
+  <text x="195" y="392" font-size="7.5" text-anchor="middle" fill="rgba(255,255,255,0.4)">↺ بار بار</text>
+  <text x="126" y="392" font-size="7.5" text-anchor="middle" fill="rgba(255,255,255,0.4)">👤 پروفائل</text>
+
+  <!-- Floating badges -->
+  <g transform="translate(304, 180)" filter="url(#sh_ur)">
+    <rect width="68" height="52" rx="14" fill="#4CAF82"/>
+    <text x="34" y="20" font-size="7.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">آمدنی</text>
+    <text x="34" y="36" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">↓</text>
+    <text x="34" y="47" font-size="7" fill="rgba(255,255,255,0.85)" text-anchor="middle">اس ماہ</text>
+  </g>
+  <g transform="translate(18, 220)" filter="url(#sh_ur)">
+    <rect width="68" height="52" rx="14" fill="#E05252"/>
+    <text x="34" y="20" font-size="7.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">خرچ</text>
+    <text x="34" y="36" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">↑</text>
+    <text x="34" y="47" font-size="7" fill="rgba(255,255,255,0.85)" text-anchor="middle">اس ماہ</text>
+  </g>
+
+  </svg>

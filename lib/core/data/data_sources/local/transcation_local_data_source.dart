@@ -116,13 +116,6 @@ class TransactionLocalDataSourceImpl implements TransactionLocalDataSource {
         .toList();
   }
 
-  // @override
-  // List<TransactionModel> getTransactionsByBudget(String budgetId) {
-  //   return _box.values
-  //       .where((t) => !t.isDeleted && t.budgetId == budgetId)
-  //       .toList();
-  // }
-
   @override
   List<TransactionModel> getDebtTransactions() {
     return _box.values.where((t) => !t.isDeleted && t.isDebt).toList();

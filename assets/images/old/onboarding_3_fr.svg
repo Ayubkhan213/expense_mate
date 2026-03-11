@@ -1,0 +1,59 @@
+<svg viewBox="0 0 390 580" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI',system-ui,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1E3545"/><stop offset="100%" style="stop-color:#0f2030"/></linearGradient>
+    <linearGradient id="tl" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#3AAFA9"/><stop offset="100%" style="stop-color:#2a8f8a"/></linearGradient>
+    <filter id="sh"><feGaussianBlur in="SourceAlpha" stdDeviation="10"/><feOffset dx="0" dy="6"/><feComponentTransfer><feFuncA type="linear" slope="0.3"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <clipPath id="pc"><rect x="95" y="60" width="200" height="370" rx="28"/></clipPath>
+  </defs>
+  <rect width="390" height="580" fill="url(#bg)"/>
+  <circle cx="60" cy="100" r="85" fill="#3AAFA9" opacity="0.07"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="#1a2d38" filter="url(#sh)"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="none" stroke="#3a5560" stroke-width="1.5"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="#1E3545" clip-path="url(#pc)"/>
+  <rect x="168" y="72" width="54" height="11" rx="5.5" fill="#0f2030"/>
+  <text x="115" y="102" font-size="16" font-weight="800" fill="#FFFFFF">Récurrent</text>
+  <text x="115" y="115" font-size="7.5" fill="rgba(255,255,255,0.4)">2 Actifs · 2 Total</text>
+  <rect x="109" y="122" width="172" height="65" rx="14" fill="rgba(255,255,255,0.07)"/>
+  <text x="118" y="134" font-size="7.5" fill="rgba(255,255,255,0.5)">Net Mensuel</text>
+  <text x="118" y="154" font-size="20" font-weight="800" fill="#FFFFFF">$805</text>
+  <rect x="215" y="133" width="52" height="16" rx="8" fill="rgba(255,255,255,0.1)"/>
+  <text x="241" y="144" font-size="7" fill="rgba(255,255,255,0.7)" text-anchor="middle">2 Actifs</text>
+  <rect x="109" y="218" width="172" height="72" rx="14" fill="rgba(255,255,255,0.08)" stroke="rgba(76,175,130,0.2)" stroke-width="1"/>
+  <rect x="115" y="226" width="22" height="22" rx="8" fill="rgba(76,175,130,0.25)"/>
+  <text x="126" y="240" font-size="11" text-anchor="middle" fill="#4CAF82">↓</text>
+  <text x="144" y="234" font-size="9" font-weight="700" fill="#FFFFFF">Pourboires</text>
+  <text x="144" y="244" font-size="7" fill="rgba(255,255,255,0.45)">Mensuel</text>
+  <text x="267" y="234" font-size="11" font-weight="800" fill="#4CAF82" text-anchor="end">+655.00</text>
+  <rect x="225" y="226" width="36" height="13" rx="6.5" fill="rgba(76,175,130,0.2)"/>
+  <text x="243" y="236" font-size="6.5" fill="#4CAF82" text-anchor="middle" font-weight="700">Actif</text>
+  <text x="118" y="254" font-size="6.5" fill="rgba(255,255,255,0.35)">📅 Prochain: 7/4/2026</text>
+  <rect x="115" y="260" width="42" height="18" rx="9" fill="transparent" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+  <text x="136" y="272" font-size="6.5" fill="rgba(255,255,255,0.7)" text-anchor="middle">⏸ Pause</text>
+  <rect x="162" y="260" width="36" height="18" rx="9" fill="transparent" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"/>
+  <text x="180" y="272" font-size="6.5" fill="rgba(255,255,255,0.7)" text-anchor="middle">✏️ Modifier</text>
+  <rect x="203" y="260" width="38" height="18" rx="9" fill="transparent" stroke="rgba(224,82,82,0.3)" stroke-width="0.8"/>
+  <text x="222" y="272" font-size="6.5" fill="#E05252" text-anchor="middle">🗑 Suppr.</text>
+  <rect x="109" y="297" width="172" height="52" rx="14" fill="rgba(255,255,255,0.06)"/>
+  <rect x="115" y="305" width="22" height="22" rx="8" fill="rgba(76,175,130,0.25)"/>
+  <text x="126" y="319" font-size="11" text-anchor="middle" fill="#4CAF82">↓</text>
+  <text x="144" y="313" font-size="9" font-weight="700" fill="#FFFFFF">Commerce</text>
+  <text x="144" y="323" font-size="7" fill="rgba(255,255,255,0.45)">Quotidien</text>
+  <text x="267" y="319" font-size="11" font-weight="800" fill="#4CAF82" text-anchor="end">+150.00</text>
+  <rect x="109" y="357" width="172" height="52" rx="14" fill="rgba(255,255,255,0.05)"/>
+  <text x="118" y="372" font-size="7" fill="rgba(255,255,255,0.4)">Prochains paiements</text>
+  <circle cx="122" cy="390" r="7" fill="#4CAF82" opacity="0.8"/><text x="122" y="394" font-size="7" fill="#FFFFFF" text-anchor="middle">5</text>
+  <circle cx="148" cy="390" r="7" fill="rgba(255,255,255,0.1)"/><text x="148" y="394" font-size="7" fill="rgba(255,255,255,0.5)" text-anchor="middle">12</text>
+  <circle cx="174" cy="390" r="7" fill="#3AAFA9" opacity="0.8"/><text x="174" y="394" font-size="7" fill="#FFFFFF" text-anchor="middle">15</text>
+  <circle cx="200" cy="390" r="7" fill="rgba(255,255,255,0.1)"/><text x="200" y="394" font-size="7" fill="rgba(255,255,255,0.5)" text-anchor="middle">22</text>
+  <circle cx="226" cy="390" r="7" fill="#4CAF82" opacity="0.8"/><text x="226" y="394" font-size="7" fill="#FFFFFF" text-anchor="middle">28</text>
+  <line x1="109" y1="416" x2="281" y2="416" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <text x="126" y="424" font-size="7" text-anchor="middle" fill="rgba(255,255,255,0.4)">🏠 Accueil</text>
+  <text x="195" y="424" font-size="7" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-weight="700">↺ Récurrent</text>
+  <text x="264" y="424" font-size="7" text-anchor="middle" fill="rgba(255,255,255,0.4)">👤 Profil</text>
+  <g transform="translate(10, 200)" filter="url(#sh)">
+    <rect width="78" height="52" rx="14" fill="url(#tl)"/>
+    <text x="39" y="18" font-size="7.5" fill="rgba(255,255,255,0.8)" text-anchor="middle">Paiement auto</text>
+    <text x="39" y="34" font-size="20" fill="#FFFFFF" text-anchor="middle">↺</text>
+    <text x="39" y="47" font-size="7" fill="rgba(255,255,255,0.75)" text-anchor="middle">N'oubliez plus</text>
+  </g>
+  </svg>

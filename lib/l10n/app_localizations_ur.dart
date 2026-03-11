@@ -9,7 +9,7 @@ class AppLocalizationsUr extends AppLocalizations {
   AppLocalizationsUr([String locale = 'ur']) : super(locale);
 
   @override
-  String get appName => 'اخراجات مینیجر';
+  String get appName => 'Expense Mate';
 
   @override
   String get home => 'ہوم';
@@ -51,7 +51,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get lentTo => 'کو قرض دیا';
 
   @override
-  String get personName => 'شخص کا نام';
+  String get personName => 'شخص کا نام...';
 
   @override
   String get returnDate => 'واپسی کی تاریخ';
@@ -114,7 +114,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get submit => 'جمع کروائیں';
 
   @override
-  String get cancel => 'منسوخ کریں';
+  String get cancel => 'منسوخ';
 
   @override
   String get save => 'محفوظ کریں';
@@ -468,7 +468,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get otherExpense => 'دیگر اخراجات';
 
   @override
-  String get selectCategory => 'زمرہ منتخب کریں';
+  String get selectCategory => 'قسم منتخب کریں';
 
   @override
   String get single => 'واحد';
@@ -498,7 +498,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get recurring => 'بار بار';
 
   @override
-  String get enterPin => 'اپنا پن درج کریں';
+  String get enterPin => 'پن درج کریں';
 
   @override
   String get enterPinSubtitle => 'جاری رکھنے کے لیے اپنا 4 ہندسوں کا پن درج کریں';
@@ -528,7 +528,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get enterEmail => 'اپنی ای میل درج کریں';
 
   @override
-  String get emailAddress => 'ای میل ایڈریس';
+  String get emailAddress => 'ای میل پتہ';
 
   @override
   String get welcomeBack => 'خوش آمدید';
@@ -546,7 +546,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get signUp => 'سائن اپ';
 
   @override
-  String get dontHaveAccount => 'کیا آپ کا اکاؤنٹ نہیں ہے؟';
+  String get dontHaveAccount => 'اکاؤنٹ نہیں ہے؟';
 
   @override
   String get onboardingTitle1 => 'اپنے اخراجات ٹریک کریں';
@@ -906,7 +906,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get addTransaction => 'ٹرانزیکشن شامل کریں';
 
   @override
-  String get anErrorOccurred => 'ایک خرابی پیش آئی';
+  String get anErrorOccurred => 'کوئی خرابی پیش آئی';
 
   @override
   String get more => 'مزید';
@@ -990,10 +990,10 @@ class AppLocalizationsUr extends AppLocalizations {
   String get addNoteOptional => 'نوٹ شامل کریں (اختیاری)';
 
   @override
-  String get recurringCreated => 'بار بار ٹرانزیکشن بنائی گئی!';
+  String get recurringCreated => 'بار بار لین دین بنائی گئی!';
 
   @override
-  String get recurringUpdated => 'بار بار ٹرانزیکشن اپ ڈیٹ ہوئی!';
+  String get recurringUpdated => 'بار بار لین دین اپ ڈیٹ ہو گئی!';
 
   @override
   String get ledger => 'کھاتہ';
@@ -1405,4 +1405,438 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get add => 'شامل کریں';
+
+  @override
+  String get signInToContinue => 'اپنے اخراجات کا انتظام جاری رکھنے کے لیے سائن ان کریں';
+
+  @override
+  String get emailHint => 'آپ@مثال.com';
+
+  @override
+  String get alreadyHaveAccount => 'پہلے سے اکاؤنٹ ہے؟';
+
+  @override
+  String get logIn => 'لاگ ان کریں';
+
+  @override
+  String get usePin => 'جلدی سائن ان کے لیے اپنا 4 ہندسوں کا پن استعمال کریں';
+
+  @override
+  String get quickPin => 'فوری پن';
+
+  @override
+  String get enterYour4DigitPin => 'اپنا 4 ہندسوں کا پن درج کریں';
+
+  @override
+  String get singleAccountNotice => 'یہ ایپ صرف ایک اکاؤنٹ کو سپورٹ کرتی ہے۔ اپنے موجودہ اکاؤنٹ سے سائن ان کریں۔';
+
+  @override
+  String get personalInfo => 'ذاتی معلومات';
+
+  @override
+  String get fullName => 'پورا نام';
+
+  @override
+  String get enterFullName => 'اپنا پورا نام درج کریں';
+
+  @override
+  String get phoneNumber => 'فون نمبر';
+
+  @override
+  String get optional => 'اختیاری';
+
+  @override
+  String get preferredCurrency => 'پسندیدہ کرنسی';
+
+  @override
+  String get security => 'سیکیورٹی';
+
+  @override
+  String get minimumSixChars => 'کم از کم 6 حروف';
+
+  @override
+  String get confirmPassword => 'پاس ورڈ کی تصدیق کریں';
+
+  @override
+  String get reEnterPassword => 'پاس ورڈ دوبارہ درج کریں';
+
+  @override
+  String get quickLoginPin => 'فوری لاگ ان پن (اختیاری)';
+
+  @override
+  String get pin => 'پن';
+
+  @override
+  String get pinHint => 'تیز لاگ ان کے لیے 4 ہندسوں کا کوڈ';
+
+  @override
+  String get securityQuestions => 'سیکیورٹی سوالات';
+
+  @override
+  String get extraRecoveryOption => 'اکاؤنٹ بازیابی کا اضافی آپشن';
+
+  @override
+  String get securityQuestion1 => 'سیکیورٹی سوال 1';
+
+  @override
+  String get securityQuestion2 => 'سیکیورٹی سوال 2';
+
+  @override
+  String get selectAQuestion => 'سوال منتخب کریں';
+
+  @override
+  String get yourAnswer => 'آپ کا جواب';
+
+  @override
+  String get typeYourAnswer => 'اپنا جواب لکھیں';
+
+  @override
+  String get answerCannotBeEmpty => 'جواب خالی نہیں ہو سکتا';
+
+  @override
+  String get recoveryKeysInfo => 'رجسٹریشن کے بعد بازیابی کی چابیاں بنائی جائیں گی۔ انہیں محفوظ رکھیں۔';
+
+  @override
+  String get agreeToTerms => 'میں موافق ہوں ';
+
+  @override
+  String get termsAndConditions => 'شرائط و ضوابط';
+
+  @override
+  String get and => 'اور';
+
+  @override
+  String get privacyPolicy => 'رازداری کی پالیسی';
+
+  @override
+  String get done => 'مکمل';
+
+  @override
+  String get addPhoto => 'إضافة صورة';
+
+  @override
+  String get removePhoto => 'تصویر ہٹائیں';
+
+  @override
+  String get profilePhotoOptional => 'پروفائل تصویر (اختیاری)';
+
+  @override
+  String get choosePhoto => 'تصویر منتخب کریں';
+
+  @override
+  String get camera => 'کیمرہ';
+
+  @override
+  String get gallery => 'گیلری';
+
+  @override
+  String get saveYourRecoveryKeys => 'اپنی بازیابی کی چابیاں محفوظ کریں';
+
+  @override
+  String get recoveryKeysWarning => 'یہ چابیاں محفوظ جگہ رکھیں۔ پاس ورڈ بھولنے کی صورت میں یہی واحد ذریعہ ہیں۔';
+
+  @override
+  String get copyOne => 'ایک کاپی کریں';
+
+  @override
+  String get copyAll => 'سب کاپی کریں';
+
+  @override
+  String get iHaveSavedMyKeys => 'میں نے اپنی چابیاں محفوظ کر لی ہیں';
+
+  @override
+  String get keyCopied => 'چابی کاپی ہو گئی!';
+
+  @override
+  String get allKeysCopied => 'تمام چابیاں کاپی ہو گئیں!';
+
+  @override
+  String get accountCreatedSuccessfully => 'اکاؤنٹ کامیابی سے بنایا گیا!';
+
+  @override
+  String get forgotPasswordTitle => 'پاس ورڈ بھول گئے؟';
+
+  @override
+  String get enterEmailToFind => 'اپنا اکاؤنٹ تلاش کرنے کے لیے ای میل درج کریں۔';
+
+  @override
+  String get verifyIdentity => 'شناخت کی تصدیق کریں';
+
+  @override
+  String get chooseRecoveryMethod => 'اپنا اکاؤنٹ بازیاب کرنے کا طریقہ منتخب کریں۔';
+
+  @override
+  String get setNewPassword => 'نیا پاس ورڈ سیٹ کریں';
+
+  @override
+  String get chooseStrongPassword => 'اپنے اکاؤنٹ کے لیے مضبوط پاس ورڈ منتخب کریں۔';
+
+  @override
+  String get allDone => 'سب ہو گیا!';
+
+  @override
+  String get passwordResetSuccess => 'آپ کا پاس ورڈ کامیابی سے دوبارہ ترتیب دیا گیا۔';
+
+  @override
+  String get step1of3 => 'مرحلہ 1 از 3 — اکاؤنٹ تلاش کریں';
+
+  @override
+  String get step2of3 => 'مرحلہ 2 از 3 — شناخت کی تصدیق';
+
+  @override
+  String get step3of3 => 'مرحلہ 3 از 3 — نیا پاس ورڈ سیٹ کریں';
+
+  @override
+  String get complete => 'مکمل!';
+
+  @override
+  String get recoveryMethod => 'بازیابی کا طریقہ';
+
+  @override
+  String get recoveryKey => 'بازیابی کی چابی';
+
+  @override
+  String get securityQA => 'سیکیورٹی سوال و جواب';
+
+  @override
+  String get enterRecoveryKeyHint => 'اکاؤنٹ بناتے وقت محفوظ کی گئی 8 چابیوں میں سے ایک درج کریں۔';
+
+  @override
+  String get recoveryKeyLabel => 'بازیابی کی چابی';
+
+  @override
+  String get recoveryKeyHint => 'مثال: ABCD1234';
+
+  @override
+  String get verifyKey => 'چابی کی تصدیق کریں';
+
+  @override
+  String get answerAtLeastOne => 'پاس ورڈ دوبارہ ترتیب دینے کے لیے کم از کم ایک سیکیورٹی سوال کا صحیح جواب دیں۔';
+
+  @override
+  String get question1 => 'سوال 1';
+
+  @override
+  String get question2 => 'سوال 2';
+
+  @override
+  String get verifyAnswers => 'جوابات کی تصدیق کریں';
+
+  @override
+  String get identityVerified => 'شناخت کی تصدیق ہو گئی! اب آپ نیا پاس ورڈ سیٹ کر سکتے ہیں۔';
+
+  @override
+  String get newPassword => 'نیا پاس ورڈ';
+
+  @override
+  String get newPasswordLabel => 'نیا پاس ورڈ';
+
+  @override
+  String get passwordsMatch => 'پاس ورڈ مطابقت رکھتے ہیں';
+
+  @override
+  String get passwordsDoNotMatch => 'پاس ورڈ مطابقت نہیں رکھتے';
+
+  @override
+  String get resetPassword => 'پاس ورڈ دوبارہ ترتیب دیں';
+
+  @override
+  String get findMyAccount => 'میرا اکاؤنٹ تلاش کریں';
+
+  @override
+  String get fillInDetails => 'شروع کرنے کے لیے اپنی تفصیلات بھریں';
+
+  @override
+  String get loginSuccessful => 'لاگ ان کامیاب 🎉';
+
+  @override
+  String get pleaseAgreeToTerms => 'براہ کرم شرائط و ضوابط سے اتفاق کریں';
+
+  @override
+  String get pleasSelectBothQuestions => 'براہ کرم دونوں سیکیورٹی سوالات منتخب کریں';
+
+  @override
+  String get pleaseAnswerBothQuestions => 'براہ کرم دونوں سوالات کا جواب دیں';
+
+  @override
+  String get transactionSavedSuccessfully => 'لین دین کامیابی سے محفوظ ہو گیا!';
+
+  @override
+  String get setExpectedReturnDate => 'متوقع واپسی کی تاریخ سیٹ کریں';
+
+  @override
+  String get returnBy => 'واپسی بتاریخ';
+
+  @override
+  String get enterANote => 'نوٹ: ایک نوٹ درج کریں...';
+
+  @override
+  String get enterValidEmail => 'درست ای میل ایڈریس درج کریں';
+
+  @override
+  String get enterValidName => 'درست نام درج کریں (کم از کم 3 حروف)';
+
+  @override
+  String get passwordMinSix => 'پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے';
+
+  @override
+  String get passwordsDoNotMatchError => 'پاس ورڈ مطابقت نہیں رکھتے';
+
+  @override
+  String get pinMustBeFourDigits => 'پن بالکل 4 ہندسوں کا ہونا چاہیے';
+
+  @override
+  String get pinMustBeNumeric => 'پن صرف ہندسوں پر مشتمل ہونا چاہیے';
+
+  @override
+  String get amountCannotBeZero => 'رقم صفر نہیں ہو سکتی';
+
+  @override
+  String get pleaseAddPersonName => 'براہ کرم شخص کا نام شامل کریں';
+
+  @override
+  String get pleaseAddReturnDate => 'براہ کرم متوقع واپسی کی تاریخ شامل کریں';
+
+  @override
+  String get failedToCreateDebt => 'قرض بنانے میں ناکامی';
+
+  @override
+  String get transactionFailed => 'لین دین ناکام ہو گیا';
+
+  @override
+  String get debtPaymentFailed => 'قرض کی ادائیگی ناکام ہو گئی';
+
+  @override
+  String get passwordResetSuccessLogin => 'پاس ورڈ کامیابی سے دوبارہ ترتیب دیا گیا! براہ کرم لاگ ان کریں۔';
+
+  @override
+  String get createAccount => 'اکاؤنٹ بنائیں';
+
+  @override
+  String get signUpToGetStarted => 'شروع کرنے کے لیے سائن اپ کریں';
+
+  @override
+  String get transactionSavedSuccess => 'لین دین کامیابی سے محفوظ ہو گئی!';
+
+  @override
+  String get transactionSaveFailed => 'لین دین محفوظ کرنے میں ناکامی ہوئی';
+
+  @override
+  String get logout => 'لاگ آؤٹ';
+
+  @override
+  String get logoutConfirmTitle => 'لاگ آؤٹ';
+
+  @override
+  String get logoutConfirmMessage => 'کیا آپ واقعی لاگ آؤٹ کرنا چاہتے ہیں؟';
+
+  @override
+  String get appDescription => 'ایک پیشہ ورانہ اخراجات ٹریکنگ ایپلی کیشن';
+
+  @override
+  String get guestUser => 'مہمان صارف';
+
+  @override
+  String get placeholderEmail => 'email@example.com';
+
+  @override
+  String get memberSince => 'رکنیت';
+
+  @override
+  String get updatePhoto => 'تصویر تبدیل کریں';
+
+  @override
+  String get profileUpdatedSuccess => 'پروفائل کامیابی سے اپ ڈیٹ ہو گئی ✓';
+
+  @override
+  String get profileUpdateFailed => 'پروفائل اپ ڈیٹ کرنے میں ناکامی ہوئی';
+
+  @override
+  String get editProfile => 'پروفائل ترمیم کریں';
+
+  @override
+  String get tapToChangePhoto => 'تصویر تبدیل کرنے کے لیے ٹیپ کریں';
+
+  @override
+  String get fullNameHint => 'اپنا پورا نام درج کریں';
+
+  @override
+  String get fullNameError => 'نام کم از کم 2 حروف کا ہونا چاہیے';
+
+  @override
+  String get emailError => 'درست ای میل پتہ درج کریں';
+
+  @override
+  String get saveChanges => 'تبدیلیاں محفوظ کریں';
+
+  @override
+  String get selectLanguage => 'زبان منتخب کریں';
+
+  @override
+  String get chooseLanguageSubtitle => 'اپنی پسندیدہ زبان چنیں';
+
+  @override
+  String get currentLanguage => 'موجودہ زبان';
+
+  @override
+  String languageSelected(Object name) {
+    return '$name منتخب ہوئی';
+  }
+
+  @override
+  String get splashAppName => 'ایکسپنس میٹ';
+
+  @override
+  String get splashTagline => 'ہوشمند پیسہ · ہوشمند آپ';
+
+  @override
+  String get transactionDetails => 'لین دین کی تفصیلات';
+
+  @override
+  String get tags => 'ٹیگز';
+
+  @override
+  String get attachment => 'منسلکہ';
+
+  @override
+  String get collapse => 'سکیڑیں';
+
+  @override
+  String get expand => 'پھیلائیں';
+
+  @override
+  String get imageFileNotFound => 'تصویر کی فائل نہیں ملی';
+
+  @override
+  String get transactionId => 'لین دین کی شناخت';
+
+  @override
+  String get created => 'بنایا گیا';
+
+  @override
+  String get type => 'قسم';
+
+  @override
+  String get status => 'حیثیت';
+
+  @override
+  String get transactionIdCopied => 'لین دین کی شناخت کاپی ہو گئی';
+
+  @override
+  String get addNote => 'أضف ملاحظة...';
+
+  @override
+  String get change => 'تغيير';
+
+  @override
+  String get chooseSource => 'اختر مصدرًا';
+
+  @override
+  String get takePhoto => 'التقط صورة';
+
+  @override
+  String get chooseFromLibrary => 'اختر من المكتبة';
+
+  @override
+  String get deleteCurrentAttachment => 'حذف المرفق الحالي';
 }

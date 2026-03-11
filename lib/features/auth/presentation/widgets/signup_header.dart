@@ -1,3 +1,4 @@
+import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SignupHeader extends StatelessWidget {
@@ -5,11 +6,12 @@ class SignupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final t = AppLocalizations.of(context)!;
+    return Center(
       child: Column(
         children: [
           Text(
-            'Create Account',
+            t.createAccount,
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -18,7 +20,7 @@ class SignupHeader extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            'Sign up to get started',
+            t.signUpToGetStarted,
             style: TextStyle(fontSize: 16, color: Color(0xFF6B7280)),
           ),
         ],

@@ -26,4 +26,5 @@ abstract class AuthRepository {
   Future<bool> checkEmailExists(String email);
   Future<bool> checkPinExists({required String pin});
   Future<UserModel?> getCurrentLoggedInUser();
+  Future<void> resetPassword(String userId, String newPassword);
 }

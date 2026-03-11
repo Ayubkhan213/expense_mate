@@ -2,6 +2,7 @@ import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/data/models/budget_model.dart';
 import 'package:expense_mate/core/data/models/debt_model.dart';
 import 'package:expense_mate/core/utils/enum.dart';
+import 'package:expense_mate/features/auth/presentation/faces/forget_face.dart';
 import 'package:expense_mate/features/budgets/presentation/faces/budget_details.dart';
 
 import 'package:expense_mate/features/home/presentation/faces/all_debt_face.dart';
@@ -24,7 +25,12 @@ class AppRouter {
       case 'template':
         return MaterialPageRoute(builder: (_) => const TemplateFace());
       case 'language':
-        return MaterialPageRoute(builder: (_) => const LanguageFace());
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder: (_) => LanguageFace(
+            isFirstLaunch: args?['isFirstLaunch'] as bool? ?? false,
+          ),
+        );
       case 'add_record':
         final args = settings.arguments as Map<String, dynamic>?;
 
@@ -44,7 +50,7 @@ class AppRouter {
       case 'signup':
         return MaterialPageRoute(builder: (_) => const SignupFace());
       case 'forget_password':
-        return MaterialPageRoute(builder: (_) => const SplashFace());
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordFace());
       case 'budget_details':
         final args = settings.arguments as Map<String, dynamic>?;
         final BudgetModel budget = args?['budget'] ?? '';
@@ -62,6 +68,8 @@ class AppRouter {
         );
       case 'all_transcation':
         return MaterialPageRoute(builder: (_) => AllTransactionsFace());
+      case 'forgot_password':
+        return MaterialPageRoute(builder: (_) => ForgotPasswordFace());
       case 'all_debt_transcation':
         return MaterialPageRoute(builder: (_) => AllDebtTransactionsFace());
       default:

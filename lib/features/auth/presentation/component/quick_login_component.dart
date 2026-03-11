@@ -1,79 +1,189 @@
+import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
 import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/auth_event.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/auth_state.dart';
 
 class QuickLoginComponent extends StatelessWidget {
-  const QuickLoginComponent({super.key});
+  final Color primary;
+  final bool isDark;
+
+  const QuickLoginComponent({
+    super.key,
+    required this.primary,
+    required this.isDark,
+  });
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    // Wrap in Directionality so it always renders LTR (same as original)
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            t.enterPin,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A1A),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            t.enterPinSubtitle,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-          ),
-          const SizedBox(height: 36),
+      child: BlocBuilder<LoginBloc, LoginState>(
+        buildWhen: (p, c) =>
+            p.enteredPin != c.enteredPin ||
+            p.status != c.status ||
+            p.storedAccount != c.storedAccount,
+        builder: (context, state) {
+          final isLoading = state.status == LoginStatus.loading;
+          final hasError =
+              state.status == LoginStatus.unauthenticated &&
+              state.errorMessage != null;
+          final theme = Theme.of(context);
 
-          /// PIN DOTS
-          BlocBuilder<AuthBloc, AuthState>(
-            buildWhen: (p, c) => p.enteredPin != c.enteredPin,
-            builder: (context, state) {
-              return _PinDots(pin: state.enteredPin);
-            },
-          ),
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ── Account avatar + name ───────────────────────────
+              if (state.storedAccount != null) ...[
+                _PinAccountHeader(
+                  account: state.storedAccount!,
+                  primary: primary,
+                  t: t,
+                ),
+                const SizedBox(height: 28),
+              ] else ...[
+                Text(
+                  t.enterPin,
+                  style: AppTextStyles.h5.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  t.usePin,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
+                ),
+                const SizedBox(height: 28),
+              ],
 
-          const SizedBox(height: 40),
+              // ── PIN dots ────────────────────────────────────────
+              _PinDots(
+                pin: state.enteredPin,
+                primary: primary,
+                hasError: hasError,
+                isLoading: isLoading,
+              ),
 
-          /// NUMBER PAD
-          _NumberPad(),
-        ],
+              const SizedBox(height: 10),
+
+              // ── Error label ─────────────────────────────────────
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: hasError
+                    ? Padding(
+                        key: const ValueKey('err'),
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          state.errorMessage!,
+                          style: AppTextStyles.captionSmall.copyWith(
+                            color: theme.colorScheme.error,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : const SizedBox(key: ValueKey('no-err'), height: 18),
+              ),
+
+              const SizedBox(height: 12),
+
+              // ── Number pad ──────────────────────────────────────
+              _NumberPad(primary: primary, isLoading: isLoading),
+            ],
+          );
+        },
       ),
     );
   }
 }
 
-/// ---------------- PIN DOTS ----------------
-class _PinDots extends StatelessWidget {
-  final String pin;
-  const _PinDots({required this.pin});
+// ─────────────────────────────────────────────────────────────────────────────
+// Account header shown above PIN dots
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _PinAccountHeader extends StatelessWidget {
+  final dynamic account;
+  final Color primary;
+  final AppLocalizations t;
+
+  const _PinAccountHeader({
+    required this.account,
+    required this.primary,
+    required this.t,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Column(
+      children: [
+        const SizedBox(height: 4),
+        Text(
+          t.enterYour4DigitPin,
+          style: AppTextStyles.captionSmall.copyWith(
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PIN dots row
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _PinDots extends StatelessWidget {
+  final String pin;
+  final Color primary;
+  final bool hasError;
+  final bool isLoading;
+
+  const _PinDots({
+    required this.pin,
+    required this.primary,
+    required this.hasError,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final dotColor = hasError ? theme.colorScheme.error : primary;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(4, (index) {
-        final isFilled = index < pin.length;
-
+      children: List.generate(4, (i) {
+        final filled = i < pin.length;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          width: 16,
-          height: 16,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          width: 20,
+          height: 20,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isFilled ? const Color(0xFF6C5CE7) : Colors.transparent,
+            color: filled ? dotColor : Colors.transparent,
             border: Border.all(
-              color: isFilled ? const Color(0xFF6C5CE7) : Colors.grey.shade400,
+              color: filled
+                  ? dotColor
+                  : theme.colorScheme.outline.withValues(alpha: 0.35),
               width: 2,
             ),
+            boxShadow: filled
+                ? [
+                    BoxShadow(
+                      color: dotColor.withValues(alpha: 0.3),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
           ),
         );
       }),
@@ -81,92 +191,116 @@ class _PinDots extends StatelessWidget {
   }
 }
 
-/// ---------------- NUMBER PAD ----------------
+// ─────────────────────────────────────────────────────────────────────────────
+// Number pad
+// ─────────────────────────────────────────────────────────────────────────────
+
 class _NumberPad extends StatelessWidget {
+  final Color primary;
+  final bool isLoading;
+
+  const _NumberPad({required this.primary, required this.isLoading});
+
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
+    const rows = [
+      ['1', '2', '3'],
+      ['4', '5', '6'],
+      ['7', '8', '9'],
+      ['', '0', 'del'],
+    ];
+
     return Column(
-      children: [
-        _NumberRow(numbers: ['1', '2', '3']),
-        SizedBox(height: 18),
-        _NumberRow(numbers: ['4', '5', '6']),
-        SizedBox(height: 18),
-        _NumberRow(numbers: ['7', '8', '9']),
-        SizedBox(height: 18),
-        _NumberRow(numbers: ['', '0', t.delete]),
-      ],
+      children: rows.map((row) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: row.map((key) {
+              if (key.isEmpty) {
+                return const SizedBox(width: 80, height: 70);
+              }
+              return _NumKey(
+                label: key,
+                primary: primary,
+                isLoading: isLoading,
+                onTap: () {
+                  if (isLoading) return;
+                  HapticFeedback.lightImpact();
+                  if (key == 'del') {
+                    context.read<LoginBloc>().add(LoginPinDigitDeleted());
+                  } else {
+                    context.read<LoginBloc>().add(LoginPinDigitEntered(key));
+                  }
+                },
+              );
+            }).toList(),
+          ),
+        );
+      }).toList(),
     );
   }
 }
 
-class _NumberRow extends StatelessWidget {
-  final List<String> numbers;
-  const _NumberRow({required this.numbers});
+class _NumKey extends StatelessWidget {
+  final String label;
+  final Color primary;
+  final bool isLoading;
+  final VoidCallback onTap;
+
+  const _NumKey({
+    required this.label,
+    required this.primary,
+    required this.isLoading,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<AuthBloc>();
+    final theme = Theme.of(context);
+    final isDel = label == 'del';
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: numbers.map((value) {
-        if (value.isEmpty) {
-          return const SizedBox(width: 72, height: 72);
-        }
-
-        return BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            final isDisabled =
-                value != 'delete' && state.enteredPin.length >= 4;
-
-            return GestureDetector(
-              onTap: isDisabled
-                  ? null
-                  : () {
-                      if (value == 'delete') {
-                        bloc.add(PinDigitDeletedEvent());
-                      } else {
-                        bloc.add(PinDigitEnteredEvent(value));
-                      }
-                    },
-              child: AnimatedOpacity(
-                duration: const Duration(milliseconds: 150),
-                opacity: isDisabled ? 0.4 : 1,
-                child: Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: value == 'delete'
-                        ? Colors.transparent
-                        : Colors.grey.shade100,
-                    border: value == 'delete'
-                        ? Border.all(color: Colors.grey.shade300, width: 2)
-                        : null,
+    return GestureDetector(
+      onTap: isLoading ? null : onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        width: 78,
+        height: 68,
+        margin: const EdgeInsets.symmetric(horizontal: 6),
+        decoration: BoxDecoration(
+          color: isDel ? Colors.transparent : theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: isDel
+              ? []
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   ),
-                  child: Center(
-                    child: value == 'delete'
-                        ? Icon(
-                            Icons.backspace_outlined,
-                            size: 24,
-                            color: Colors.grey.shade700,
-                          )
-                        : Text(
-                            value,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF1A1A1A),
-                            ),
-                          ),
+                ],
+          border: isDel
+              ? null
+              : Border.all(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.08),
+                ),
+        ),
+        child: Center(
+          child: isDel
+              ? Icon(
+                  Icons.backspace_outlined,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
+                  size: 22,
+                )
+              : Text(
+                  label,
+                  style: AppTextStyles.h5.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-            );
-          },
-        );
-      }).toList(),
+        ),
+      ),
     );
   }
 }

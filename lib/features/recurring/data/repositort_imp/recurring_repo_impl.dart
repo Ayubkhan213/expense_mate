@@ -1,117 +1,14 @@
-import 'package:expense_mate/core/data/data_sources/local/recurring_local_data_source.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
+// ignore_for_file: avoid_print
+
 import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/core/domain/repository/recurrin_repository.dart';
+
 import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart';
 import 'package:expense_mate/features/recurring/domain/repository.dart';
-
-// class RecurringRepositoryImple implements RecurringRepositories {
-//   final RecurringLocalDataSource dataSource;
-
-//   RecurringRepositoryImple({required this.dataSource});
-
-//   @override
-//   Future<String> createRecurring(RecurringTransactionModel recurring) {
-//     return dataSource.createRecurring(recurring);
-//   }
-
-//   @override
-//   RecurringTransactionModel? getRecurringById(String id) {
-//     return dataSource.getRecurringById(id);
-//   }
-
-//   @override
-//   List<RecurringTransactionModel> getAllRecurring() {
-//     return dataSource.getAllRecurring();
-//   }
-
-//   @override
-//   List<RecurringTransactionModel> getActiveRecurring() {
-//     return dataSource.getActiveRecurring();
-//   }
-
-//   @override
-//   List<RecurringTransactionModel> getInactiveRecurring() {
-//     return dataSource.getInactiveRecurring();
-//   }
-
-//   @override
-//   List<RecurringTransactionModel> getDueRecurring() {
-//     return dataSource.getDueRecurring();
-//   }
-
-//   @override
-//   Future<void> updateRecurring(RecurringTransactionModel recurring) {
-//     return dataSource.updateRecurring(recurring);
-//   }
-
-//   @override
-//   Future<void> toggleActive(String id) {
-//     return dataSource.toggleActive(id);
-//   }
-
-//   @override
-//   Future<void> deleteRecurring(String id) {
-//     return dataSource.deleteRecurring(id);
-//   }
-
-//   @override
-//   int getActiveRecurringCount() {
-//     // TODO: implement getActiveRecurringCount
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   List<RecurringTransactionModel> getRecurringByFrequency(
-//     RecurrenceFrequency frequency,
-//   ) {
-//     // TODO: implement getRecurringByFrequency
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   List<RecurringTransactionModel> getRecurringByType(TransactionType type) {
-//     // TODO: implement getRecurringByType
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   double getTotalMonthlyRecurringExpense() {
-//     // TODO: implement getTotalMonthlyRecurringExpense
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   double getTotalMonthlyRecurringIncome() {
-//     // TODO: implement getTotalMonthlyRecurringIncome
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   Future<void> markTransactionGenerated(
-//     String recurringId,
-//     String transactionId,
-//   ) {
-//     // TODO: implement markTransactionGenerated
-//     throw UnimplementedError();
-//   }
-
-//   @override
-//   Future<void> updateNextOccurrence(String id, DateTime nextDate) {
-//     // TODO: implement updateNextOccurrence
-//     throw UnimplementedError();
-//   }
-// }
 
 class RecurringRepositoryImpl implements RecurringRepository {
   final RecurringLocalDataSource localDataSource;
 
   RecurringRepositoryImpl({required this.localDataSource});
-
-  @override
-  Future<void> toggleActive(String id) async {
-    await localDataSource.toggleActive(id);
-  }
 
   @override
   Future<void> createRecurring(RecurringTransactionModel recurring) async {

@@ -1,6 +1,8 @@
 import 'package:expense_mate/core/app_export.dart';
 
 import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
+import 'package:expense_mate/core/data/data_sources/local/sql/debt_local_datasource.dart';
+import 'package:expense_mate/core/data/data_sources/local/sql/transcation_local_data_source.dart';
 
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
 
@@ -8,6 +10,10 @@ import 'package:expense_mate/core/di/injection_container.dart';
 import 'package:expense_mate/core/services/hive_box_manager.dart';
 import 'package:expense_mate/features/analytics/data/repository_impl/analytics_repository_impl.dart';
 import 'package:expense_mate/features/analytics/presentation/bloc/analytics_bloc.dart';
+import 'package:expense_mate/features/auth/domain/use_cases/update_profile_usecase.dart';
+import 'package:expense_mate/features/auth/presentation/bloc/forget_password_bloc/forget_password_bloc.dart';
+import 'package:expense_mate/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
+import 'package:expense_mate/features/auth/presentation/bloc/signup_bloc/signup_bloc.dart';
 import 'package:expense_mate/features/budgets/data/data_source/budget_local_data_source.dart';
 import 'package:expense_mate/features/budgets/data/repository_imp/budget_repository_imp.dart'
     show BudgetRepositoryImp;
@@ -31,12 +37,15 @@ import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc
 import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_event.dart';
 import 'package:expense_mate/features/profile/presentation/bloc/notification/notification_bloc.dart';
 import 'package:expense_mate/features/profile/presentation/bloc/notification/notification_event.dart';
+import 'package:expense_mate/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:expense_mate/features/profile/presentation/bloc/profile_event.dart';
 import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart';
 import 'package:expense_mate/features/recurring/data/repositort_imp/recurring_repo_impl.dart';
 import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_bloc.dart';
 
 import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_bloc.dart';
 import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
+import 'package:expense_mate/features/splah/presentation/bloc/splash_bloc.dart';
 
 class AppProviders {
   static List<BlocProvider> providers = [
@@ -52,11 +61,11 @@ class AppProviders {
       )..add(RefreshHomeData()),
     ),
     BlocProvider<LanguageBloc>(create: (_) => sl<LanguageBloc>()),
-    BlocProvider<AuthBloc>(
-      create: (_) => sl<AuthBloc>()
-        ..add(LoadCurrenciesEvent())
-        ..add(CheckAuthStatusEvent()),
-    ),
+    // BlocProvider<AuthBloc>(
+    //   create: (_) => sl<AuthBloc>()
+    //     ..add(LoadCurrenciesEvent())
+    //     ..add(CheckAuthStatusEvent()),
+    // ),
     BlocProvider<TranscationBloc>(
       create: (_) => sl<TranscationBloc>()
         ..add(FetchAllExpancesEvent())
@@ -111,15 +120,99 @@ class AppProviders {
         ),
       )..add(LoadRecurringList()),
     ),
-    // BlocProvider<AnalyticsBloc>(
-    //   create: (context) => AnalyticsBloc(
-    //     repository: AnalyticsRepositoryImpl(
-    //       transactionBox: null,
-    //       budgetBox: null,
-    //       debtBox: null,
-    //     ),
-    //   ),
-    // ),
+
+    BlocProvider<ProfileBloc>(
+      create: (_) => ProfileBloc(
+        authRepository: AuthRepositoryImpl(
+          localDataSource: AuthLocalDataSourceImpl(),
+        ),
+        logoutUseCase: LogoutUseCase(
+          repository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+        ),
+        splashBloc: SplashBloc(
+          authRepository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+          currencyRepository: CurrencyRepositoryImpl(
+            localDataSource: CurrencyLocalDataSourceImpl(),
+          ),
+        ),
+        updateProfileUseCase: UpdateProfileUseCase(
+          repository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+        ),
+      )..add(LoadProfile()),
+    ),
+
+    BlocProvider<ProfileBloc>(
+      create: (_) => ProfileBloc(
+        authRepository: AuthRepositoryImpl(
+          localDataSource: AuthLocalDataSourceImpl(),
+        ),
+        logoutUseCase: LogoutUseCase(
+          repository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+        ),
+        splashBloc: SplashBloc(
+          authRepository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+          currencyRepository: CurrencyRepositoryImpl(
+            localDataSource: CurrencyLocalDataSourceImpl(),
+          ),
+        ),
+        updateProfileUseCase: UpdateProfileUseCase(
+          repository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+        ),
+      )..add(LoadProfile()),
+    ),
+    BlocProvider<SplashBloc>(
+      create: (_) => SplashBloc(
+        authRepository: AuthRepositoryImpl(
+          localDataSource: AuthLocalDataSourceImpl(),
+        ),
+        currencyRepository: CurrencyRepositoryImpl(
+          localDataSource: CurrencyLocalDataSourceImpl(),
+        ),
+      ),
+    ),
+    BlocProvider<LoginBloc>(
+      create: (_) => LoginBloc(
+        authRepository: AuthRepositoryImpl(
+          localDataSource: AuthLocalDataSourceImpl(),
+        ),
+      ),
+    ),
+    BlocProvider<SignupBloc>(
+      create: (_) => SignupBloc(
+        registerUseCase: RegisterUseCase(
+          repository: AuthRepositoryImpl(
+            localDataSource: AuthLocalDataSourceImpl(),
+          ),
+        ),
+        authRepository: AuthRepositoryImpl(
+          localDataSource: AuthLocalDataSourceImpl(),
+        ),
+        currencyRepository: CurrencyRepositoryImpl(
+          localDataSource: CurrencyLocalDataSourceImpl(),
+        ),
+      ),
+    ),
+
+    BlocProvider<ForgotPasswordBloc>(
+      create: (_) => ForgotPasswordBloc(
+        authRepository: AuthRepositoryImpl(
+          localDataSource: AuthLocalDataSourceImpl(),
+        ),
+      ),
+    ),
+
     BlocProvider<AnalyticsBloc>(
       create: (context) => AnalyticsBloc(
         repository: AnalyticsRepositoryImpl(

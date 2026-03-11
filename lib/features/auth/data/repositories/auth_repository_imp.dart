@@ -23,7 +23,6 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<UserModel> register(UserModel user) async {
     try {
-      // Hash the password before storing
       final hashedUser = UserModel(
         id: user.id,
         name: user.name,
@@ -39,6 +38,12 @@ class AuthRepositoryImpl implements AuthRepository {
         lastLoginAt: user.lastLoginAt,
         pin: user.pin,
         useBiometric: user.useBiometric,
+        // ── New fields ──
+        securityQuestion1: user.securityQuestion1,
+        securityAnswer1: user.securityAnswer1,
+        securityQuestion2: user.securityQuestion2,
+        securityAnswer2: user.securityAnswer2,
+        recoveryKeys: user.recoveryKeys,
       );
 
       return await localDataSource.createUser(hashedUser);
@@ -228,206 +233,14 @@ class AuthRepositoryImpl implements AuthRepository {
       return null;
     }
   }
+
+  @override
+  Future<void> resetPassword(String userId, String newPassword) async {
+    try {
+      final hashedPassword = _hashPassword(newPassword);
+      await localDataSource.updatePassword(userId, hashedPassword);
+    } catch (e) {
+      throw Exception('Password reset failed: $e');
+    }
+  }
 }
-
-// // lib/features/auth/data/repositories/auth_repository.dart
-
-// import 'dart:convert';
-// import 'package:expense_mate/core/services/hive_initializer.dart';
-// import 'package:hive/hive.dart';
-// import 'package:expense_mate/core/data/models/user_model.dart';
-
-// class AuthRepository {
-//   // final Box<UserModel> _userBox = HiveInitializer.users;
-//   // final LocalAuthentication _localAuth = LocalAuthentication();
-
-//   // Hash password
-//   String _hashPassword(String password) {
-//     final bytes = utf8.encode(password);
-//     final hash = sha256.convert(bytes);
-//     return hash.toString();
-//   }
-
-//   // Get current logged-in user
-//   Future<UserModel?> getCurrentUser() async {
-//     try {
-//       return _userBox.values.firstWhere((user) => user.isLoggedIn);
-//     } catch (e) {
-//       return null;
-//     }
-//   }
-
-//   // Login with email & password
-//   Future<UserModel?> loginWithEmail({
-//     required String email,
-//     required String password,
-//   }) async {
-//     try {
-//       final user = _userBox.values.firstWhere(
-//         (u) => u.email.toLowerCase() == email.toLowerCase(),
-//       );
-
-//       if (user.passwordHash == _hashPassword(password)) {
-//         // Update login status
-//         final updatedUser = UserModel(
-//           id: user.id,
-//           name: user.name,
-//           email: user.email,
-//           phoneNumber: user.phoneNumber,
-//           profilePicturePath: user.profilePicturePath,
-//           currency: user.currency,
-//           passwordHash: user.passwordHash,
-//           isLoggedIn: true,
-//           createdAt: user.createdAt,
-//           lastLoginAt: DateTime.now(),
-//           pin: user.pin,
-//           useBiometric: user.useBiometric,
-//         );
-
-//         await _userBox.put(user.id, updatedUser);
-//         return updatedUser;
-//       }
-//       return null;
-//     } catch (e) {
-//       return null;
-//     }
-//   }
-
-//   // Login with PIN
-//   Future<UserModel?> loginWithPin({required String pin}) async {
-//     try {
-//       final user = _userBox.values.firstWhere((u) => u.pin == pin);
-
-//       final updatedUser = UserModel(
-//         id: user.id,
-//         name: user.name,
-//         email: user.email,
-//         phoneNumber: user.phoneNumber,
-//         profilePicturePath: user.profilePicturePath,
-//         currency: user.currency,
-//         passwordHash: user.passwordHash,
-//         isLoggedIn: true,
-//         createdAt: user.createdAt,
-//         lastLoginAt: DateTime.now(),
-//         pin: user.pin,
-//         useBiometric: user.useBiometric,
-//       );
-
-//       await _userBox.put(user.id, updatedUser);
-//       return updatedUser;
-//     } catch (e) {
-//       return null;
-//     }
-//   }
-
-//   // Sign up
-//   Future<UserModel?> signUp({
-//     required String name,
-//     required String email,
-//     required String password,
-//     String? phoneNumber,
-//   }) async {
-//     try {
-//       // Check if email already exists
-//       final existingUser = _userBox.values.where(
-//         (u) => u.email.toLowerCase() == email.toLowerCase(),
-//       );
-
-//       if (existingUser.isNotEmpty) {
-//         throw Exception('Email already registered');
-//       }
-
-//       final user = UserModel(
-//         id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-//         name: name,
-//         email: email,
-//         phoneNumber: phoneNumber,
-//         passwordHash: _hashPassword(password),
-//         isLoggedIn: true,
-//         currency: 'USD',
-//       );
-
-//       await _userBox.put(user.id, user);
-//       return user;
-//     } catch (e) {
-//       rethrow;
-//     }
-//   }
-
-//   // Set PIN
-//   Future<UserModel?> setPin({required String pin}) async {
-//     final currentUser = await getCurrentUser();
-//     if (currentUser == null) return null;
-
-//     final updatedUser = UserModel(
-//       id: currentUser.id,
-//       name: currentUser.name,
-//       email: currentUser.email,
-//       phoneNumber: currentUser.phoneNumber,
-//       profilePicturePath: currentUser.profilePicturePath,
-//       currency: currentUser.currency,
-//       passwordHash: currentUser.passwordHash,
-//       isLoggedIn: true,
-//       createdAt: currentUser.createdAt,
-//       lastLoginAt: DateTime.now(),
-//       pin: pin,
-//       useBiometric: currentUser.useBiometric,
-//     );
-
-//     await _userBox.put(currentUser.id, updatedUser);
-//     return updatedUser;
-//   }
-
-//   // Logout
-//   Future<void> logout() async {
-//     final currentUser = await getCurrentUser();
-//     if (currentUser == null) return;
-
-//     final updatedUser = UserModel(
-//       id: currentUser.id,
-//       name: currentUser.name,
-//       email: currentUser.email,
-//       phoneNumber: currentUser.phoneNumber,
-//       profilePicturePath: currentUser.profilePicturePath,
-//       currency: currentUser.currency,
-//       passwordHash: currentUser.passwordHash,
-//       isLoggedIn: false,
-//       createdAt: currentUser.createdAt,
-//       lastLoginAt: currentUser.lastLoginAt,
-//       pin: currentUser.pin,
-//       useBiometric: currentUser.useBiometric,
-//     );
-
-//     await _userBox.put(currentUser.id, updatedUser);
-//   }
-
-//   // Reset password (local mock)
-//   Future<void> resetPassword({required String email}) async {
-//     await Future.delayed(Duration(seconds: 2));
-//     // In a real app, send email or SMS
-//   }
-
-//   // Biometric login
-//   Future<UserModel?> loginWithBiometric() async {
-//     try {
-//       final canAuth = await _localAuth.canCheckBiometrics;
-//       if (!canAuth) return null;
-
-//       final authenticated = await _localAuth.authenticate(
-//         localizedReason: 'Authenticate to login',
-//         options: const AuthenticationOptions(
-//           biometricOnly: true,
-//           stickyAuth: true,
-//         ),
-//       );
-
-//       if (authenticated) {
-//         final user = _userBox.values.firstWhere((u) => u.useBiometric);
-//         return loginWithPin(pin: user.pin!);
-//       }
-//       return null;
-//     } catch (e) {
-//       return null;
-//     }
-//   }
-// }

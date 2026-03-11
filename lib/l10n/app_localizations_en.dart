@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Expense Manager';
+  String get appName => 'Expense Mate';
 
   @override
   String get home => 'Home';
@@ -21,7 +21,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get records => 'records';
 
   @override
-  String get transactions => 'transactions';
+  String get transactions => 'Transactions';
 
   @override
   String get budgets => 'Budgets';
@@ -45,13 +45,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lent => 'Lent';
 
   @override
-  String get borrowedFrom => 'Borrowed from';
+  String get borrowedFrom => 'Borrowed From';
 
   @override
-  String get lentTo => 'Lent to';
+  String get lentTo => 'Lent To';
 
   @override
-  String get personName => 'Person Name';
+  String get personName => 'Person name...';
 
   @override
   String get returnDate => 'Return Date';
@@ -498,7 +498,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get recurring => 'Recurring';
 
   @override
-  String get enterPin => 'Enter Your PIN';
+  String get enterPin => 'Enter PIN';
 
   @override
   String get enterPinSubtitle => 'Enter your 4-digit PIN to continue';
@@ -546,7 +546,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUp => 'Sign Up';
 
   @override
-  String get dontHaveAccount => 'Don\"t have an account?';
+  String get dontHaveAccount => 'Don\'t have an account?';
 
   @override
   String get onboardingTitle1 => 'Track Your Expenses';
@@ -672,7 +672,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentHistory => 'Payment History';
 
   @override
-  String get payments => 'payments';
+  String get payments => 'Payments';
 
   @override
   String get addPayment => 'Add Payment';
@@ -1405,4 +1405,438 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get add => 'Add';
+
+  @override
+  String get signInToContinue => 'Sign in to continue managing your expenses';
+
+  @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get logIn => 'Log In';
+
+  @override
+  String get usePin => 'Use your 4-digit PIN to sign in quickly';
+
+  @override
+  String get quickPin => 'Quick PIN';
+
+  @override
+  String get enterYour4DigitPin => 'Enter your 4-digit PIN';
+
+  @override
+  String get singleAccountNotice => 'This app supports a single account. Sign in with your existing account.';
+
+  @override
+  String get personalInfo => 'PERSONAL INFO';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get enterFullName => 'Enter your full name';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get preferredCurrency => 'PREFERRED CURRENCY';
+
+  @override
+  String get security => 'SECURITY';
+
+  @override
+  String get minimumSixChars => 'Minimum 6 characters';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get reEnterPassword => 'Re-enter your password';
+
+  @override
+  String get quickLoginPin => 'QUICK LOGIN PIN (OPTIONAL)';
+
+  @override
+  String get pin => 'PIN';
+
+  @override
+  String get pinHint => '4-digit code for faster login';
+
+  @override
+  String get securityQuestions => 'Security Questions';
+
+  @override
+  String get extraRecoveryOption => 'Extra account recovery option';
+
+  @override
+  String get securityQuestion1 => 'SECURITY QUESTION 1';
+
+  @override
+  String get securityQuestion2 => 'SECURITY QUESTION 2';
+
+  @override
+  String get selectAQuestion => 'Select a question';
+
+  @override
+  String get yourAnswer => 'Your Answer';
+
+  @override
+  String get typeYourAnswer => 'Type your answer';
+
+  @override
+  String get answerCannotBeEmpty => 'Answer cannot be empty';
+
+  @override
+  String get recoveryKeysInfo => 'Recovery keys will be generated after signup. Save them securely.';
+
+  @override
+  String get agreeToTerms => 'I agree to the ';
+
+  @override
+  String get termsAndConditions => 'Terms & Conditions';
+
+  @override
+  String get and => 'and';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get addPhoto => 'Add Photo';
+
+  @override
+  String get removePhoto => 'Remove Photo';
+
+  @override
+  String get profilePhotoOptional => 'Profile photo (optional)';
+
+  @override
+  String get choosePhoto => 'Choose Photo';
+
+  @override
+  String get camera => 'Camera';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get saveYourRecoveryKeys => 'Save Your Recovery Keys';
+
+  @override
+  String get recoveryKeysWarning => 'Store these keys safely. They are the only way to recover your account if you forget your password.';
+
+  @override
+  String get copyOne => 'Copy One';
+
+  @override
+  String get copyAll => 'Copy All';
+
+  @override
+  String get iHaveSavedMyKeys => 'I Have Saved My Keys';
+
+  @override
+  String get keyCopied => 'Key copied!';
+
+  @override
+  String get allKeysCopied => 'All keys copied!';
+
+  @override
+  String get accountCreatedSuccessfully => 'Account created successfully!';
+
+  @override
+  String get forgotPasswordTitle => 'Forgot Password?';
+
+  @override
+  String get enterEmailToFind => 'Enter your email address to find your account.';
+
+  @override
+  String get verifyIdentity => 'Verify Identity';
+
+  @override
+  String get chooseRecoveryMethod => 'Choose how you\'d like to recover your account.';
+
+  @override
+  String get setNewPassword => 'Set New Password';
+
+  @override
+  String get chooseStrongPassword => 'Choose a strong password for your account.';
+
+  @override
+  String get allDone => 'All Done!';
+
+  @override
+  String get passwordResetSuccess => 'Your password has been reset successfully.';
+
+  @override
+  String get step1of3 => 'Step 1 of 3 — Find Account';
+
+  @override
+  String get step2of3 => 'Step 2 of 3 — Verify Identity';
+
+  @override
+  String get step3of3 => 'Step 3 of 3 — Set New Password';
+
+  @override
+  String get complete => 'Complete!';
+
+  @override
+  String get recoveryMethod => 'RECOVERY METHOD';
+
+  @override
+  String get recoveryKey => 'Recovery Key';
+
+  @override
+  String get securityQA => 'Security Q&A';
+
+  @override
+  String get enterRecoveryKeyHint => 'Enter one of the 8 recovery keys you saved when creating your account.';
+
+  @override
+  String get recoveryKeyLabel => 'RECOVERY KEY';
+
+  @override
+  String get recoveryKeyHint => 'e.g. ABCD1234';
+
+  @override
+  String get verifyKey => 'Verify Key';
+
+  @override
+  String get answerAtLeastOne => 'Answer at least one security question correctly to reset your password.';
+
+  @override
+  String get question1 => 'QUESTION 1';
+
+  @override
+  String get question2 => 'QUESTION 2';
+
+  @override
+  String get verifyAnswers => 'Verify Answers';
+
+  @override
+  String get identityVerified => 'Identity verified! You can now set a new password.';
+
+  @override
+  String get newPassword => 'NEW PASSWORD';
+
+  @override
+  String get newPasswordLabel => 'New Password';
+
+  @override
+  String get passwordsMatch => 'Passwords match';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get findMyAccount => 'Find My Account';
+
+  @override
+  String get fillInDetails => 'Fill in your details to get started';
+
+  @override
+  String get loginSuccessful => 'Login successful 🎉';
+
+  @override
+  String get pleaseAgreeToTerms => 'Please agree to the terms and conditions';
+
+  @override
+  String get pleasSelectBothQuestions => 'Please select both security questions';
+
+  @override
+  String get pleaseAnswerBothQuestions => 'Please answer both security questions';
+
+  @override
+  String get transactionSavedSuccessfully => 'Transaction saved successfully!';
+
+  @override
+  String get setExpectedReturnDate => 'Set expected return date';
+
+  @override
+  String get returnBy => 'Return by';
+
+  @override
+  String get enterANote => 'Note: Enter a note...';
+
+  @override
+  String get enterValidEmail => 'Enter a valid email address';
+
+  @override
+  String get enterValidName => 'Enter a valid name (min 3 chars)';
+
+  @override
+  String get passwordMinSix => 'Password must be at least 6 characters';
+
+  @override
+  String get passwordsDoNotMatchError => 'Passwords do not match';
+
+  @override
+  String get pinMustBeFourDigits => 'PIN must be exactly 4 digits';
+
+  @override
+  String get pinMustBeNumeric => 'PIN must be numeric';
+
+  @override
+  String get amountCannotBeZero => 'Amount cannot be zero';
+
+  @override
+  String get pleaseAddPersonName => 'Please add person name';
+
+  @override
+  String get pleaseAddReturnDate => 'Please add expected return date';
+
+  @override
+  String get failedToCreateDebt => 'Failed to create debt';
+
+  @override
+  String get transactionFailed => 'Transaction failed';
+
+  @override
+  String get debtPaymentFailed => 'Debt Payment failed';
+
+  @override
+  String get passwordResetSuccessLogin => 'Password reset successfully! Please log in.';
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get signUpToGetStarted => 'Sign up to get started';
+
+  @override
+  String get transactionSavedSuccess => 'Transaction saved successfully!';
+
+  @override
+  String get transactionSaveFailed => 'Failed to save transaction';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get logoutConfirmTitle => 'Logout';
+
+  @override
+  String get logoutConfirmMessage => 'Are you sure you want to logout?';
+
+  @override
+  String get appDescription => 'A professional expense tracking application';
+
+  @override
+  String get guestUser => 'Guest User';
+
+  @override
+  String get placeholderEmail => 'email@example.com';
+
+  @override
+  String get memberSince => 'Member since';
+
+  @override
+  String get updatePhoto => 'Update Photo';
+
+  @override
+  String get profileUpdatedSuccess => 'Profile updated successfully ✓';
+
+  @override
+  String get profileUpdateFailed => 'Failed to update profile';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get tapToChangePhoto => 'Tap to change photo';
+
+  @override
+  String get fullNameHint => 'Enter your full name';
+
+  @override
+  String get fullNameError => 'Name must be at least 2 characters';
+
+  @override
+  String get emailError => 'Enter a valid email address';
+
+  @override
+  String get saveChanges => 'Save Changes';
+
+  @override
+  String get selectLanguage => 'SELECT LANGUAGE';
+
+  @override
+  String get chooseLanguageSubtitle => 'Choose your preferred language';
+
+  @override
+  String get currentLanguage => 'Current language';
+
+  @override
+  String languageSelected(Object name) {
+    return '$name selected';
+  }
+
+  @override
+  String get splashAppName => 'ExpenseMate';
+
+  @override
+  String get splashTagline => 'SMART MONEY · SMARTER YOU';
+
+  @override
+  String get transactionDetails => 'Transaction Details';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get attachment => 'Attachment';
+
+  @override
+  String get collapse => 'Collapse';
+
+  @override
+  String get expand => 'Expand';
+
+  @override
+  String get imageFileNotFound => 'Image file not found';
+
+  @override
+  String get transactionId => 'Transaction ID';
+
+  @override
+  String get created => 'Created';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get transactionIdCopied => 'Transaction ID copied';
+
+  @override
+  String get addNote => 'Add a note...';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get chooseSource => 'Choose a source';
+
+  @override
+  String get takePhoto => 'Take a photo';
+
+  @override
+  String get chooseFromLibrary => 'Choose from library';
+
+  @override
+  String get deleteCurrentAttachment => 'Delete the current attachment';
 }

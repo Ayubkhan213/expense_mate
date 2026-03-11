@@ -1,4 +1,6 @@
 import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
+import 'package:expense_mate/core/data/data_sources/local/sql/debt_local_datasource.dart';
+import 'package:expense_mate/core/data/data_sources/local/sql/transcation_local_data_source.dart';
 import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
 import 'package:expense_mate/core/data/models/enums.dart';
 import 'package:expense_mate/core/data/models/transaction_model.dart';

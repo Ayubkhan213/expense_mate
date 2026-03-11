@@ -1,25 +1,24 @@
 import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/core/data/models/transaction_item_model.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
+
 import 'package:expense_mate/core/di/injection_container.dart';
 import 'package:expense_mate/core/services/app_prefs.dart';
 import 'package:expense_mate/core/services/daily_notification_service.dart';
-import 'package:expense_mate/core/services/hive_box_manager.dart';
+
 import 'package:expense_mate/core/services/recurring_background_service.dart';
-import 'package:uuid/uuid.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await initializeDependencies();
   // Initialize shared preferences
   await AppPrefs.instance.init();
   await HiveInitializer.init();
+
   // Initialize Daily Notifications
   await DailyNotificationService().initialize();
+
   await RecurringBackgroundService.initialize();
-  // ✅ Process on every app open (catches missed transactions)
+  //  Process on every app open (catches missed transactions)
   await RecurringBackgroundService.processRecurringTransactions();
 
   runApp(const MyApp());

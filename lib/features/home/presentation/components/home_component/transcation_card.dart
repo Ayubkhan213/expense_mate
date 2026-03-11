@@ -1,12 +1,12 @@
 import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/extension/responsive_extension.dart';
 import 'package:expense_mate/core/utils/translation_helper.dart';
+import 'package:expense_mate/features/home/presentation/components/home_component/transcation_detail_face.dart';
 import 'package:expense_mate/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionCard extends StatelessWidget {
-  final TransactionModel transaction; // Replace with TransactionModel
+  final TransactionModel transaction;
 
   const TransactionCard({super.key, required this.transaction});
 
@@ -16,37 +16,103 @@ class TransactionCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-
     final isIncome = transaction.type.toString().contains('income');
-    final color = isIncome ? Color(0xFF10b981) : Color(0xFFef4444);
+    final color = isIncome ? const Color(0xFF10b981) : const Color(0xFFef4444);
     final icon = _getIcon();
+    final heroTag = 'txn_card_${transaction.id}';
 
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 450),
+          reverseTransitionDuration: const Duration(milliseconds: 350),
+          pageBuilder: (_, __, ___) =>
+              TransactionDetailFace(transaction: transaction, heroTag: heroTag),
+          transitionsBuilder: (_, animation, __, child) => FadeTransition(
+            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+            child: child,
+          ),
+        ),
+      ),
+      child: Hero(
+        tag: heroTag,
+        flightShuttleBuilder: (_, anim, __, ___, ____) => Material(
+          color: Colors.transparent,
+          child: _CardBody(
+            transaction: transaction,
+            colorScheme: colorScheme,
+            isDark: isDark,
+            isIncome: isIncome,
+            color: color,
+            icon: icon,
+            t: t,
+          ),
+        ),
+        child: _CardBody(
+          transaction: transaction,
+          colorScheme: colorScheme,
+          isDark: isDark,
+          isIncome: isIncome,
+          color: color,
+          icon: icon,
+          t: t,
+        ),
+      ),
+    );
+  }
+
+  String _getIcon() {
+    final category = transaction.items.first.category.toLowerCase();
+    if (category.contains('food') || category.contains('restaurant'))
+      return '🍔';
+    if (category.contains('salary')) return '💰';
+    if (category.contains('transport')) return '🚗';
+    if (category.contains('shopping')) return '🛒';
+    return '💵';
+  }
+}
+
+class _CardBody extends StatelessWidget {
+  final TransactionModel transaction;
+  final ColorScheme colorScheme;
+  final bool isDark;
+  final bool isIncome;
+  final Color color;
+  final String icon;
+  final AppLocalizations t;
+
+  const _CardBody({
+    required this.transaction,
+    required this.colorScheme,
+    required this.isDark,
+    required this.isIncome,
+    required this.color,
+    required this.icon,
+    required this.t,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      padding: EdgeInsets.all(14),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: isDark ? colorScheme.surface : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: transaction.isDebt
-            ? Border.all(
-                color: colorScheme.secondary.withValues(alpha: 0.4),
-                width: 1,
-              )
-            : Border.all(
-                color: colorScheme.onSurface.withValues(alpha: 0.1),
-                width: 1,
-              ),
+            ? Border.all(color: colorScheme.secondary.withValues(alpha: 0.4))
+            : Border.all(color: colorScheme.onSurface.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
             color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Row(
         children: [
-          // Icon
           Container(
             width: 45,
             height: 45,
@@ -54,11 +120,11 @@ class TransactionCard extends StatelessWidget {
               color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Center(child: Text(icon, style: TextStyle(fontSize: 24))),
+            child: Center(
+              child: Text(icon, style: const TextStyle(fontSize: 24)),
+            ),
           ),
-          SizedBox(width: 12),
-
-          // Info
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +143,7 @@ class TransactionCard extends StatelessWidget {
                     ),
                     if (transaction.isDebt)
                       Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 6,
                           vertical: 2,
                         ),
@@ -96,7 +162,7 @@ class TransactionCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   '${DateFormat('MMM dd, yyyy').format(transaction.date)} • ${context.trMethod(transaction.paymentMethod.name)}',
                   style: TextStyle(
@@ -107,8 +173,6 @@ class TransactionCard extends StatelessWidget {
               ],
             ),
           ),
-
-          // Amount
           Text(
             '${isIncome ? '+' : '-'}\$${transaction.totalAmount.toStringAsFixed(2)}',
             style: TextStyle(
@@ -120,16 +184,5 @@ class TransactionCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getIcon() {
-    final category = transaction.items.first.category.toLowerCase();
-    if (category.contains('food') || category.contains('restaurant')) {
-      return '🍔';
-    }
-    if (category.contains('salary')) return '💰';
-    if (category.contains('transport')) return '🚗';
-    if (category.contains('shopping')) return '🛒';
-    return '💵';
   }
 }

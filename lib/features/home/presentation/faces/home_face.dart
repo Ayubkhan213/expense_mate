@@ -1,13 +1,12 @@
 import 'package:expense_mate/core/app_export.dart';
 import 'package:expense_mate/core/extension/responsive_extension.dart';
-import 'package:expense_mate/core/navigation/route_name.dart';
+
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
 import 'package:expense_mate/features/home/presentation/components/home_component/financial_summary_card.dart';
 import 'package:expense_mate/features/home/presentation/components/home_component/home_tabbar.dart';
 import 'package:expense_mate/features/home/presentation/faces/debt_list.dart';
 import 'package:expense_mate/features/home/presentation/faces/transcation_list.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../bloc/home_bloc/home_bloc.dart';
 import '../bloc/home_bloc/home_state.dart';
 import '../bloc/home_bloc/home_event.dart';
@@ -152,7 +151,7 @@ class HomeFace extends StatelessWidget {
                             foregroundColor: colorScheme.primary,
                           ),
                           child: Text(
-                            // ✅ Was: 'View All →'
+                            //  Was: 'View All →'
                             t.viewAll,
                             style: TextStyle(
                               color: colorScheme.primary,
@@ -169,7 +168,7 @@ class HomeFace extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          // ✅ Was: 'Active Debts'
+                          //  Was: 'Active Debts'
                           t.activeDebts,
                           style: TextStyle(
                             color: colorScheme.primary,
@@ -188,7 +187,7 @@ class HomeFace extends StatelessWidget {
                             foregroundColor: colorScheme.primary,
                           ),
                           child: Text(
-                            // ✅ Was: 'View All →'
+                            //  Was: 'View All →'
                             t.viewAll,
                             style: TextStyle(
                               color: colorScheme.primary,

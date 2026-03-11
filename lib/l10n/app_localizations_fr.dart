@@ -21,7 +21,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get records => 'enregistrements';
 
   @override
-  String get transactions => 'transactions';
+  String get transactions => 'Transactions';
 
   @override
   String get budgets => 'Budgets';
@@ -51,7 +51,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lentTo => 'Prêté à';
 
   @override
-  String get personName => 'Nom de la personne';
+  String get personName => 'Nom de la personne...';
 
   @override
   String get returnDate => 'Date de retour';
@@ -468,7 +468,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get otherExpense => 'Autre dépense';
 
   @override
-  String get selectCategory => 'Sélectionner une catégorie';
+  String get selectCategory => 'Sélectionner la catégorie';
 
   @override
   String get single => 'Unique';
@@ -498,7 +498,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get recurring => 'Récurrent';
 
   @override
-  String get enterPin => 'Entrez votre code PIN';
+  String get enterPin => 'Entrer le code PIN';
 
   @override
   String get enterPinSubtitle => 'Entrez votre code PIN à 4 chiffres pour continuer';
@@ -507,7 +507,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signIn => 'Se connecter';
 
   @override
-  String get forgotPassword => 'Mot de passe oublié ?';
+  String get forgotPassword => 'Mot de passe oublié?';
 
   @override
   String get passwordMinLength => 'Le mot de passe doit contenir au moins 6 caractères';
@@ -546,7 +546,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signUp => 'S\'inscrire';
 
   @override
-  String get dontHaveAccount => 'Vous n\'avez pas de compte ?';
+  String get dontHaveAccount => 'Vous n\'avez pas de compte?';
 
   @override
   String get onboardingTitle1 => 'Suivez vos dépenses';
@@ -585,7 +585,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get getStarted => 'Commencer';
 
   @override
-  String get selectExpenseCategory => 'Sélectionner une catégorie de dépense';
+  String get selectExpenseCategory => 'Sélectionner la catégorie de dépense';
 
   @override
   String get errorPrefix => 'Erreur';
@@ -906,7 +906,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addTransaction => 'Ajouter une transaction';
 
   @override
-  String get anErrorOccurred => 'Une erreur s\'est produite';
+  String get anErrorOccurred => 'Une erreur est survenue';
 
   @override
   String get more => 'plus';
@@ -990,10 +990,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addNoteOptional => 'Ajouter une note (optionnel)';
 
   @override
-  String get recurringCreated => 'Transaction récurrente créée!';
+  String get recurringCreated => 'Transaction récurrente créée !';
 
   @override
-  String get recurringUpdated => 'Transaction récurrente mise à jour!';
+  String get recurringUpdated => 'Transaction récurrente mise à jour !';
 
   @override
   String get ledger => 'Registre';
@@ -1405,4 +1405,438 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get add => 'Ajouter';
+
+  @override
+  String get signInToContinue => 'Connectez-vous pour continuer à gérer vos dépenses';
+
+  @override
+  String get emailHint => 'vous@exemple.com';
+
+  @override
+  String get alreadyHaveAccount => 'Vous avez déjà un compte?';
+
+  @override
+  String get logIn => 'Se connecter';
+
+  @override
+  String get usePin => 'Utilisez votre code PIN à 4 chiffres pour vous connecter rapidement';
+
+  @override
+  String get quickPin => 'PIN rapide';
+
+  @override
+  String get enterYour4DigitPin => 'Entrez votre code PIN à 4 chiffres';
+
+  @override
+  String get singleAccountNotice => 'Cette application prend en charge un seul compte. Connectez-vous avec votre compte existant.';
+
+  @override
+  String get personalInfo => 'INFORMATIONS PERSONNELLES';
+
+  @override
+  String get fullName => 'Nom complet';
+
+  @override
+  String get enterFullName => 'Entrez votre nom complet';
+
+  @override
+  String get phoneNumber => 'Numéro de téléphone';
+
+  @override
+  String get optional => 'Optionnel';
+
+  @override
+  String get preferredCurrency => 'DEVISE PRÉFÉRÉE';
+
+  @override
+  String get security => 'SÉCURITÉ';
+
+  @override
+  String get minimumSixChars => 'Minimum 6 caractères';
+
+  @override
+  String get confirmPassword => 'Confirmer le mot de passe';
+
+  @override
+  String get reEnterPassword => 'Ressaisissez votre mot de passe';
+
+  @override
+  String get quickLoginPin => 'CODE PIN DE CONNEXION RAPIDE (OPTIONNEL)';
+
+  @override
+  String get pin => 'Code PIN';
+
+  @override
+  String get pinHint => 'Code à 4 chiffres pour une connexion plus rapide';
+
+  @override
+  String get securityQuestions => 'Questions de sécurité';
+
+  @override
+  String get extraRecoveryOption => 'Option de récupération de compte supplémentaire';
+
+  @override
+  String get securityQuestion1 => 'QUESTION DE SÉCURITÉ 1';
+
+  @override
+  String get securityQuestion2 => 'QUESTION DE SÉCURITÉ 2';
+
+  @override
+  String get selectAQuestion => 'Sélectionner une question';
+
+  @override
+  String get yourAnswer => 'Votre réponse';
+
+  @override
+  String get typeYourAnswer => 'Tapez votre réponse';
+
+  @override
+  String get answerCannotBeEmpty => 'La réponse ne peut pas être vide';
+
+  @override
+  String get recoveryKeysInfo => 'Des clés de récupération seront générées après l\'inscription. Conservez-les en sécurité.';
+
+  @override
+  String get agreeToTerms => 'J\'accepte les ';
+
+  @override
+  String get termsAndConditions => 'Conditions générales';
+
+  @override
+  String get and => 'et';
+
+  @override
+  String get privacyPolicy => 'Politique de confidentialité';
+
+  @override
+  String get done => 'Terminé';
+
+  @override
+  String get addPhoto => 'Ajouter une photo';
+
+  @override
+  String get removePhoto => 'Supprimer la photo';
+
+  @override
+  String get profilePhotoOptional => 'Photo de profil (optionnel)';
+
+  @override
+  String get choosePhoto => 'Choisir une photo';
+
+  @override
+  String get camera => 'Appareil photo';
+
+  @override
+  String get gallery => 'Galerie';
+
+  @override
+  String get saveYourRecoveryKeys => 'Sauvegardez vos clés de récupération';
+
+  @override
+  String get recoveryKeysWarning => 'Conservez ces clés en sécurité. Elles sont le seul moyen de récupérer votre compte si vous oubliez votre mot de passe.';
+
+  @override
+  String get copyOne => 'Copier une';
+
+  @override
+  String get copyAll => 'Tout copier';
+
+  @override
+  String get iHaveSavedMyKeys => 'J\'ai sauvegardé mes clés';
+
+  @override
+  String get keyCopied => 'Clé copiée!';
+
+  @override
+  String get allKeysCopied => 'Toutes les clés copiées!';
+
+  @override
+  String get accountCreatedSuccessfully => 'Compte créé avec succès!';
+
+  @override
+  String get forgotPasswordTitle => 'Mot de passe oublié?';
+
+  @override
+  String get enterEmailToFind => 'Entrez votre adresse e-mail pour trouver votre compte.';
+
+  @override
+  String get verifyIdentity => 'Vérifier l\'identité';
+
+  @override
+  String get chooseRecoveryMethod => 'Choisissez comment récupérer votre compte.';
+
+  @override
+  String get setNewPassword => 'Définir un nouveau mot de passe';
+
+  @override
+  String get chooseStrongPassword => 'Choisissez un mot de passe fort pour votre compte.';
+
+  @override
+  String get allDone => 'Tout est fait!';
+
+  @override
+  String get passwordResetSuccess => 'Votre mot de passe a été réinitialisé avec succès.';
+
+  @override
+  String get step1of3 => 'Étape 1 sur 3 — Trouver le compte';
+
+  @override
+  String get step2of3 => 'Étape 2 sur 3 — Vérifier l\'identité';
+
+  @override
+  String get step3of3 => 'Étape 3 sur 3 — Définir un nouveau mot de passe';
+
+  @override
+  String get complete => 'Terminé!';
+
+  @override
+  String get recoveryMethod => 'MÉTHODE DE RÉCUPÉRATION';
+
+  @override
+  String get recoveryKey => 'Clé de récupération';
+
+  @override
+  String get securityQA => 'Questions et réponses de sécurité';
+
+  @override
+  String get enterRecoveryKeyHint => 'Entrez l\'une des 8 clés de récupération que vous avez sauvegardées lors de la création de votre compte.';
+
+  @override
+  String get recoveryKeyLabel => 'CLÉ DE RÉCUPÉRATION';
+
+  @override
+  String get recoveryKeyHint => 'ex. ABCD1234';
+
+  @override
+  String get verifyKey => 'Vérifier la clé';
+
+  @override
+  String get answerAtLeastOne => 'Répondez correctement à au moins une question de sécurité pour réinitialiser votre mot de passe.';
+
+  @override
+  String get question1 => 'QUESTION 1';
+
+  @override
+  String get question2 => 'QUESTION 2';
+
+  @override
+  String get verifyAnswers => 'Vérifier les réponses';
+
+  @override
+  String get identityVerified => 'Identité vérifiée! Vous pouvez maintenant définir un nouveau mot de passe.';
+
+  @override
+  String get newPassword => 'NOUVEAU MOT DE PASSE';
+
+  @override
+  String get newPasswordLabel => 'Nouveau mot de passe';
+
+  @override
+  String get passwordsMatch => 'Les mots de passe correspondent';
+
+  @override
+  String get passwordsDoNotMatch => 'Les mots de passe ne correspondent pas';
+
+  @override
+  String get resetPassword => 'Réinitialiser le mot de passe';
+
+  @override
+  String get findMyAccount => 'Trouver mon compte';
+
+  @override
+  String get fillInDetails => 'Remplissez vos informations pour commencer';
+
+  @override
+  String get loginSuccessful => 'Connexion réussie 🎉';
+
+  @override
+  String get pleaseAgreeToTerms => 'Veuillez accepter les conditions générales';
+
+  @override
+  String get pleasSelectBothQuestions => 'Veuillez sélectionner les deux questions de sécurité';
+
+  @override
+  String get pleaseAnswerBothQuestions => 'Veuillez répondre aux deux questions de sécurité';
+
+  @override
+  String get transactionSavedSuccessfully => 'Transaction enregistrée avec succès!';
+
+  @override
+  String get setExpectedReturnDate => 'Définir la date de retour prévue';
+
+  @override
+  String get returnBy => 'Retour avant le';
+
+  @override
+  String get enterANote => 'Note: Entrez une note...';
+
+  @override
+  String get enterValidEmail => 'Entrez une adresse e-mail valide';
+
+  @override
+  String get enterValidName => 'Entrez un nom valide (min 3 caractères)';
+
+  @override
+  String get passwordMinSix => 'Le mot de passe doit contenir au moins 6 caractères';
+
+  @override
+  String get passwordsDoNotMatchError => 'Les mots de passe ne correspondent pas';
+
+  @override
+  String get pinMustBeFourDigits => 'Le code PIN doit comporter exactement 4 chiffres';
+
+  @override
+  String get pinMustBeNumeric => 'Le code PIN doit être numérique';
+
+  @override
+  String get amountCannotBeZero => 'Le montant ne peut pas être zéro';
+
+  @override
+  String get pleaseAddPersonName => 'Veuillez ajouter le nom de la personne';
+
+  @override
+  String get pleaseAddReturnDate => 'Veuillez ajouter la date de retour prévue';
+
+  @override
+  String get failedToCreateDebt => 'Échec de la création de la dette';
+
+  @override
+  String get transactionFailed => 'Échec de la transaction';
+
+  @override
+  String get debtPaymentFailed => 'Échec du paiement de la dette';
+
+  @override
+  String get passwordResetSuccessLogin => 'Mot de passe réinitialisé avec succès! Veuillez vous connecter.';
+
+  @override
+  String get createAccount => 'Créer un compte';
+
+  @override
+  String get signUpToGetStarted => 'Inscrivez-vous pour commencer';
+
+  @override
+  String get transactionSavedSuccess => 'Transaction enregistrée avec succès !';
+
+  @override
+  String get transactionSaveFailed => 'Échec de l\'enregistrement de la transaction';
+
+  @override
+  String get logout => 'Déconnexion';
+
+  @override
+  String get logoutConfirmTitle => 'Déconnexion';
+
+  @override
+  String get logoutConfirmMessage => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+
+  @override
+  String get appDescription => 'Une application professionnelle de suivi des dépenses';
+
+  @override
+  String get guestUser => 'Utilisateur invité';
+
+  @override
+  String get placeholderEmail => 'email@exemple.com';
+
+  @override
+  String get memberSince => 'Membre depuis';
+
+  @override
+  String get updatePhoto => 'Mettre à jour la photo';
+
+  @override
+  String get profileUpdatedSuccess => 'Profil mis à jour avec succès ✓';
+
+  @override
+  String get profileUpdateFailed => 'Échec de la mise à jour du profil';
+
+  @override
+  String get editProfile => 'Modifier le profil';
+
+  @override
+  String get tapToChangePhoto => 'Appuyez pour changer la photo';
+
+  @override
+  String get fullNameHint => 'Entrez votre nom complet';
+
+  @override
+  String get fullNameError => 'Le nom doit comporter au moins 2 caractères';
+
+  @override
+  String get emailError => 'Entrez une adresse e-mail valide';
+
+  @override
+  String get saveChanges => 'Enregistrer les modifications';
+
+  @override
+  String get selectLanguage => 'CHOISIR LA LANGUE';
+
+  @override
+  String get chooseLanguageSubtitle => 'Choisissez votre langue préférée';
+
+  @override
+  String get currentLanguage => 'Langue actuelle';
+
+  @override
+  String languageSelected(Object name) {
+    return '$name sélectionnée';
+  }
+
+  @override
+  String get splashAppName => 'ExpenseMate';
+
+  @override
+  String get splashTagline => 'ARGENT INTELLIGENT · VOUS ENCORE PLUS';
+
+  @override
+  String get transactionDetails => 'Détails de la Transaction';
+
+  @override
+  String get tags => 'Étiquettes';
+
+  @override
+  String get attachment => 'Pièce Jointe';
+
+  @override
+  String get collapse => 'Réduire';
+
+  @override
+  String get expand => 'Développer';
+
+  @override
+  String get imageFileNotFound => 'Fichier image introuvable';
+
+  @override
+  String get transactionId => 'ID de Transaction';
+
+  @override
+  String get created => 'Créé';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get status => 'Statut';
+
+  @override
+  String get transactionIdCopied => 'ID de transaction copié';
+
+  @override
+  String get addNote => 'Ajouter une note...';
+
+  @override
+  String get change => 'Changer';
+
+  @override
+  String get chooseSource => 'Choisir une source';
+
+  @override
+  String get takePhoto => 'Prendre une photo';
+
+  @override
+  String get chooseFromLibrary => 'Choisir dans la bibliothèque';
+
+  @override
+  String get deleteCurrentAttachment => 'Supprimer la pièce jointe actuelle';
 }

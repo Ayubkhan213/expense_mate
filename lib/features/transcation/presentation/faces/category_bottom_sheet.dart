@@ -43,41 +43,50 @@ class CategoryBottomSheet {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => BlocProvider(
-        create: (_) => CategoryBottomSheetBloc(
-          category:
-              category ??
-              CategoryHiveModel(
-                key: '',
-                iconCode: 123,
-                colorValue: 123,
-                isIncome: false,
+        create: (_) =>
+            CategoryBottomSheetBloc(
+              category:
+                  category ??
+                  CategoryHiveModel(
+                    key: '',
+                    iconCode: 123,
+                    colorValue: 123,
+                    isIncome: false,
+                  ),
+              saveBudgetTranscationUsecase: SaveBudgetTranscationUsecase(
+                transactionRepository: TransactionRepositoryImp(
+                  localDataSource: TransactionLocalDataSourceImpl(),
+                ),
               ),
-          saveBudgetTranscationUsecase: SaveBudgetTranscationUsecase(
-            transactionRepository: TransactionRepositoryImp(
-              localDataSource: TransactionLocalDataSourceImpl(),
+              addDebtUsecase: AddDebtUsecase(
+                transactionRepository: TransactionRepositoryImp(
+                  localDataSource: TransactionLocalDataSourceImpl(),
+                ),
+              ),
+              addDebtPaymentUseCase: AddDebtPaymentUseCase(
+                repository: TransactionRepositoryImp(
+                  localDataSource: TransactionLocalDataSourceImpl(),
+                ),
+              ),
+              saveNormalTranscationUsecase: SaveNormalTranscationUsecase(
+                transactionRepository: TransactionRepositoryImp(
+                  localDataSource: TransactionLocalDataSourceImpl(),
+                ),
+              ),
+              saveDebtTranscationUsecase: SaveDebtTranscationUsecase(
+                transactionRepository: TransactionRepositoryImp(
+                  localDataSource: TransactionLocalDataSourceImpl(),
+                ),
+              ),
+            )..add(
+              flowType == TransactionSource.debt && debtModel == null
+                  ? DebtToggled(
+                      category?.isIncome == true
+                          ? DebtType.lent
+                          : DebtType.borrowed,
+                    )
+                  : DebtCleared(),
             ),
-          ),
-          addDebtUsecase: AddDebtUsecase(
-            transactionRepository: TransactionRepositoryImp(
-              localDataSource: TransactionLocalDataSourceImpl(),
-            ),
-          ),
-          addDebtPaymentUseCase: AddDebtPaymentUseCase(
-            repository: TransactionRepositoryImp(
-              localDataSource: TransactionLocalDataSourceImpl(),
-            ),
-          ),
-          saveNormalTranscationUsecase: SaveNormalTranscationUsecase(
-            transactionRepository: TransactionRepositoryImp(
-              localDataSource: TransactionLocalDataSourceImpl(),
-            ),
-          ),
-          saveDebtTranscationUsecase: SaveDebtTranscationUsecase(
-            transactionRepository: TransactionRepositoryImp(
-              localDataSource: TransactionLocalDataSourceImpl(),
-            ),
-          ),
-        ),
         child: _CategoryBottomSheetContent(
           category:
               category ??
@@ -158,8 +167,11 @@ class _CategoryBottomSheetContent extends StatelessWidget {
 
               NoteInputField(
                 note: state.note,
+                selectedImage: state.selectedImage,
                 onNoteChanged: (note) => bloc.add(NoteChanged(note: note)),
                 onImagePick: () => bloc.add(ImagePicked()),
+                onCameraCapture: () => bloc.add(ImagePickedFromCamera()),
+                onImageRemove: () => bloc.add(ImageRemoved()), // add this event
               ),
               const SizedBox(height: 8),
 
@@ -343,8 +355,9 @@ class _CategoryBottomSheetContent extends StatelessWidget {
     BuildContext context,
     CategoryBottomSheetState state,
   ) {
+    final t = AppLocalizations.of(context)!;
     if (state.transactionStatus == TransactionStatus.success) {
-      AnimatedSnackbar.showSuccess(context, 'Transaction saved successfully!');
+      AnimatedSnackbar.showSuccess(context, t.transactionSavedSuccess);
       if (budgetModel != null) {
         context.read<BudgetBloc>().add(LoadBudgetsEvent());
         context.read<BudgetDetailsBloc>().add(
@@ -366,7 +379,7 @@ class _CategoryBottomSheetContent extends StatelessWidget {
     } else if (state.transactionStatus == TransactionStatus.error) {
       AnimatedSnackbar.showError(
         context,
-        state.errorMessage ?? 'Failed to save transaction',
+        state.errorMessage ?? t.transactionSaveFailed,
       );
       context.read<CategoryBottomSheetBloc>().add(ResetTransactionStatus());
     }

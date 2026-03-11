@@ -1,0 +1,115 @@
+<svg viewBox="0 0 390 580" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bg_en2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2D3A52"/>
+      <stop offset="100%" style="stop-color:#1a2540"/>
+    </linearGradient>
+    <linearGradient id="purple_en2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9B6FD4"/>
+      <stop offset="100%" style="stop-color:#7B4FB4"/>
+    </linearGradient>
+    <linearGradient id="bar_safe" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4CAF82"/><stop offset="100%" style="stop-color:#34D382"/>
+    </linearGradient>
+    <linearGradient id="bar_warn" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#F59E0B"/><stop offset="100%" style="stop-color:#FCD34D"/>
+    </linearGradient>
+    <linearGradient id="bar_over" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#E05252"/><stop offset="100%" style="stop-color:#F87171"/>
+    </linearGradient>
+    <filter id="shadow_en2">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="0" dy="6"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="phone_clip_en2"><rect x="95" y="60" width="200" height="370" rx="28"/></clipPath>
+  </defs>
+
+  <rect width="390" height="580" fill="url(#bg_en2)"/>
+
+  <!-- Orbs -->
+  <circle cx="50" cy="150" r="80" fill="#9B6FD4" opacity="0.08"/>
+  <circle cx="340" cy="100" r="65" fill="#4CAF82" opacity="0.07"/>
+  <circle cx="310" cy="380" r="70" fill="#F59E0B" opacity="0.06"/>
+
+  <!-- Phone shell -->
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="#1E2D40" filter="url(#shadow_en2)"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="none" stroke="#3a4a65" stroke-width="1.5"/>
+  <rect x="95" y="60" width="200" height="370" rx="28" fill="#2D4060" clip-path="url(#phone_clip_en2)"/>
+
+  <!-- Dynamic island -->
+  <rect x="168" y="72" width="54" height="11" rx="5.5" fill="#1a2d35"/>
+
+  <!-- Header "My Budgets" -->
+  <text x="115" y="102" font-size="16" font-weight="800" fill="#FFFFFF">My Budgets</text>
+  <text x="115" y="115" font-size="7.5" fill="rgba(255,255,255,0.4)">3 Active · 3 Total</text>
+
+  <!-- Summary card on phone -->
+  <rect x="109" y="122" width="172" height="70" rx="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <text x="118" y="134" font-size="7.5" fill="rgba(255,255,255,0.5)">Total Remaining</text>
+  <text x="118" y="153" font-size="18" font-weight="800" fill="#FFFFFF">$3,503</text>
+  <rect x="218" y="130" width="52" height="16" rx="8" fill="#E05252" opacity="0.9"/>
+  <text x="244" y="142" font-size="7" fill="#FFFFFF" text-anchor="middle" font-weight="700">Over Budget</text>
+  <!-- mini progress bar red -->
+  <rect x="118" y="160" width="154" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+  <rect x="118" y="160" width="154" height="4" rx="2" fill="url(#bar_over)" opacity="0.9"/>
+  <text x="118" y="176" font-size="7" fill="rgba(255,255,255,0.45)">spent $9,555</text>
+  <text x="227" y="176" font-size="7" fill="rgba(255,255,255,0.45)">3 Active</text>
+
+  <!-- Budget category cards -->
+  <!-- Entertainment card (purple, 0% used) -->
+  <rect x="109" y="200" width="172" height="70" rx="14" fill="rgba(255,255,255,0.08)" stroke="rgba(155,111,212,0.3)" stroke-width="1"/>
+  <rect x="115" y="208" width="22" height="22" rx="8" fill="url(#purple_en2)"/>
+  <text x="126" y="222" font-size="11" text-anchor="middle">🎭</text>
+  <text x="143" y="218" font-size="8" font-weight="700" fill="#FFFFFF">Entertainment</text>
+  <rect x="220" y="210" width="48" height="13" rx="6.5" fill="rgba(155,111,212,0.25)"/>
+  <text x="244" y="220" font-size="6.5" fill="#9B6FD4" text-anchor="middle" font-weight="700">MONTHLY</text>
+  <text x="115" y="238" font-size="6.5" fill="rgba(255,255,255,0.4)">Mar 01 - Mar 31</text>
+  <text x="115" y="248" font-size="7" fill="rgba(255,255,255,0.5)">Spent: $0</text>
+  <text x="220" y="248" font-size="7" fill="#9B6FD4">Remaining: $545</text>
+  <rect x="115" y="254" width="156" height="4" rx="2" fill="rgba(155,111,212,0.2)"/>
+  <text x="115" y="266" font-size="6.5" fill="#9B6FD4">0.0% used</text>
+
+  <!-- Food card (green, 71% used) -->
+  <rect x="109" y="278" width="172" height="58" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(76,175,130,0.2)" stroke-width="1"/>
+  <rect x="115" y="282" width="22" height="22" rx="8" fill="rgba(76,175,130,0.3)"/>
+  <text x="126" y="296" font-size="11" text-anchor="middle">🍕</text>
+  <text x="143" y="296" font-size="8" font-weight="700" fill="#FFFFFF">Food</text>
+  <rect x="115" y="308" width="156" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+  <rect x="115" y="308" width="110" height="4" rx="2" fill="url(#bar_safe)"/>
+  <text x="115" y="322" font-size="6.5" fill="rgba(255,255,255,0.4)">$710 of $1,000</text>
+  <text x="265" y="322" font-size="6.5" fill="#4CAF82" text-anchor="end">71%</text>
+
+  <!-- Transport card (amber warning) -->
+  <rect x="109" y="344" width="172" height="58" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(245,158,11,0.2)" stroke-width="1"/>
+  <rect x="115" y="348" width="22" height="22" rx="8" fill="rgba(245,158,11,0.3)"/>
+  <text x="126" y="362" font-size="11" text-anchor="middle">🚗</text>
+  <text x="143" y="362" font-size="8" font-weight="700" fill="#FFFFFF">Transport</text>
+  <rect x="115" y="374" width="156" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+  <rect x="115" y="374" width="132" height="4" rx="2" fill="url(#bar_warn)"/>
+  <text x="115" y="388" font-size="6.5" fill="rgba(255,255,255,0.4)">$528 of $600</text>
+  <text x="265" y="388" font-size="6.5" fill="#F59E0B" text-anchor="end">88% ⚠️</text>
+
+  <!-- Bottom nav on phone -->
+  <line x1="109" y1="410" x2="281" y2="410" stroke="rgba(255,255,255,0.08)" stroke-width="0.8"/>
+  <text x="128" y="424" font-size="7.5" text-anchor="middle" fill="rgba(255,255,255,0.4)">🏠 Home</text>
+  <text x="195" y="424" font-size="7.5" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-weight="700">💼 Budgets</text>
+  <text x="262" y="424" font-size="7.5" text-anchor="middle" fill="rgba(255,255,255,0.4)">👤 Profile</text>
+
+  <!-- + Budgets floating btn -->
+  <g transform="translate(285, 290)">
+    <rect width="84" height="32" rx="16" fill="#2D4060" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    <text x="42" y="20" font-size="9" fill="#FFFFFF" text-anchor="middle" font-weight="600">+ Budgets</text>
+  </g>
+
+  <!-- Side floating alert -->
+  <g transform="translate(8, 240)" filter="url(#shadow_en2)">
+    <rect width="80" height="58" rx="14" fill="#E05252"/>
+    <text x="40" y="18" font-size="7" fill="rgba(255,255,255,0.8)" text-anchor="middle">⚠️ Over Budget</text>
+    <text x="40" y="34" font-size="11" font-weight="800" fill="#FFFFFF" text-anchor="middle">Bills</text>
+    <text x="40" y="48" font-size="7" fill="rgba(255,255,255,0.75)" text-anchor="middle">$12 left!</text>
+  </g>
+
+  
+</svg>

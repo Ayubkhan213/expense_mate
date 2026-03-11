@@ -80,3 +80,7 @@ class SaveDebtPayment extends CategoryBottomSheetEvent {
 }
 
 class ResetTransactionStatus extends CategoryBottomSheetEvent {}
+
+class ImagePickedFromCamera extends CategoryBottomSheetEvent {}
+
+class ImageRemoved extends CategoryBottomSheetEvent {}

@@ -1,5 +1,5 @@
 import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/extension/responsive_extension.dart';
+
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
 import 'package:expense_mate/core/utils/enum.dart';
 import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';

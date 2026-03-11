@@ -1,22 +1,28 @@
+// lib/features/profile/presentation/faces/profile_face.dart
+
 import 'dart:io';
 import 'package:expense_mate/core/app_export.dart';
+import 'package:expense_mate/core/di/injection_container.dart';
 import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:expense_mate/features/auth/domain/use_cases/logout_usecase.dart';
+import 'package:expense_mate/features/auth/domain/use_cases/update_profile_usecase.dart';
 import 'package:expense_mate/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:expense_mate/features/profile/presentation/bloc/profile_event.dart';
 import 'package:expense_mate/features/profile/presentation/bloc/profile_state.dart';
 import 'package:expense_mate/features/profile/presentation/faces/daily_notification_face.dart';
+import 'package:expense_mate/features/profile/presentation/faces/edit_profile_face.dart';
 import 'package:expense_mate/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:expense_mate/features/profile/presentation/widgets/profile_section_header.dart';
+import 'package:expense_mate/features/splah/presentation/bloc/splash_bloc.dart';
+import 'package:expense_mate/features/splah/presentation/bloc/splash_event.dart';
+import 'package:expense_mate/features/splah/presentation/bloc/splash_state.dart';
 
 class ProfileFace extends StatelessWidget {
   const ProfileFace({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ProfileBloc()..add(LoadProfile()),
-      child: const _ProfileView(),
-    );
+    return const _ProfileView();
   }
 }
 
@@ -28,151 +34,146 @@ class _ProfileView extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final t = AppLocalizations.of(context)!;
-    return Scaffold(
-      backgroundColor: isDark
-          ? theme.colorScheme.background
-          : const Color(0xFFF2F4F8),
-      body: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          if (state.status == ProfileStatus.loading) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: theme.colorScheme.primary,
-                strokeWidth: 2.5,
-              ),
-            );
-          }
 
-          return CustomScrollView(
-            physics: const ClampingScrollPhysics(),
-            slivers: [
-              // ── Hero SliverAppBar ──
-              _ProfileSliverAppBar(state: state, isDark: isDark),
+    // Listen to the SINGLETON SplashBloc for logout navigation
+    return BlocListener<SplashBloc, SplashState>(
+      listenWhen: (p, c) => p.status != c.status,
+      listener: (ctx, state) {
+        if (state.status == SplashStatus.unauthenticated) {
+          Navigator.pushNamedAndRemoveUntil(ctx, RouteName.login, (_) => false);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: isDark
+            ? theme.colorScheme.background
+            : const Color(0xFFF2F4F8),
+        body: BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
+            if (state.status == ProfileStatus.loading) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: theme.colorScheme.primary,
+                  strokeWidth: 2.5,
+                ),
+              );
+            }
 
-              // ── Menu content ──
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 8),
+            return CustomScrollView(
+              physics: const ClampingScrollPhysics(),
+              slivers: [
+                _ProfileSliverAppBar(state: state, isDark: isDark),
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
 
-                    // ── APPEARANCE ──
-                    ProfileSectionHeader(title: t.sectionAppearance),
-                    ProfileMenuItem(
-                      icon: Icons.palette_outlined,
-                      title: t.menuTheme,
-                      subtitle: t.menuThemeSubtitle,
-                      onTap: () =>
-                          Navigator.pushNamed(context, RouteName.template),
-                    ),
-                    ProfileMenuItem(
-                      icon: Icons.language_outlined,
-                      title: t.menuLanguage,
-                      subtitle: t.menuLanguageSubtitle,
-                      onTap: () =>
-                          Navigator.pushNamed(context, RouteName.language),
-                    ),
-                    BlocBuilder<ThemeBloc, ThemeState>(
-                      builder: (context, themeState) {
-                        return ProfileMenuItem(
-                          icon: themeState.isDark
-                              ? Icons.dark_mode_outlined
-                              : Icons.light_mode_outlined,
-                          title: t.menuDarkMode,
-                          subtitle: themeState.isDark
-                              ? t.menuDarkModeEnabled
-                              : t.menuDarkModeDisabled,
-                          onTap: () {},
-                          trailing: Switch(
-                            value: themeState.isDark,
-                            onChanged: (value) => context.read<ThemeBloc>().add(
-                              ToggleDarkModeEvent(value),
+                      // ── APPEARANCE ──
+                      ProfileSectionHeader(title: t.sectionAppearance),
+                      ProfileMenuItem(
+                        icon: Icons.palette_outlined,
+                        title: t.menuTheme,
+                        subtitle: t.menuThemeSubtitle,
+                        onTap: () =>
+                            Navigator.pushNamed(context, RouteName.template),
+                      ),
+                      ProfileMenuItem(
+                        icon: Icons.language_outlined,
+                        title: t.menuLanguage,
+                        subtitle: t.menuLanguageSubtitle,
+                        onTap: () =>
+                            Navigator.pushNamed(context, RouteName.language),
+                      ),
+                      BlocBuilder<ThemeBloc, ThemeState>(
+                        builder: (context, themeState) {
+                          return ProfileMenuItem(
+                            icon: themeState.isDark
+                                ? Icons.dark_mode_outlined
+                                : Icons.light_mode_outlined,
+                            title: t.menuDarkMode,
+                            subtitle: themeState.isDark
+                                ? t.menuDarkModeEnabled
+                                : t.menuDarkModeDisabled,
+                            onTap: () {},
+                            trailing: Switch(
+                              value: themeState.isDark,
+                              onChanged: (v) => context.read<ThemeBloc>().add(
+                                ToggleDarkModeEvent(v),
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
 
-                    // ── ACCOUNT ──
-                    ProfileSectionHeader(title: t.sectionAccount),
-                    ProfileMenuItem(
-                      icon: Icons.person_outline,
-                      title: t.menuEditProfile,
-                      subtitle: t.menuEditProfileSubtitle,
-                      onTap: () => _showEditNameDialog(context, state.userName),
-                    ),
-                    ProfileMenuItem(
-                      icon: Icons.security_outlined,
-                      title: t.menuPrivacy,
-                      subtitle: t.menuPrivacySubtitle,
-                      onTap: () {},
-                    ),
-                    ProfileMenuItem(
-                      icon: Icons.notifications_outlined,
-                      title: t.menuNotifications,
-                      subtitle: t.menuNotificationsSubtitle,
-                      onTap: () {},
-                    ),
-                    ProfileMenuItem(
-                      icon: Icons.notifications_active_outlined,
-                      title: t.menuDailyNotification,
-                      subtitle: t.menuDailyNotificationSubtitle,
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const DailyNotificationFace(),
+                      // ── ACCOUNT ──
+                      ProfileSectionHeader(title: t.sectionAccount),
+                      ProfileMenuItem(
+                        icon: Icons.person_outline,
+                        title: t.menuEditProfile,
+                        subtitle: t.menuEditProfileSubtitle,
+                        onTap: () => _navigateToEditProfile(context),
+                      ),
+                      ProfileMenuItem(
+                        icon: Icons.security_outlined,
+                        title: t.menuPrivacy,
+                        subtitle: t.menuPrivacySubtitle,
+                        onTap: () {},
+                      ),
+                      ProfileMenuItem(
+                        icon: Icons.notifications_outlined,
+                        title: t.menuNotifications,
+                        subtitle: t.menuNotificationsSubtitle,
+                        onTap: () {},
+                      ),
+                      ProfileMenuItem(
+                        icon: Icons.notifications_active_outlined,
+                        title: t.menuDailyNotification,
+                        subtitle: t.menuDailyNotificationSubtitle,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const DailyNotificationFace(),
+                          ),
                         ),
                       ),
-                    ),
 
-                    // ── DATA ──
-                    ProfileSectionHeader(title: t.sectionData),
-                    ProfileMenuItem(
-                      icon: Icons.backup_outlined,
-                      title: t.menuBackup,
-                      subtitle: t.menuBackupSubtitle,
-                      onTap: () {},
-                    ),
-                    ProfileMenuItem(
-                      icon: Icons.download_outlined,
-                      title: t.menuExport,
-                      subtitle: t.menuExportSubtitle,
-                      onTap: () {},
-                    ),
+                      // ── DATA ──
+                      ProfileSectionHeader(title: t.sectionData),
+                      ProfileMenuItem(
+                        icon: Icons.backup_outlined,
+                        title: t.menuBackup,
+                        subtitle: t.menuBackupSubtitle,
+                        onTap: () {},
+                      ),
+                      ProfileMenuItem(
+                        icon: Icons.download_outlined,
+                        title: t.menuExport,
+                        subtitle: t.menuExportSubtitle,
+                        onTap: () {},
+                      ),
 
-                    // ── SUPPORT ──
-                    ProfileSectionHeader(title: t.sectionSupport),
-                    ProfileMenuItem(
-                      icon: Icons.help_outline,
-                      title: t.menuHelp,
-                      subtitle: t.menuHelpSubtitle,
-                      onTap: () {},
-                    ),
-                    ProfileMenuItem(
-                      icon: Icons.info_outline,
-                      title: t.menuAbout,
-                      subtitle: '${t.menuAboutVersion} 1.0.0',
-                      onTap: () => _showAboutDialog(context),
-                    ),
+                      // ── SUPPORT ──
+                      ProfileSectionHeader(title: t.sectionSupport),
+                      ProfileMenuItem(
+                        icon: Icons.help_outline,
+                        title: t.menuHelp,
+                        subtitle: t.menuHelpSubtitle,
+                        onTap: () {},
+                      ),
+                      ProfileMenuItem(
+                        icon: Icons.info_outline,
+                        title: t.menuAbout,
+                        subtitle: '${t.menuAboutVersion} 1.0.0',
+                        onTap: () => _showAboutDialog(context),
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // ── Logout ──
-                    BlocListener<AuthBloc, AuthState>(
-                      listenWhen: (p, c) => p.status != c.status,
-                      listener: (context, authState) {
-                        if (authState.status == AuthStatus.unauthenticated) {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            RouteName.login,
-                            (_) => false,
-                          );
-                        }
-                      },
-                      child: Padding(
+                      // ── Logout ─────────────────────────────────────
+                      Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: ElevatedButton.icon(
-                          onPressed: () => _showLogoutDialog(context),
+                          onPressed: () => _showLogoutDialog(context, t),
                           icon: const Icon(Icons.logout),
                           label: Text(t.btnLogout),
                           style: ElevatedButton.styleFrom(
@@ -185,111 +186,55 @@ class _ProfileView extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ),
 
-                    const SizedBox(height: 48),
-                  ],
+                      const SizedBox(height: 48),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  // ── Dialogs & sheets ──────────────────────────────────────────────────────
-
-  void _handleImagePick(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.camera_alt),
-              title: const Text('Take Photo'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Choose from Gallery'),
-              onTap: () => Navigator.pop(context),
-            ),
-            ListTile(
-              leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text(
-                'Remove Photo',
-                style: TextStyle(color: Colors.red),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                context.read<ProfileBloc>().add(const UpdateProfileImage(''));
-              },
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  void _showEditNameDialog(BuildContext context, String? currentName) {
-    final controller = TextEditingController(text: currentName);
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Edit Name'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                context.read<ProfileBloc>().add(
-                  UpdateProfileName(controller.text),
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
+  // ── Navigate to EditProfileFace sharing the same ProfileBloc ─────────────
+
+  void _navigateToEditProfile(BuildContext context) async {
+    final bloc = context.read<ProfileBloc>();
+    final updated = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            BlocProvider.value(value: bloc, child: const EditProfileFace()),
       ),
     );
+    // Reload from Hive to show updated name/email/image in the header
+    if (updated == true && context.mounted) {
+      bloc.add(LoadProfile());
+    }
   }
 
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog(BuildContext context, AppLocalizations t) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(t.logout),
+        content: Text(t.logoutConfirmMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(t.cancel),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              context.read<AuthBloc>().add(LogoutEvent());
+              // Uses singleton SplashBloc — clears AppPrefs + Hive
+              context.read<SplashBloc>().add(SplashLogout());
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Logout'),
+            child: Text(t.logout, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -307,13 +252,13 @@ class _ProfileView extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 // Hero SliverAppBar
-// ─────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+
 class _ProfileSliverAppBar extends StatelessWidget {
   final ProfileState state;
   final bool isDark;
-
   const _ProfileSliverAppBar({required this.state, required this.isDark});
 
   @override
@@ -354,7 +299,6 @@ class _ProfileSliverAppBar extends StatelessWidget {
                       primary: primary,
                       topPad: topPad,
                       availableHeight: current,
-                      onEditImage: () {},
                     ),
                   ),
                 if (collapsedOpacity > 0)
@@ -375,25 +319,25 @@ class _ProfileSliverAppBar extends StatelessWidget {
   }
 }
 
-// ── Expanded header — centered avatar · name · email ──
+// ── Expanded header ──────────────────────────────────────────────────────────
+
 class _ExpandedHeader extends StatelessWidget {
   final ProfileState state;
   final Color primary;
   final double topPad;
   final double availableHeight;
-  final VoidCallback onEditImage;
 
   const _ExpandedHeader({
     required this.state,
     required this.primary,
     required this.topPad,
     required this.availableHeight,
-    required this.onEditImage,
   });
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -424,15 +368,13 @@ class _ExpandedHeader extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ── Top row: settings icon on right ──
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 12, 0),
                   child: Row(
                     children: [
                       const Spacer(),
-                      // Edit profile quick-action
                       GestureDetector(
-                        onTap: () => _showEditNameDialogDirect(context),
+                        onTap: () => _navigateToEditFromHeader(context),
                         child: Container(
                           width: 36,
                           height: 36,
@@ -456,9 +398,9 @@ class _ExpandedHeader extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                // ── Avatar ──
+                // Avatar
                 GestureDetector(
-                  onTap: onEditImage,
+                  onTap: () => _navigateToEditFromHeader(context),
                   child: Stack(
                     children: [
                       Container(
@@ -495,7 +437,6 @@ class _ExpandedHeader extends StatelessWidget {
                               : null,
                         ),
                       ),
-                      // Camera badge
                       Positioned(
                         bottom: 2,
                         right: 2,
@@ -529,7 +470,7 @@ class _ExpandedHeader extends StatelessWidget {
 
                 const SizedBox(height: 14),
 
-                // ── Name ──
+                // Name — reads from ProfileBloc state (updated immediately)
                 Text(
                   state.userName ?? 'Guest User',
                   style: AppTextStyles.h3.copyWith(
@@ -541,7 +482,7 @@ class _ExpandedHeader extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                // ── Email ──
+                // Email
                 Text(
                   state.userEmail ?? 'email@example.com',
                   style: AppTextStyles.bodySmall.copyWith(
@@ -551,7 +492,6 @@ class _ExpandedHeader extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                // ── Stats row ──
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   padding: const EdgeInsets.symmetric(
@@ -586,42 +526,23 @@ class _ExpandedHeader extends StatelessWidget {
     );
   }
 
-  void _showEditNameDialogDirect(BuildContext context) {
-    final controller = TextEditingController(text: state.userName);
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Edit Name'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            border: OutlineInputBorder(),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (controller.text.isNotEmpty) {
-                context.read<ProfileBloc>().add(
-                  UpdateProfileName(controller.text),
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
+  void _navigateToEditFromHeader(BuildContext context) async {
+    final bloc = context.read<ProfileBloc>();
+    final updated = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            BlocProvider.value(value: bloc, child: const EditProfileFace()),
       ),
     );
+    if (updated == true && context.mounted) {
+      bloc.add(LoadProfile());
+    }
   }
 }
 
-// ── Collapsed header — avatar · name · email in the bar ──
+// ── Collapsed header ─────────────────────────────────────────────────────────
+
 class _CollapsedHeader extends StatelessWidget {
   final ProfileState state;
   final Color primary;
@@ -643,7 +564,6 @@ class _CollapsedHeader extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Small circular avatar
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -671,10 +591,7 @@ class _CollapsedHeader extends StatelessWidget {
                     : null,
               ),
             ),
-
             const SizedBox(width: 10),
-
-            // Name + email stacked
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -700,8 +617,6 @@ class _CollapsedHeader extends StatelessWidget {
                 ],
               ),
             ),
-
-            // Edit icon on right
             GestureDetector(
               onTap: () {},
               child: Container(
@@ -728,11 +643,9 @@ class _CollapsedHeader extends StatelessWidget {
   }
 }
 
-// ── Small stat item inside the frosted card ──
 class _StatItem extends StatelessWidget {
   final String label;
   final String value;
-
   const _StatItem({required this.label, required this.value});
 
   @override
