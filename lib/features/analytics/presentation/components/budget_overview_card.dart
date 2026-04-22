@@ -1,6 +1,7 @@
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class BudgetOverviewCard extends StatelessWidget {
@@ -119,13 +120,13 @@ class BudgetOverviewCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '\$${budgetAnalysis.totalSpentAmount.toStringAsFixed(0)} ${t.spent}',
+              '${CurrencyFormatter.format(budgetAnalysis.totalSpentAmount, decimalDigits: 0)} ${t.spent}',
               style: AppTextStyles.caption.copyWith(
                 color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               ),
             ),
             Text(
-              '${t.ofa} \$${budgetAnalysis.totalBudgetAmount.toStringAsFixed(0)}',
+              '${t.ofa} ${CurrencyFormatter.format(budgetAnalysis.totalBudgetAmount, decimalDigits: 0)}',
               style: AppTextStyles.caption.copyWith(
                 color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
               ),
@@ -249,7 +250,7 @@ class BudgetOverviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '\$${progress.spentAmount.toStringAsFixed(0)} ${t.ofa} \$${progress.budgetAmount.toStringAsFixed(0)}',
+            '${CurrencyFormatter.format(progress.spentAmount, decimalDigits: 0)} ${t.ofa} ${CurrencyFormatter.format(progress.budgetAmount, decimalDigits: 0)}',
             style: AppTextStyles.caption.copyWith(
               color: theme.textTheme.bodyMedium?.color?.withOpacity(0.6),
             ),

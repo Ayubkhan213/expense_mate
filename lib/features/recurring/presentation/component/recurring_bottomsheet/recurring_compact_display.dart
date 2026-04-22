@@ -1,9 +1,14 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/utils/icon_mapper.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 /// Compact display showing category icon, name and amount
 class RecurringCompactDisplay extends StatelessWidget {
-  final CategoryHiveModel category;
+  final CategoryModel category;
   final AddEditRecurringState state;
 
   const RecurringCompactDisplay({
@@ -42,7 +47,7 @@ class RecurringCompactDisplay extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(
-        IconData(category.iconCode, fontFamily: 'MaterialIcons'),
+        IconMapper.getIcon(category.iconCode),
         color: Color(category.colorValue),
         size: 20,
       ),

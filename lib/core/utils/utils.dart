@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/category_item_model.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/data/models/category_item_model.dart';
 
 class Utils {
   final List<CategoryItem> incomeCategories = [

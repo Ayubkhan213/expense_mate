@@ -1,22 +1,26 @@
 // lib/features/recurring/presentation/faces/recurring_bottomsheet.dart
 
-import 'package:expense_mate/core/common/custom_snackbar.dart';
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart';
-import 'package:expense_mate/features/recurring/data/repositort_imp/recurring_repo_impl.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_bloc.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_bloc.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_calculator.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_compact_display.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_date_row.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_frequency_dropdown.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_note_field.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_bottomsheet/recurring_payment_dropdown.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/common/custom_snackbar.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+
+import 'package:spendio/core/data/models/category_model.dart';
+
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/features/recurring/data/data_source/recurring_local_datasource.dart';
+
+import 'package:spendio/features/recurring/data/repositort_imp/recurring_repo_impl.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_bloc.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_bloc.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_bottomsheet/recurring_calculator.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_bottomsheet/recurring_compact_display.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_bottomsheet/recurring_date_row.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_bottomsheet/recurring_frequency_dropdown.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_bottomsheet/recurring_note_field.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_bottomsheet/recurring_payment_dropdown.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +29,7 @@ class RecurringTransactionBottomSheet {
   /// [isCreating] = false → came from RecurringFace edit button  (1 pop needed)
   static void show(
     BuildContext context,
-    CategoryHiveModel category, {
+    CategoryModel category, {
     RecurringTransactionModel? existingRecurring,
   }) {
     final isCreating = existingRecurring == null;
@@ -42,12 +46,15 @@ class RecurringTransactionBottomSheet {
         create: (_) => AddEditRecurringBloc(
           repository: RecurringRepositoryImpl(
             localDataSource: RecurringLocalDataSourceImpl(),
+            transactionDataSource: TransactionLocalDataSourceImpl(),
           ),
         )..add(InitializeForm(category: category, existing: existingRecurring)),
-        child: _RecurringBottomSheetContent(
-          category: category,
-          isCreating: isCreating,
-          recurringListBloc: recurringListBloc,
+        child: SafeArea(
+          child: _RecurringBottomSheetContent(
+            category: category,
+            isCreating: isCreating,
+            recurringListBloc: recurringListBloc,
+          ),
         ),
       ),
     );
@@ -55,7 +62,7 @@ class RecurringTransactionBottomSheet {
 }
 
 class _RecurringBottomSheetContent extends StatelessWidget {
-  final CategoryHiveModel category;
+  final CategoryModel category;
   final bool isCreating;
   final RecurringListBloc recurringListBloc;
 
@@ -104,7 +111,10 @@ class _RecurringBottomSheetContent extends StatelessWidget {
                       const SizedBox(height: 8),
                       const RecurringNoteField(),
                       const SizedBox(height: 16),
-                      RecurringCalculator(state: state),
+                      Directionality(
+                        textDirection: TextDirection.ltr,
+                        child: RecurringCalculator(state: state),
+                      ),
                       const SizedBox(height: 12),
                     ],
                   ),

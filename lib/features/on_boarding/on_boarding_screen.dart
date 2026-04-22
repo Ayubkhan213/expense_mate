@@ -1,10 +1,13 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/on_boading_model.dart';
-import 'package:expense_mate/core/services/app_prefs.dart';
-import 'package:expense_mate/core/services/hive_box_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/on_boading_model.dart';
+import 'package:spendio/core/language/bloc/language_bloc.dart';
+import 'package:spendio/core/navigation/route_name.dart';
+import 'package:spendio/core/services/app_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Asset path helper  (PNG)

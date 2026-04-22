@@ -879,7 +879,34 @@
   "chooseSource": "Choose a source",
   "takePhoto": "Take a photo",
   "chooseFromLibrary": "Choose from library",
-  "deleteCurrentAttachment": "Delete the current attachment"
+  "deleteCurrentAttachment": "Delete the current attachment",
+  "secQ1_1": "What was the name of your first pet?",
+"secQ1_2": "What is the name of the city where you were born?",
+"secQ1_3": "What was the make of your first car?",
+"secQ1_4": "What is your mother's maiden name?",
+"secQ1_5": "What was the name of your elementary school?",
+"secQ1_6": "What was your childhood nickname?",
+"secQ1_7": "What is the name of the street you grew up on?",
+"secQ2_1": "What is the name of your oldest sibling?",
+"secQ2_2": "What was the first concert you attended?",
+"secQ2_3": "What was the name of your favorite teacher?",
+"secQ2_4": "In what city did you meet your spouse/partner?",
+"secQ2_5": "What was the first album you purchased?",
+"secQ2_6": "What is your oldest cousin's first name?",
+"secQ2_7": "What was the name of your first stuffed animal or toy?",
+"keyCopied": "Key copied!",
+"allKeysCopied": "All keys copied!",
+"copyOne": "Copy One",
+"copyAll": "Copy All",
+"iHaveSavedMyKeys": "I Have Saved My Keys",
+"accountCreatedSuccessfully": "Account created successfully!",
+   "splashAppName": "Spendio",
+   "splashTagline": "TRACK  ·  BUDGET  ·  PROSPER",
+   "deleteTransaction": "Delete Transaction",
+"deleteTransactionConfirm": "Are you sure you want to delete this transaction? This cannot be undone.",
+"update": "Update",
+"transactionUpdatedSuccess": "Transaction updated successfully!"
+  
   
 
 }

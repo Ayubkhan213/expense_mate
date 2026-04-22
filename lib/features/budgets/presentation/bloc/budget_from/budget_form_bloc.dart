@@ -1,11 +1,20 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetFormBloc extends Bloc<BudgetFormEvent, BudgetFormState> {
-  BudgetFormBloc({Map<BudgetType, List<String>>? categoryPresets})
-    : super(BudgetFormState.initial(categoryPresets: categoryPresets)) {
+  BudgetFormBloc({
+    Map<BudgetType, List<String>>? categoryPresets,
+    BudgetModel? existingBudget, // ✅ NEW — for edit mode
+  }) : super(
+         BudgetFormState.initial(
+           categoryPresets: categoryPresets,
+           existingBudget: existingBudget, // ✅ pre-fill
+         ),
+       ) {
     on<BudgetFormTypeChanged>(_onTypeChanged);
     on<BudgetFormCategorySelected>(_onCategorySelected);
     on<BudgetFormColorChanged>(_onColorChanged);
@@ -13,8 +22,8 @@ class BudgetFormBloc extends Bloc<BudgetFormEvent, BudgetFormState> {
     on<BudgetFormStartDateChanged>(_onStartDateChanged);
     on<BudgetFormEndDateChanged>(_onEndDateChanged);
     on<BudgetFormNameChanged>(_onNameChanged);
-    on<BudgetFormAmountChanged>(_onAmountChanged); // ← NEW
-    on<BudgetFormOperationChanged>(_onOperationChanged); // ← NEW
+    on<BudgetFormAmountChanged>(_onAmountChanged);
+    on<BudgetFormOperationChanged>(_onOperationChanged);
     on<BudgetFormReset>(_onReset);
   }
 
@@ -22,6 +31,12 @@ class BudgetFormBloc extends Bloc<BudgetFormEvent, BudgetFormState> {
     BudgetFormTypeChanged event,
     Emitter<BudgetFormState> emit,
   ) {
+    // Skip auto date change in edit mode
+    if (state.isEditMode) {
+      emit(state.copyWith(selectedType: event.type, clearCategory: true));
+      return;
+    }
+
     final now = DateTime.now();
     DateTime newStartDate;
     DateTime newEndDate;
@@ -56,7 +71,11 @@ class BudgetFormBloc extends Bloc<BudgetFormEvent, BudgetFormState> {
     Emitter<BudgetFormState> emit,
   ) {
     emit(
-      state.copyWith(selectedCategory: event.category, name: event.category),
+      state.copyWith(
+        selectedCategory: event.category,
+        name: event.category,
+        displayName: event.displayName,
+      ),
     );
   }
 
@@ -99,12 +118,10 @@ class BudgetFormBloc extends Bloc<BudgetFormEvent, BudgetFormState> {
     emit(state.copyWith(name: event.name));
   }
 
-  // ── NEW ──
   void _onAmountChanged(
     BudgetFormAmountChanged event,
     Emitter<BudgetFormState> emit,
   ) {
-    // If an operation is pending, resolve it first
     if (state.operation.isNotEmpty && event.amount.isNotEmpty) {
       final base = double.tryParse(state.amount) ?? 0;
       final incoming = double.tryParse(event.amount) ?? 0;
@@ -130,7 +147,6 @@ class BudgetFormBloc extends Bloc<BudgetFormEvent, BudgetFormState> {
   ) {
     emit(state.copyWith(operation: event.operation));
   }
-  // ─────────
 
   void _onReset(BudgetFormReset event, Emitter<BudgetFormState> emit) {
     emit(BudgetFormState.initial());

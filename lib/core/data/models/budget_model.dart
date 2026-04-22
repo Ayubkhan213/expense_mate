@@ -1,93 +1,91 @@
-import 'package:hive/hive.dart';
+import 'dart:convert';
 
-part 'budget_model.g.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/budget_entity.dart';
 
-@HiveType(typeId: 4)
-class BudgetModel extends HiveObject {
-  @HiveField(0)
-  final String id;
+class BudgetModel extends BudgetEntity {
+  const BudgetModel({
+    required super.id,
+    super.userId,
+    required super.name,
+    required super.type,
+    required super.totalAmount,
+    super.spentAmount,
+    required super.startDate,
+    required super.endDate,
+    super.transactionIds,
+    super.category,
+    super.icon,
+    super.colorCode,
+    super.isActive,
+    super.isArchived,
+    required super.createdAt,
+    required super.updatedAt,
+  });
 
-  @HiveField(1)
-  final String name; // "January Salary", "Wedding Budget"
+  // ── DB row → Model ──────────────────────────────────────────────────────────
+  // transactionIds is intentionally left empty here.
+  // The datasource fills it by querying:
+  //   SELECT id FROM transactions WHERE budget_id = ? AND is_deleted = 0
+  factory BudgetModel.fromMap(
+    Map<String, dynamic> map, {
+    List<String> transactionIds = const [],
+  }) => BudgetModel(
+    id: map['id'] as String,
+    userId: map['user_id'] as String?,
+    name: map['name'] as String,
+    type: BudgetType.values.firstWhere((t) => t.name == map['type']),
+    totalAmount: (map['total_amount'] as num).toDouble(),
+    spentAmount: (map['spent_amount'] as num?)?.toDouble() ?? 0,
+    startDate: DateTime.parse(map['start_date'] as String),
+    endDate: DateTime.parse(map['end_date'] as String),
+    transactionIds: transactionIds,
+    category: map['category'] as String?,
+    icon: map['icon'] as String?,
+    colorCode: map['color_code'] as int?,
+    isActive: (map['is_active'] as int? ?? 1) == 1,
+    isArchived: (map['is_archived'] as int? ?? 0) == 1,
+    createdAt: DateTime.parse(map['created_at'] as String),
+    updatedAt: DateTime.parse(map['updated_at'] as String),
+  );
 
-  @HiveField(2)
-  final BudgetType type; // monthly, project, custom
+  // ── Model → DB row ──────────────────────────────────────────────────────────
+  // transactionIds is NOT written to the budgets table —
+  // the reverse FK on transactions is the source of truth.
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'user_id': userId,
+    'name': name,
+    'type': type.name,
+    'total_amount': totalAmount,
+    'spent_amount': spentAmount,
+    'start_date': startDate.toIso8601String(),
+    'end_date': endDate.toIso8601String(),
+    'category': category,
+    'icon': icon,
+    'color_code': colorCode,
+    'is_active': isActive ? 1 : 0,
+    'is_archived': isArchived ? 1 : 0,
+    'created_at': createdAt.toIso8601String(),
+    'updated_at': updatedAt.toIso8601String(),
+  };
 
-  @HiveField(3)
-  final double totalAmount; // Initial budget amount
-
-  @HiveField(4)
-  final double spentAmount; // Calculated from linked transactions
-
-  @HiveField(5)
-  final DateTime startDate;
-
-  @HiveField(6)
-  final DateTime endDate;
-
-  @HiveField(7)
-  final List<String> transactionIds; // Link to TransactionModel
-
-  @HiveField(8)
-  final String? category; // Optional: "Personal", "Work", "Wedding"
-
-  @HiveField(9)
-  final String? icon; // Icon name for UI
-
-  @HiveField(10)
-  final int? colorCode; // Color for UI
-
-  @HiveField(11)
-  bool isActive;
-
-  @HiveField(12)
-  bool isArchived;
-
-  @HiveField(13)
-  final DateTime createdAt;
-
-  @HiveField(14)
-  DateTime updatedAt;
-  @HiveField(15)
-  final String? userId;
-
-  BudgetModel({
-    required this.id,
-    required this.name,
-    required this.type,
-    required this.totalAmount,
-    this.spentAmount = 0.0,
-    required this.startDate,
-    required this.endDate,
-    this.transactionIds = const [],
-    this.category,
-    this.icon,
-    this.colorCode,
-    this.isActive = true,
-    this.isArchived = false,
-    DateTime? createdAt,
-    this.userId,
-    DateTime? updatedAt,
-  }) : createdAt = createdAt ?? DateTime.now(),
-       updatedAt = updatedAt ?? DateTime.now();
-
-  // Helpers
-  double get remainingAmount => totalAmount - spentAmount;
-  double get spentPercentage => (spentAmount / totalAmount * 100).clamp(0, 100);
-  bool get isOverBudget => spentAmount > totalAmount;
-  bool get isExpired => DateTime.now().isAfter(endDate);
-  int get daysRemaining => endDate.difference(DateTime.now()).inDays;
-}
-
-// Add to enums.dart
-@HiveType(typeId: 13)
-enum BudgetType {
-  @HiveField(0)
-  monthly, // Recurring monthly budget (salary)
-
-  @HiveField(1)
-  project, // One-time project (wedding, vacation)
-
-  @HiveField(2)
-  custom, // Custom duration
+  factory BudgetModel.fromEntity(BudgetEntity e) => BudgetModel(
+    id: e.id,
+    userId: e.userId,
+    name: e.name,
+    type: e.type,
+    totalAmount: e.totalAmount,
+    spentAmount: e.spentAmount,
+    startDate: e.startDate,
+    endDate: e.endDate,
+    transactionIds: e.transactionIds,
+    category: e.category,
+    icon: e.icon,
+    colorCode: e.colorCode,
+    isActive: e.isActive,
+    isArchived: e.isArchived,
+    createdAt: e.createdAt,
+    updatedAt: e.updatedAt,
+  );
 }

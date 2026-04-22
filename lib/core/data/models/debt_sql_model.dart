@@ -1,4 +1,5 @@
-import 'package:expense_mate/core/domain/entity/debt_entity.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/debt_entity.dart';
 
 class DebtModel extends DebtEntity {
   const DebtModel({
@@ -63,5 +64,27 @@ class DebtModel extends DebtEntity {
     personImage: e.personImage,
     createdAt: e.createdAt,
     updatedAt: e.updatedAt,
+  );
+  // Add to DebtModel class:
+  DebtModel copyWith({
+    String? personName,
+    double? paidAmount,
+    bool? isReturned,
+    DateTime? expectedReturnDate,
+    DateTime? updatedAt,
+  }) => DebtModel(
+    id: id,
+    userId: userId,
+    transactionId: transactionId,
+    personName: personName ?? this.personName,
+    totalAmount: totalAmount,
+    debtType: debtType,
+    expectedReturnDate: expectedReturnDate ?? this.expectedReturnDate,
+    isReturned: isReturned ?? this.isReturned,
+    paidAmount: paidAmount ?? this.paidAmount,
+    personPhone: personPhone,
+    personImage: personImage,
+    createdAt: createdAt,
+    updatedAt: updatedAt ?? DateTime.now(),
   );
 }

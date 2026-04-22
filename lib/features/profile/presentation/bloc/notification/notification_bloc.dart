@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/data/models/notification_secdular.dart';
-import 'package:expense_mate/core/services/daily_notification_service.dart';
+import 'package:spendio/core/data/models/notification_secdular.dart';
+import 'package:spendio/core/services/daily_notification_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'notification_event.dart';
 import 'notification_state.dart';

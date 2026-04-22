@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/notification_secdular.dart';
+import 'package:spendio/core/data/models/notification_secdular.dart';
 
 enum NotificationStatus { initial, loading, loaded, success, error }
 

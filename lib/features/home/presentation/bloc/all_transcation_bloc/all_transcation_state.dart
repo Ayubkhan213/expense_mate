@@ -1,8 +1,8 @@
 // ─────────────────────────────────────────
 // FILE: features/home/presentation/bloc/all_transactions/all_transactions_state.dart
 // ─────────────────────────────────────────
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
 
 enum AllTransactionsStatus { initial, loading, loaded, error }
 

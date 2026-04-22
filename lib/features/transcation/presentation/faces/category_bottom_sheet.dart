@@ -1,31 +1,39 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/common/custom_snackbar.dart';
-import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
-import 'package:expense_mate/core/domain/use_cases/add_debt_payment_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/add_debt_transcation_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/add_debt_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/add_transcation_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/save_budget_transcation_usecase.dart';
-import 'package:expense_mate/core/utils/enum.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
-import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_event.dart';
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_event.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_bottom_sheet/calculator_button.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_bottom_sheet/debt_details_section.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_bottom_sheet/display_section.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_bottom_sheet/note_input_section.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_bottom_sheet/payment_method_section.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:spendio/core/common/custom_snackbar.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+
+import 'package:spendio/core/data/repository_imp/transcation_repo_imp.dart';
+import 'package:spendio/core/domain/use_cases/add_debt_payment_usecase.dart';
+
+import 'package:spendio/core/domain/use_cases/add_debt_transcation_usecase.dart';
+import 'package:spendio/core/domain/use_cases/add_debt_usecase.dart';
+import 'package:spendio/core/domain/use_cases/add_transcation_usecase.dart';
+import 'package:spendio/core/domain/use_cases/save_budget_transcation_usecase.dart';
+import 'package:spendio/core/utils/enum.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
+import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_event.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_event.dart';
+import 'package:spendio/features/transcation/presentation/components/category_bottom_sheet/calculator_button.dart';
+import 'package:spendio/features/transcation/presentation/components/category_bottom_sheet/debt_details_section.dart';
+import 'package:spendio/features/transcation/presentation/components/category_bottom_sheet/display_section.dart';
+import 'package:spendio/features/transcation/presentation/components/category_bottom_sheet/note_input_section.dart';
+import 'package:spendio/features/transcation/presentation/components/category_bottom_sheet/payment_method_section.dart';
+import 'package:intl/intl.dart';
+import 'package:spendio/l10n/app_localizations.dart';
+import 'dart:ui' as ui;
 import '../bloc/category_bottom_sheet_bloc/category_bottom_sheet_bloc.dart';
 import '../bloc/category_bottom_sheet_bloc/category_bottom_sheet_event.dart';
 import '../bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
@@ -33,72 +41,107 @@ import '../bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
 class CategoryBottomSheet {
   static void show(
     BuildContext context,
-    CategoryHiveModel? category,
+    CategoryModel? category,
     TransactionSource flowType,
     BudgetModel? budgetModel,
-    DebtModel? debtModel,
-  ) {
+    DebtModel? debtModel, {
+    TransactionModel? existingTransaction, //  NEW optional param
+  }) {
+    // If editing, derive category from transaction
+    final resolvedCategory =
+        category ??
+        (existingTransaction != null
+            ? CategoryModel(
+                key: existingTransaction.items.isNotEmpty
+                    ? existingTransaction.items.first.category
+                    : '',
+                iconCode: 0,
+                colorValue: 0,
+                isIncome: existingTransaction.type == TransactionType.income,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              )
+            : CategoryModel(
+                key: '',
+                iconCode: 123,
+                colorValue: 123,
+                isIncome: false,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
+              ));
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => BlocProvider(
-        create: (_) =>
-            CategoryBottomSheetBloc(
-              category:
-                  category ??
-                  CategoryHiveModel(
-                    key: '',
-                    iconCode: 123,
-                    colorValue: 123,
-                    isIncome: false,
-                  ),
-              saveBudgetTranscationUsecase: SaveBudgetTranscationUsecase(
-                transactionRepository: TransactionRepositoryImp(
-                  localDataSource: TransactionLocalDataSourceImpl(),
-                ),
+        create: (_) {
+          final bloc = CategoryBottomSheetBloc(
+            category: resolvedCategory,
+            saveBudgetTranscationUsecase: SaveBudgetTranscationUsecase(
+              transactionRepository: TransactionRepositoryImp(
+                localDataSource: TransactionLocalDataSourceImpl(),
               ),
-              addDebtUsecase: AddDebtUsecase(
-                transactionRepository: TransactionRepositoryImp(
-                  localDataSource: TransactionLocalDataSourceImpl(),
-                ),
+            ),
+            addDebtUsecase: AddDebtUsecase(
+              transactionRepository: TransactionRepositoryImp(
+                localDataSource: TransactionLocalDataSourceImpl(),
               ),
-              addDebtPaymentUseCase: AddDebtPaymentUseCase(
-                repository: TransactionRepositoryImp(
-                  localDataSource: TransactionLocalDataSourceImpl(),
-                ),
+            ),
+            addDebtPaymentUseCase: AddDebtPaymentUseCase(
+              repository: TransactionRepositoryImp(
+                localDataSource: TransactionLocalDataSourceImpl(),
               ),
-              saveNormalTranscationUsecase: SaveNormalTranscationUsecase(
-                transactionRepository: TransactionRepositoryImp(
-                  localDataSource: TransactionLocalDataSourceImpl(),
-                ),
+            ),
+            saveNormalTranscationUsecase: SaveNormalTranscationUsecase(
+              transactionRepository: TransactionRepositoryImp(
+                localDataSource: TransactionLocalDataSourceImpl(),
               ),
-              saveDebtTranscationUsecase: SaveDebtTranscationUsecase(
-                transactionRepository: TransactionRepositoryImp(
-                  localDataSource: TransactionLocalDataSourceImpl(),
-                ),
+            ),
+            saveDebtTranscationUsecase: SaveDebtTranscationUsecase(
+              transactionRepository: TransactionRepositoryImp(
+                localDataSource: TransactionLocalDataSourceImpl(),
               ),
-            )..add(
+            ),
+          );
+
+          //  Pre-fill state when editing
+          if (existingTransaction != null) {
+            bloc.add(
+              NumberPressed(
+                number: existingTransaction.totalAmount.toStringAsFixed(2),
+              ),
+            );
+            if (existingTransaction.items.isNotEmpty &&
+                existingTransaction.items.first.note != null) {
+              bloc.add(
+                NoteChanged(note: existingTransaction.items.first.note!),
+              );
+            }
+            bloc.add(PaymentMethodChanged(existingTransaction.paymentMethod));
+            bloc.add(PreFillDate(existingTransaction.date));
+          } else {
+            bloc.add(
               flowType == TransactionSource.debt && debtModel == null
                   ? DebtToggled(
-                      category?.isIncome == true
+                      resolvedCategory.isIncome
                           ? DebtType.lent
                           : DebtType.borrowed,
                     )
                   : DebtCleared(),
-            ),
-        child: _CategoryBottomSheetContent(
-          category:
-              category ??
-              CategoryHiveModel(
-                key: '',
-                iconCode: 123,
-                colorValue: 123,
-                isIncome: false,
-              ),
-          flowType: flowType,
-          budgetModel: budgetModel,
-          debtModel: debtModel,
+            );
+          }
+
+          return bloc;
+        },
+        child: SafeArea(
+          child: _CategoryBottomSheetContent(
+            category: resolvedCategory,
+            flowType: flowType,
+            budgetModel: budgetModel,
+            debtModel: debtModel,
+            existingTransaction: existingTransaction,
+          ),
         ),
       ),
     );
@@ -106,16 +149,18 @@ class CategoryBottomSheet {
 }
 
 class _CategoryBottomSheetContent extends StatelessWidget {
-  final CategoryHiveModel category;
+  final CategoryModel category;
   final TransactionSource flowType;
   final BudgetModel? budgetModel;
   final DebtModel? debtModel;
+  final TransactionModel? existingTransaction;
 
   const _CategoryBottomSheetContent({
     required this.category,
     required this.flowType,
     this.budgetModel,
     this.debtModel,
+    this.existingTransaction,
   });
 
   @override
@@ -189,7 +234,10 @@ class _CategoryBottomSheetContent extends StatelessWidget {
                   ? const SizedBox(height: 2)
                   : const SizedBox(height: 8),
 
-              _buildCalculatorGrid(context, state, bloc),
+              Directionality(
+                textDirection: ui.TextDirection.ltr,
+                child: _buildCalculatorGrid(context, state, bloc),
+              ),
 
               const SizedBox(height: 12),
             ],
@@ -340,6 +388,10 @@ class _CategoryBottomSheetContent extends StatelessWidget {
   }
 
   void _handleSubmit(CategoryBottomSheetBloc bloc) {
+    if (existingTransaction != null) {
+      bloc.add(UpdateTransaction(existingTransaction: existingTransaction!));
+      return;
+    }
     if (flowType == TransactionSource.budget) {
       bloc.add(SaveBudgetTransaction(budgetModel: budgetModel!));
     } else if (flowType == TransactionSource.normal) {
@@ -357,21 +409,41 @@ class _CategoryBottomSheetContent extends StatelessWidget {
   ) {
     final t = AppLocalizations.of(context)!;
     if (state.transactionStatus == TransactionStatus.success) {
-      AnimatedSnackbar.showSuccess(context, t.transactionSavedSuccess);
+      final message = existingTransaction != null
+          ? t.transactionUpdatedSuccess
+          : t.transactionSavedSuccess;
+      AnimatedSnackbar.showSuccess(context, message);
+
       if (budgetModel != null) {
         context.read<BudgetBloc>().add(LoadBudgetsEvent());
         context.read<BudgetDetailsBloc>().add(
           LoadBudgetDetailsEvent(budgetModel!.id),
         );
       }
-      if (debtModel == null) {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      } else {
+
+      if (debtModel != null) {
         Navigator.pop(context);
         context.read<DebtRepaymentBloc>().add(
           LoadDebtPayments(debtModel: debtModel!),
         );
+      } else if (existingTransaction != null) {
+        // ✅ EDIT MODE — one pop
+        Navigator.pop(context);
+
+        // ✅ If transaction belongs to a budget, reload budget details
+        if (existingTransaction!.budgetId != null) {
+          try {
+            context.read<BudgetDetailsBloc>().add(
+              RefreshBudgetDetailsEvent(existingTransaction!.budgetId!),
+            );
+          } catch (_) {
+            // BudgetDetailsBloc not in tree — fine
+          }
+        }
+      } else {
+        // CREATE MODE — two pops
+        Navigator.pop(context);
+        Navigator.pop(context);
       }
 
       context.read<CategoryBottomSheetBloc>().add(ResetTransactionStatus());
@@ -387,23 +459,23 @@ class _CategoryBottomSheetContent extends StatelessWidget {
 }
 // // ignore_for_file: dead_code, unnecessary_null_comparison
 
-// import 'package:expense_mate/core/app_export.dart';
-// import 'package:expense_mate/core/common/custom_snackbar.dart';
-// import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-// import 'package:expense_mate/core/data/models/budget_model.dart';
-// import 'package:expense_mate/core/data/models/debt_model.dart';
-// import 'package:expense_mate/core/data/models/enums.dart';
-// import 'package:expense_mate/core/data/repository_imp/transcation_repository.dart';
-// import 'package:expense_mate/core/domain/use_cases/add_debt_payment_usecase.dart';
-// import 'package:expense_mate/core/domain/use_cases/add_debt_usecase.dart';
-// import 'package:expense_mate/core/domain/use_cases/save_budget_transcation_usecase.dart';
+// import 'package:spendio/core/app_export.dart';
+// import 'package:spendio/core/common/custom_snackbar.dart';
+// import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+// import 'package:spendio/core/data/models/budget_model.dart';
+// import 'package:spendio/core/data/models/debt_model.dart';
+// import 'package:spendio/core/data/models/enums.dart';
+// import 'package:spendio/core/data/repository_imp/transcation_repository.dart';
+// import 'package:spendio/core/domain/use_cases/add_debt_payment_usecase.dart';
+// import 'package:spendio/core/domain/use_cases/add_debt_usecase.dart';
+// import 'package:spendio/core/domain/use_cases/save_budget_transcation_usecase.dart';
 
-// import 'package:expense_mate/core/utils/enum.dart';
-// import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
-// import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_event.dart';
-// import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
-// import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_event.dart';
-// import 'package:expense_mate/features/transcation/presentation/components/category_bottom_sheet/button_component.dart';
+// import 'package:spendio/core/utils/enum.dart';
+// import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
+// import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_event.dart';
+// import 'package:spendio/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+// import 'package:spendio/features/home/presentation/bloc/home_bloc/home_event.dart';
+// import 'package:spendio/features/transcation/presentation/components/category_bottom_sheet/button_component.dart';
 // import 'package:flutter/services.dart';
 // import 'package:intl/intl.dart';
 // import '../bloc/category_bottom_sheet_bloc/category_bottom_sheet_bloc.dart';

@@ -1,12 +1,17 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/extension/responsive_extension.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_state.dart';
-import 'package:expense_mate/features/budgets/presentation/components/budget_card.dart';
-import 'package:expense_mate/features/budgets/presentation/faces/budget_details.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/extension/responsive_extension.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_state.dart';
+import 'package:spendio/features/budgets/presentation/components/budget_card.dart';
+import 'package:spendio/features/budgets/presentation/faces/add_budget_bottomsheet.dart';
+import 'package:spendio/features/budgets/presentation/faces/budget_details.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class BudgetsFace extends StatelessWidget {
   const BudgetsFace({super.key});
@@ -730,7 +735,7 @@ class _SummaryCard extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     final totalBudgeted = state.activeBudgets.fold<double>(
       0,
-      (s, b) => s + b.totalAmount,
+      (s, b) => s + b.totalAmount!,
     );
     final totalSpent = state.activeBudgets.fold<double>(
       0,
@@ -772,7 +777,7 @@ class _SummaryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '\$${totalRemaining.abs().toStringAsFixed(0)}',
+                    CurrencyFormatter.format(totalRemaining.abs(), decimalDigits: 0),
                     style: AppTextStyles.currencyLarge.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
@@ -784,7 +789,7 @@ class _SummaryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '${t.ofa} \$${totalBudgeted.toStringAsFixed(0)}',
+                    '${t.ofa} ${CurrencyFormatter.format(totalBudgeted, decimalDigits: 0)}',
                     style: AppTextStyles.captionSmall.copyWith(
                       color: Colors.white.withValues(alpha: 0.65),
                     ),
@@ -832,7 +837,7 @@ class _SummaryCard extends StatelessWidget {
             children: [
               _Pill(
                 label: t.spent,
-                value: '\$${totalSpent.toStringAsFixed(0)}',
+                value: CurrencyFormatter.format(totalSpent, decimalDigits: 0),
                 icon: Icons.arrow_upward_rounded,
               ),
               const SizedBox(width: 10),
@@ -897,27 +902,126 @@ class _Pill extends StatelessWidget {
 class _BudgetList extends StatelessWidget {
   final List<BudgetModel> budgets;
   const _BudgetList({required this.budgets});
+  void _openEditSheet(BuildContext context, BudgetModel budget) {
+    AddBudgetBottomSheet.show(context, existingBudget: budget); // ✅
+  }
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => Padding(
+        delegate: // In _BudgetList build:
+        SliverChildBuilderDelegate((context, index) {
+          final budget = budgets[index];
+          return Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: BudgetCard(
-              budget: budgets[index],
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => BudgetDetailsFace(budget: budgets[index]),
+            child: Dismissible(
+              key: Key(budget.id),
+              direction: DismissDirection.horizontal,
+              confirmDismiss: (direction) async {
+                if (direction == DismissDirection.endToStart) {
+                  // Delete
+                  return await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          title: const Text('Delete Budget'),
+                          content: const Text(
+                            'This will delete the budget. Linked transactions will remain.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(ctx, true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: const Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ) ??
+                      false;
+                } else {
+                  // Edit — open bottom sheet pre-filled
+                  _openEditSheet(context, budget);
+                  return false;
+                }
+              },
+              onDismissed: (_) {
+                context.read<BudgetBloc>().add(DeleteBudgetEvent(budget.id));
+              },
+              // Swipe right = edit
+              background: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 24),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.edit_rounded, color: Colors.white, size: 24),
+                    SizedBox(height: 4),
+                    Text(
+                      'Edit',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Swipe left = delete
+              secondaryBackground: Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 24),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.delete_rounded, color: Colors.white, size: 24),
+                    SizedBox(height: 4),
+                    Text(
+                      'Delete',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              child: BudgetCard(
+                budget: budget,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BudgetDetailsFace(budget: budget),
+                  ),
                 ),
               ),
             ),
-          ),
-          childCount: budgets.length,
-        ),
+          );
+        }, childCount: budgets.length),
       ),
     );
   }
@@ -932,6 +1036,94 @@ class _LoadingView extends StatelessWidget {
       strokeWidth: 2.5,
     ),
   );
+}
+
+class _BudgetEditDialog extends StatefulWidget {
+  final BudgetModel budget;
+  const _BudgetEditDialog({required this.budget});
+
+  @override
+  State<_BudgetEditDialog> createState() => _BudgetEditDialogState();
+}
+
+class _BudgetEditDialogState extends State<_BudgetEditDialog> {
+  late TextEditingController _nameController;
+  late TextEditingController _amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.budget.name);
+    _amountController = TextEditingController(
+      text: widget.budget.totalAmount.toStringAsFixed(0),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: const Text('Edit Budget'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _nameController,
+            decoration: InputDecoration(
+              labelText: 'Budget Name',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          TextField(
+            controller: _amountController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Total Amount',
+              prefixText: '${CurrencyFormatter.symbol} ',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final amount = double.tryParse(_amountController.text) ?? 0;
+            if (amount <= 0 || _nameController.text.trim().isEmpty) return;
+            context.read<BudgetBloc>().add(
+              UpdateBudgetEvent(
+                budgetId: widget.budget.id,
+                name: _nameController.text.trim(),
+                totalAmount: amount,
+                isActive: widget.budget.isActive,
+                isArchived: widget.budget.isArchived,
+              ),
+            );
+            Navigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(backgroundColor: primary),
+          child: const Text('Save', style: TextStyle(color: Colors.white)),
+        ),
+      ],
+    );
+  }
 }
 
 class _EmptyView extends StatelessWidget {

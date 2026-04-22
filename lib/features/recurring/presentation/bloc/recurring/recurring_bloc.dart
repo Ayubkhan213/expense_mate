@@ -1,8 +1,8 @@
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/features/recurring/domain/repository.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/features/recurring/domain/repository.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RecurringListBloc extends Bloc<RecurringListEvent, RecurringListState> {

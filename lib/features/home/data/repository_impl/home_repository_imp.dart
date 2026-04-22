@@ -1,11 +1,12 @@
-import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/data/models/debt_payment_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/features/home/data/data_source/home_datasource.dart';
-import 'package:expense_mate/features/home/domain/repository/home_repository.dart';
+import 'package:spendio/core/data/data_sources/local/debt_local_datasource.dart';
+import 'package:spendio/core/data/models/debt_payment_sql_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/features/home/data/data_source/home_data_source.dart';
+import 'package:spendio/features/home/domain/repository/sql/home_repository.dart';
+
+import '../../../../core/data/data_sources/local/transcation_local_data_source.dart';
 
 class HomeRepositoryImp extends HomeRepository {
   final HomeDatasource homeDatasource;
@@ -18,71 +19,99 @@ class HomeRepositoryImp extends HomeRepository {
   });
 
   @override
-  List<DebtModel> getActiveDebts() {
-    return debtDataSource.getActiveDebts()
+  Future<List<DebtModel>> getActiveDebts() async {
+    return await debtDataSource.getActiveDebts()
       ..sort((a, b) => a.expectedReturnDate.compareTo(b.expectedReturnDate));
   }
 
   @override
-  double getTotalBorrowed() {
-    return debtDataSource
-        .getDebtsByType(DebtType.borrowed)
-        .where((d) => !d.isReturned)
-        .fold(0.0, (sum, d) => sum + d.remainingAmount);
+  Future<void> deleteTransaction(String transactionId) async {
+    await localDataSource.deleteTransaction(transactionId);
   }
 
   @override
-  double getTotalLent() {
-    return debtDataSource
-        .getDebtsByType(DebtType.lent)
-        .where((d) => !d.isReturned)
-        .fold(0.0, (sum, d) => sum + d.remainingAmount);
+  Future<double> getTotalBorrowed() async {
+    var debtData = await debtDataSource.getDebtsByType(DebtType.borrowed);
+
+    double total = 0.0;
+    for (var d in debtData.where((d) => !d.isReturned)) {
+      total += await d.remainingAmount; // await if it's Future<double>
+    }
+    return total;
   }
 
   @override
-  double getTotalIncome({DateTime? startDate, DateTime? endDate}) {
+  Future<double> getTotalLent() async {
+    var debtData = await debtDataSource.getDebtsByType(DebtType.lent);
+
+    double total = 0.0;
+    for (var d in debtData.where((d) => !d.isReturned)) {
+      total += await d.remainingAmount;
+    }
+    return total;
+  }
+
+  @override
+  Future<double> getTotalIncome({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     List<TransactionModel> transactions;
 
     if (startDate != null && endDate != null) {
-      transactions = localDataSource
-          .getTransactionsByDateRange(startDate, endDate)
+      var transaction = await localDataSource.getTransactionsByDateRange(
+        startDate,
+        endDate,
+      );
+      transactions = transaction
           .where((t) => t.type == TransactionType.income)
           .toList();
     } else {
-      transactions = localDataSource.getTransactionsByType(
+      transactions = await localDataSource.getTransactionsByType(
         TransactionType.income,
       );
     }
 
-    return transactions.fold(0.0, (sum, t) => sum + t.totalAmount);
+    double total = 0.0;
+    for (var t in transactions) {
+      total += await t.totalAmount; // if totalAmount is Future<double>
+    }
+    return total;
   }
 
   @override
-  double getTotalExpense({DateTime? startDate, DateTime? endDate}) {
+  Future<double> getTotalExpense({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
     List<TransactionModel> transactions;
 
     if (startDate != null && endDate != null) {
-      transactions = localDataSource
-          .getTransactionsByDateRange(startDate, endDate)
+      var transaction = await localDataSource.getTransactionsByDateRange(
+        startDate,
+        endDate,
+      );
+      transactions = transaction
           .where((t) => t.type == TransactionType.expense)
           .toList();
     } else {
-      transactions = localDataSource.getTransactionsByType(
+      transactions = await localDataSource.getTransactionsByType(
         TransactionType.expense,
       );
     }
 
-    return transactions.fold(0.0, (sum, t) => sum + t.totalAmount);
+    double total = 0.0;
+    for (var t in transactions) {
+      total += await t.totalAmount; // if totalAmount is Future<double>
+    }
+    return total;
   }
 
   @override
-  List<TransactionModel> getPureTransactions({int? limit}) {
-    final list =
-        localDataSource
-            .getAllTransactions()
-            .where((t) => !t.isDebt && !t.isRecurring)
-            .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
+  Future<List<TransactionModel>> getPureTransactions({int? limit}) async {
+    final lists = await localDataSource.getAllTransactions();
+    final list = lists.where((t) => !t.isDebt && !t.isRecurring).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
 
     if (limit != null) {
       return list.take(limit).toList();
@@ -92,14 +121,14 @@ class HomeRepositoryImp extends HomeRepository {
   }
 
   @override
-  List<DebtPaymentModel> getPaymentsByDebtId(String debtId) {
+  Future<List<DebtPaymentModel>> getPaymentsByDebtId(String debtId) async {
     return homeDatasource.getPaymentsByDebtId(debtId);
   }
 
   @override
-  List<DebtModel> getAllDebts() {
+  Future<List<DebtModel>> getAllDebts() async {
     // You can sort by creation date if needed
-    final debts = homeDatasource.getAllDebts();
+    final debts = await homeDatasource.getAllDebts();
     debts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return debts;
   }
@@ -108,38 +137,52 @@ class HomeRepositoryImp extends HomeRepository {
   //            All Transcation Face
   //=====================================
   /// Base: only pure transactions (no debt, no recurring, not deleted)
-  List<TransactionModel> _pure() {
-    return localDataSource
-        .getAllTransactions()
+  Future<List<TransactionModel>> _pure() async {
+    var trascations = await localDataSource.getAllTransactions();
+    return trascations
         .where((t) => !t.isDebt && !t.isRecurring && !t.isDeleted)
         .toList()
       ..sort((a, b) => b.date.compareTo(a.date));
   }
 
   @override
-  List<TransactionModel> getAllPureTransactions() => _pure();
+  Future<List<TransactionModel>> getAllPureTransactions() => _pure();
 
   @override
-  List<TransactionModel> getByType(TransactionType type) =>
-      _pure().where((t) => t.type == type).toList();
+  Future<List<TransactionModel>> getByType(TransactionType type) async {
+    var pure = await _pure();
+    return pure.where((t) => t.type == type).toList();
+  }
 
   @override
-  List<TransactionModel> getByDateRange(DateTime start, DateTime end) => _pure()
-      .where(
-        (t) =>
-            !t.date.isBefore(start) &&
-            !t.date.isAfter(end.add(const Duration(days: 1))),
-      )
-      .toList();
+  Future<List<TransactionModel>> getByDateRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    var pure = await _pure();
+    return pure
+        .where(
+          (t) =>
+              !t.date.isBefore(start) &&
+              !t.date.isAfter(end.add(const Duration(days: 1))),
+        )
+        .toList();
+  }
 
   @override
-  List<TransactionModel> getByPaymentMethod(PaymentMethod method) =>
-      _pure().where((t) => t.paymentMethod == method).toList();
+  Future<List<TransactionModel>> getByPaymentMethod(
+    PaymentMethod method,
+  ) async {
+    var pure = await _pure();
+
+    return pure.where((t) => t.paymentMethod == method).toList();
+  }
 
   @override
-  List<TransactionModel> search(String query) {
+  Future<List<TransactionModel>> search(String query) async {
     final q = query.toLowerCase();
-    return _pure().where((t) {
+    var transcations = await _pure();
+    return transcations.where((t) {
       final categoryMatch = t.items.any(
         (i) => i.category.toLowerCase().contains(q),
       );
@@ -153,18 +196,30 @@ class HomeRepositoryImp extends HomeRepository {
   //All debt
   //================================
   /// Base: only debt transactions, not deleted, newest first
-  List<TransactionModel> _base() {
-    return localDataSource
-        .getAllTransactions()
-        .where((t) => t.isDebt && !t.isDeleted)
-        .toList()
+  Future<List<TransactionModel>> _base() async {
+    var transcations = await localDataSource.getAllTransactions();
+    return transcations.where((t) => t.isDebt && !t.isDeleted).toList()
       ..sort((a, b) => b.date.compareTo(a.date));
   }
 
   @override
-  List<TransactionModel> getAllDebtTransactions() => _base();
+  Future<List<TransactionModel>> getAllDebtTransactions() => _base();
 
   @override
-  DebtModel? getLinkedDebt(String debtId) =>
+  Future<DebtModel?> getLinkedDebt(String debtId) =>
       localDataSource.getDebtById(debtId);
+  @override
+  Future<void> deleteDebt(DebtModel debt) async {
+    await homeDatasource.deleteDebtWithCascade(debt);
+  }
+
+  @override
+  Future<void> updateDebt(DebtModel debt) async {
+    await debtDataSource.updateDebt(debt);
+  }
+
+  @override
+  Future<void> deleteDebtPayment(String paymentId) async {
+    await debtDataSource.deletePayment(paymentId);
+  }
 }

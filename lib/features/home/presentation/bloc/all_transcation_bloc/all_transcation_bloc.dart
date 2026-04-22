@@ -1,12 +1,12 @@
 // ─────────────────────────────────────────
 // FILE: features/home/presentation/bloc/all_transactions/all_transactions_bloc.dart
 // ─────────────────────────────────────────
-import 'package:expense_mate/core/data/models/transaction_model.dart';
 
-import 'package:expense_mate/features/home/domain/repository/home_repository.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/features/home/domain/repository/sql/home_repository.dart';
 
-import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_event.dart';
-import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_state.dart';
+import 'package:spendio/features/home/presentation/bloc/all_transcation_bloc/all_transcation_event.dart';
+import 'package:spendio/features/home/presentation/bloc/all_transcation_bloc/all_transcation_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AllTransactionsBloc
@@ -32,11 +32,11 @@ class AllTransactionsBloc
   ) async {
     emit(state.copyWith(status: AllTransactionsStatus.loading));
     try {
-      final all = repository.getPureTransactions();
+      List<TransactionModel> all = await repository.getPureTransactions();
       emit(
         state.copyWith(
           status: AllTransactionsStatus.loaded,
-          all: all,
+          all: all as List<TransactionModel>?,
           filtered: all,
         ),
       );

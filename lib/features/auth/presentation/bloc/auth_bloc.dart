@@ -1,8 +1,8 @@
 // // lib/features/auth/presentation/bloc/auth_bloc.dart
-// import 'package:expense_mate/core/app_export.dart';
-// import 'package:expense_mate/core/services/app_prefs.dart';
-// import 'package:expense_mate/features/auth/domain/repository/currency_repository.dart';
-// import 'package:expense_mate/features/auth/domain/use_cases/get_current_login_user.dart';
+// import 'package:spendio/core/app_export.dart';
+// import 'package:spendio/core/services/app_prefs.dart';
+// import 'package:spendio/features/auth/domain/repository/currency_repository.dart';
+// import 'package:spendio/features/auth/domain/use_cases/get_current_login_user.dart';
 
 // class AuthBloc extends Bloc<AuthEvent, AuthState> {
 //   final CheckAuthStatusUseCase checkAuthStatusUseCase;

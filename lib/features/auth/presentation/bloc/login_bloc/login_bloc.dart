@@ -1,10 +1,14 @@
 // lib/features/auth/presentation/bloc/login_bloc/login_bloc.dart
 
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/user_model.dart';
-import 'package:expense_mate/core/services/app_prefs.dart';
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
+// import 'package:spendio/core/data/models/user_model.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/core/services/dummy_account_sedding.dart';
+import 'package:spendio/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../../core/data/models/user_sql_model.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -34,10 +38,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   ) async {
     try {
       final users = await authRepository.getAllAccounts();
-      // Single-account: grab first (and only) account
-      final account = users.isNotEmpty ? users.first : null;
-
-      // Always default to email/password mode on open
+      // Filter out dummy account — real users never see it
+      final realUsers = users
+          .where((u) => u.email != DummyAccountSeeder.dummyEmail)
+          .toList();
+      final account = realUsers.isNotEmpty ? realUsers.first : null;
       emit(
         state.copyWith(storedAccount: account, mode: LoginMode.emailPassword),
       );
@@ -99,6 +104,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       AppPrefs.instance.setUserId(user.id);
       AppPrefs.instance.setLoggedIn(true);
+      AppPrefs.instance.setUserCurrency(user.currency);
 
       emit(
         state.copyWith(
@@ -167,6 +173,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       AppPrefs.instance.setUserId(user.id);
       AppPrefs.instance.setLoggedIn(true);
+      AppPrefs.instance.setUserCurrency(user.currency);
 
       emit(
         state.copyWith(

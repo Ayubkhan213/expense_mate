@@ -1,7 +1,9 @@
-import 'package:expense_mate/core/app_export.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
 
 class CategoryGridItem extends StatelessWidget {
-  final CategoryHiveModel category;
+  final CategoryModel category;
   final bool isSelected;
   final VoidCallback onTap;
 

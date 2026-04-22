@@ -1,17 +1,172 @@
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/utils/enum.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
+import 'package:spendio/features/transcation/presentation/faces/category_bottom_sheet.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class BudgetTransactionCard extends StatelessWidget {
-  final dynamic transaction;
+  final TransactionModel transaction;
+  final BudgetModel budget; // ✅ needed to reload details after edit/delete
   final VoidCallback? onTap;
 
   const BudgetTransactionCard({
     super.key,
     required this.transaction,
+    required this.budget,
     this.onTap,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final t = AppLocalizations.of(context)!;
+
+    return Dismissible(
+      key: Key(transaction.id),
+      direction: DismissDirection.horizontal,
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          return await _showDeleteDialog(context, t);
+        } else {
+          _openEditSheet(context);
+          return false;
+        }
+      },
+      onDismissed: (_) => _deleteTransaction(context),
+
+      // ── Swipe right = edit ───────────────────────────────────────────
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: colorScheme.primary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.edit_rounded, color: Colors.white, size: 22),
+            const SizedBox(height: 4),
+            Text(
+              t.edit,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      // ── Swipe left = delete ──────────────────────────────────────────
+      secondaryBackground: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.delete_rounded, color: Colors.white, size: 22),
+            const SizedBox(height: 4),
+            Text(
+              t.delete,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      child: _CardBody(transaction: transaction, onTap: onTap),
+    );
+  }
+
+  void _openEditSheet(BuildContext context) {
+    CategoryBottomSheet.show(
+      context,
+      null,
+      TransactionSource.normal,
+      null,
+      null,
+      existingTransaction: transaction,
+    );
+    // After edit, reload budget details
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (context.mounted) {
+        context.read<BudgetDetailsBloc>().add(
+          LoadBudgetDetailsEvent(budget.id),
+        );
+      }
+    });
+  }
+
+  Future<bool> _showDeleteDialog(
+    BuildContext context,
+    AppLocalizations t,
+  ) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(t.deleteTransaction),
+            content: Text(t.deleteTransactionConfirm),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(t.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Text(
+                  t.delete,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  void _deleteTransaction(BuildContext context) {
+    context.read<BudgetDetailsBloc>().add(
+      DeleteBudgetTransactionEvent(
+        transactionId: transaction.id,
+        budgetId: budget.id,
+        amount: transaction.totalAmount,
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Card body — unchanged UI
+// ─────────────────────────────────────────────────────────────────────────────
+class _CardBody extends StatelessWidget {
+  final TransactionModel transaction;
+  final VoidCallback? onTap;
+
+  const _CardBody({required this.transaction, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +175,19 @@ class BudgetTransactionCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final t = AppLocalizations.of(context)!;
 
-    final firstItem = transaction.items?.isNotEmpty == true
+    final firstItem = transaction.items.isNotEmpty
         ? transaction.items.first
         : null;
     final isExpense = transaction.type.toString().contains('expense');
-    final amount = transaction.totalAmount ?? 0.0;
-    final date = transaction.date ?? DateTime.now();
+    final amount = transaction.totalAmount;
+    final date = transaction.date;
     final paymentMethod = transaction.paymentMethod;
-    final itemCount = transaction.items?.length ?? 0;
+    final itemCount = transaction.items.length;
 
-    // ✅ translate category
     final categoryLabel = firstItem?.category != null
         ? context.tr(firstItem!.category.toString())
         : t.transaction;
 
-    // ✅ translate payment method
     final methodLabel = context.trMethod(
       paymentMethod.toString().split('.').last,
     );
@@ -65,7 +218,6 @@ class BudgetTransactionCard extends StatelessWidget {
             padding: const EdgeInsets.all(14),
             child: Row(
               children: [
-                // Icon Container
                 Container(
                   width: 48,
                   height: 48,
@@ -86,18 +238,16 @@ class BudgetTransactionCard extends StatelessWidget {
                     color: isExpense
                         ? const Color(0xFFef4444)
                         : const Color(0xFF10b981),
-                    size: 24,
+                    size: 22,
                   ),
                 ),
                 const SizedBox(width: 14),
-
-                // Transaction Details
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        categoryLabel, // ✅ translated
+                        categoryLabel,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -135,7 +285,7 @@ class BudgetTransactionCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              methodLabel, // ✅ translated
+                              methodLabel,
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -148,13 +298,11 @@ class BudgetTransactionCard extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // Amount Column
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '${isExpense ? '-' : '+'}\$${_formatAmount(amount)}',
+                      '${isExpense ? '-' : '+'}${CurrencyFormatter.format(amount)}',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -175,7 +323,7 @@ class BudgetTransactionCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          '+${itemCount - 1} ${t.more}', // ✅ translated
+                          '+${itemCount - 1} ${t.more}',
                           style: TextStyle(
                             fontSize: 10,
                             color: colorScheme.onSurface.withValues(alpha: 0.6),
@@ -195,23 +343,12 @@ class BudgetTransactionCard extends StatelessWidget {
   }
 
   IconData _getPaymentIcon(dynamic method) {
-    final methodStr = method.toString().toLowerCase();
-    if (methodStr.contains('cash')) return Icons.money;
-    if (methodStr.contains('card')) return Icons.credit_card;
-    if (methodStr.contains('bank')) return Icons.account_balance;
-    if (methodStr.contains('wallet')) return Icons.wallet;
+    final s = method.toString().toLowerCase();
+    if (s.contains('cash')) return Icons.money;
+    if (s.contains('card')) return Icons.credit_card;
+    if (s.contains('bank')) return Icons.account_balance;
+    if (s.contains('wallet')) return Icons.wallet;
     return Icons.receipt;
   }
 
-  String _formatAmount(double amount) {
-    if (amount >= 1000) {
-      return amount
-          .toStringAsFixed(0)
-          .replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (Match m) => '${m[1]},',
-          );
-    }
-    return amount.toStringAsFixed(2);
-  }
 }

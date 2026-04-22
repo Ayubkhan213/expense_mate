@@ -1,4 +1,5 @@
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/l10n/app_localizations.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 
 class RecurringDetailMonthlyEstimate extends StatelessWidget {
@@ -35,7 +36,7 @@ class RecurringDetailMonthlyEstimate extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '${isIncome ? '+' : '-'}${monthlyAmount.toStringAsFixed(2)}',
+              '${isIncome ? '+' : '-'}${CurrencyFormatter.format(monthlyAmount)}',
               style: theme.textTheme.headlineMedium?.copyWith(
                 color: isIncome ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,

@@ -1,6 +1,11 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/navigation/route_name.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class LoginComponent extends StatelessWidget {
   final GlobalKey<FormState> formKey;

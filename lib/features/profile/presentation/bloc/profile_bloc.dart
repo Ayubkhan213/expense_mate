@@ -1,13 +1,17 @@
 // lib/features/profile/presentation/bloc/profile_bloc.dart
 
 import 'dart:io';
-import 'package:expense_mate/core/data/models/user_model.dart';
-import 'package:expense_mate/core/services/app_prefs.dart';
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
-import 'package:expense_mate/features/auth/domain/use_cases/logout_usecase.dart';
-import 'package:expense_mate/features/auth/domain/use_cases/update_profile_usecase.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_bloc.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_event.dart';
+// import 'package:spendio/core/data/models/user_model.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:spendio/core/data/models/user_sql_model.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
+import 'package:spendio/features/auth/domain/use_cases/logout_usecase.dart';
+import 'package:spendio/features/auth/domain/use_cases/update_profile_usecase.dart';
+import 'package:spendio/features/budgets/data/data_source/sql/budget_local_datasource.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_bloc.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'profile_event.dart';
@@ -18,18 +22,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final LogoutUseCase logoutUseCase;
   final UpdateProfileUseCase updateProfileUseCase;
   final SplashBloc splashBloc;
+  final TransactionLocalDataSource transactionDataSource;
+  final BudgetLocalDataSource budgetDataSource;
 
   ProfileBloc({
     required this.authRepository,
     required this.logoutUseCase,
     required this.updateProfileUseCase,
     required this.splashBloc,
+    required this.transactionDataSource,
+    required this.budgetDataSource,
   }) : super(const ProfileState()) {
     on<LoadProfile>(_onLoadProfile);
     on<UpdateProfileImage>(_onUpdateProfileImage);
     on<UpdateProfileName>(_onUpdateProfileName);
     on<UpdateProfile>(_onUpdateProfile);
     on<ProfileLogout>(_onLogout);
+    on<ProfileCurrencyChanged>(_onCurrencyChanged);
   }
 
   // ── Load — ALWAYS fetches from Hive directly ───────────────────────────────
@@ -67,12 +76,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         return;
       }
 
+      final transactions = await transactionDataSource.getAllTransactions();
+      final budgets = await budgetDataSource.getAllBudgets();
+      final memberYear = user.createdAt.year.toString();
+
       emit(
         state.copyWith(
           status: ProfileStatus.loaded,
           userName: user.name,
           userEmail: user.email,
+          userCurrency: user.currency,
           profileImagePath: user.profilePicturePath,
+          totalTransactions: transactions.length,
+          totalBudgets: budgets.length,
+          memberSince: memberYear,
         ),
       );
     } catch (e) {
@@ -145,7 +162,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         email: event.email,
         phoneNumber: current.phoneNumber,
         profilePicturePath: finalImagePath,
-        currency: current.currency,
+        currency: event.currency ?? current.currency,
         passwordHash: current.passwordHash,
         isLoggedIn: current.isLoggedIn,
         createdAt: current.createdAt,
@@ -157,9 +174,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         securityQuestion2: current.securityQuestion2,
         securityAnswer2: current.securityAnswer2,
         recoveryKeys: current.recoveryKeys,
+        updatedAt: DateTime.now(),
       );
 
       await updateProfileUseCase(updated);
+
+      AppPrefs.instance.setUserCurrency(updated.currency);
 
       // Emit updated values immediately — UI reflects changes right away
       emit(
@@ -167,6 +187,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           status: ProfileStatus.updated,
           userName: updated.name,
           userEmail: updated.email,
+          userCurrency: updated.currency,
           profileImagePath: updated.profilePicturePath,
           clearError: true,
         ),
@@ -179,6 +200,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ),
       );
     }
+  }
+
+  void _onCurrencyChanged(
+    ProfileCurrencyChanged event,
+    Emitter<ProfileState> emit,
+  ) {
+    emit(state.copyWith(userCurrency: event.currency));
   }
 
   // ── Logout ─────────────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Horizontal scrollable filter chips

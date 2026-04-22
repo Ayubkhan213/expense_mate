@@ -1,6 +1,7 @@
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class DebtOverviewCard extends StatelessWidget {
@@ -149,7 +150,7 @@ class DebtOverviewCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '\$${total.toStringAsFixed(2)}',
+                      CurrencyFormatter.format(total),
                       style: AppTextStyles.currencySmall.copyWith(color: color),
                     ),
                   ],
@@ -169,7 +170,7 @@ class DebtOverviewCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '\$${remaining.toStringAsFixed(2)}',
+                      CurrencyFormatter.format(remaining),
                       style: AppTextStyles.currencySmall.copyWith(color: color),
                     ),
                   ],

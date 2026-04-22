@@ -1,4 +1,5 @@
-import 'package:expense_mate/features/auth/domain/repository/currency_repository.dart';
+import 'package:spendio/features/auth/domain/repository/currency_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/currency_repository.dart';
 
 import '../../../../core/data/models/currency_model.dart';
 

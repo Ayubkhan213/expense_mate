@@ -1,6 +1,6 @@
-// import 'package:expense_mate/core/data/models/budget_model.dart';
-// import 'package:expense_mate/core/error/failure.dart';
-// import 'package:expense_mate/core/utils/either.dart';
+// import 'package:spendio/data/models/budget_model.dart';
+// import 'package:spendio/error/failure.dart';
+// import 'package:spendio/utils/either.dart';
 
 // abstract class BudgetRepository {
 //   Future<Either<Failure, BudgetModel>> createBudget(BudgetModel budget);

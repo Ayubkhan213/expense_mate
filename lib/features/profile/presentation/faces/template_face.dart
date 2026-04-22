@@ -1,4 +1,11 @@
-import 'package:expense_mate/core/app_export.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/theme/app_theme.dart';
+import 'package:spendio/core/theme/bloc/theme_bloc.dart';
+import 'package:spendio/core/theme/bloc/theme_event.dart';
+import 'package:spendio/core/theme/bloc/theme_state.dart';
+import 'package:spendio/features/profile/presentation/widgets/template_preview.dart';
 
 class TemplateFace extends StatelessWidget {
   const TemplateFace({super.key});

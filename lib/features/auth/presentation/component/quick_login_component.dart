@@ -1,6 +1,6 @@
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

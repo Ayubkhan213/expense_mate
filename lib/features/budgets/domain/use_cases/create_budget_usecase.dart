@@ -1,10 +1,12 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/domain/repository/budget_repository.dart';
-import 'package:expense_mate/core/domain/use_cases/use_case.dart';
-import 'package:expense_mate/core/error/failure.dart';
-import 'package:expense_mate/core/utils/either.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/repository/budget_repository.dart';
+import 'package:spendio/core/domain/use_cases/use_case.dart';
+import 'package:spendio/core/error/failure.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/core/utils/either.dart';
 
-import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
+import 'package:spendio/features/budgets/domain/repository/budget_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateBudgetUseCase implements UseCase<BudgetModel, CreateBudgetParams> {
@@ -25,6 +27,9 @@ class CreateBudgetUseCase implements UseCase<BudgetModel, CreateBudgetParams> {
       icon: params.icon,
       colorCode: params.colorCode,
       isActive: true,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      userId: AppPrefs.instance.userId,
     );
     return repository.createBudget(budget);
   }

@@ -1,19 +1,19 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
+// import 'package:spendio/models/category_hive_model.dart';
 
-abstract class CategoryRepository {
-  // READ
-  List<CategoryHiveModel> getAll();
+// abstract class CategoryRepository {
+//   // READ
+//   List<CategoryHiveModel> getAll();
 
-  List<CategoryHiveModel> getIncome();
+//   List<CategoryHiveModel> getIncome();
 
-  List<CategoryHiveModel> getExpense();
+//   List<CategoryHiveModel> getExpense();
 
-  // CREATE
-  Future<void> add(CategoryHiveModel category);
+//   // CREATE
+//   Future<void> add(CategoryHiveModel category);
 
-  // UPDATE
-  Future<void> update(CategoryHiveModel category);
+//   // UPDATE
+//   Future<void> update(CategoryHiveModel category);
 
-  //  DELETE
-  Future<void> delete(CategoryHiveModel category);
-}
+//   //  DELETE
+//   Future<void> delete(CategoryHiveModel category);
+// }

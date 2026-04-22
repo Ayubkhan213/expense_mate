@@ -1,7 +1,6 @@
-// lib/features/debt/presentation/widgets/add_payment_dialog.dart
-
-import 'package:expense_mate/core/data/models/debt_payment_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/debt_payment_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -58,7 +57,7 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Amount',
-                    prefixText: '\$ ',
+                    prefixText: '${CurrencyFormatter.symbol} ',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -184,6 +183,7 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
         paymentDate: _selectedDate,
         note: _noteController.text.isEmpty ? null : _noteController.text,
         paymentMethod: _selectedMethod,
+        createdAt: DateTime.now(),
       );
       Navigator.pop(context, payment);
     }

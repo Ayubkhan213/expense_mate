@@ -1,9 +1,16 @@
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/features/home/presentation/components/home_component/transcation_detail_face.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/home/presentation/components/home_component/transcation_detail_face.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_event.dart';
+import 'package:spendio/core/utils/enum.dart';
+import 'package:spendio/features/transcation/presentation/faces/category_bottom_sheet.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../../core/data/models/transcation_sql_model.dart';
 
 class TransactionCard extends StatelessWidget {
   final TransactionModel transaction;
@@ -21,24 +28,103 @@ class TransactionCard extends StatelessWidget {
     final icon = _getIcon();
     final heroTag = 'txn_card_${transaction.id}';
 
-    return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 450),
-          reverseTransitionDuration: const Duration(milliseconds: 350),
-          pageBuilder: (_, __, ___) =>
-              TransactionDetailFace(transaction: transaction, heroTag: heroTag),
-          transitionsBuilder: (_, animation, __, child) => FadeTransition(
-            opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-            child: child,
-          ),
+    return Dismissible(
+      key: Key(transaction.id),
+      direction: DismissDirection.horizontal,
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          return await _showDeleteDialog(context, t);
+        } else {
+          _openEditSheet(context);
+          return false;
+        }
+      },
+      onDismissed: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          _deleteTransaction(context);
+        }
+      },
+      background: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: colorScheme.primary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.edit_rounded, color: Colors.white, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              t.edit,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
         ),
       ),
-      child: Hero(
-        tag: heroTag,
-        flightShuttleBuilder: (_, anim, __, ___, ____) => Material(
-          color: Colors.transparent,
+      secondaryBackground: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.delete_rounded, color: Colors.white, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              t.delete,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 450),
+            reverseTransitionDuration: const Duration(milliseconds: 350),
+            pageBuilder: (_, __, ___) => TransactionDetailFace(
+              transaction: transaction,
+              heroTag: heroTag,
+            ),
+            transitionsBuilder: (_, animation, __, child) => FadeTransition(
+              opacity: CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOut,
+              ),
+              child: child,
+            ),
+          ),
+        ),
+        child: Hero(
+          tag: heroTag,
+          flightShuttleBuilder: (_, anim, __, ___, ____) => Material(
+            color: Colors.transparent,
+            child: _CardBody(
+              transaction: transaction,
+              colorScheme: colorScheme,
+              isDark: isDark,
+              isIncome: isIncome,
+              color: color,
+              icon: icon,
+              t: t,
+            ),
+          ),
           child: _CardBody(
             transaction: transaction,
             colorScheme: colorScheme,
@@ -49,20 +135,62 @@ class TransactionCard extends StatelessWidget {
             t: t,
           ),
         ),
-        child: _CardBody(
-          transaction: transaction,
-          colorScheme: colorScheme,
-          isDark: isDark,
-          isIncome: isIncome,
-          color: color,
-          icon: icon,
-          t: t,
-        ),
       ),
     );
   }
 
+  void _openEditSheet(BuildContext context) {
+    CategoryBottomSheet.show(
+      context,
+      transaction.items.isNotEmpty
+          ? null // category resolved inside sheet from transaction
+          : null,
+      TransactionSource.normal,
+      null,
+      null,
+      existingTransaction: transaction, // pass existing data
+    );
+  }
+
+  Future<bool> _showDeleteDialog(
+    BuildContext context,
+    AppLocalizations t,
+  ) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(t.deleteTransaction),
+            content: Text(t.deleteTransactionConfirm),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(t.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Text(
+                  t.delete,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  void _deleteTransaction(BuildContext context) {
+    context.read<HomeBloc>().add(
+      DeleteTransaction(transactionId: transaction.id),
+    );
+  }
+
   String _getIcon() {
+    if (transaction.items.isEmpty) return '💵';
     final category = transaction.items.first.category.toLowerCase();
     if (category.contains('food') || category.contains('restaurant'))
       return '🍔';
@@ -174,7 +302,7 @@ class _CardBody extends StatelessWidget {
             ),
           ),
           Text(
-            '${isIncome ? '+' : '-'}\$${transaction.totalAmount.toStringAsFixed(2)}',
+            '${isIncome ? '+' : '-'}${CurrencyFormatter.format(transaction.totalAmount)}',
             style: TextStyle(
               color: color,
               fontSize: 16,

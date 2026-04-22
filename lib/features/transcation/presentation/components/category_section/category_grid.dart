@@ -1,18 +1,19 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/utils/enum.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_bloc.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_event.dart';
-import 'package:expense_mate/features/transcation/presentation/components/category_section/components/category_grid/components/category_grid_item.dart';
-import 'package:expense_mate/features/transcation/presentation/faces/category_bottom_sheet.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/utils/enum.dart';
+import 'package:spendio/features/transcation/presentation/bloc/transcation_bloc/transcation_bloc.dart';
+import 'package:spendio/features/transcation/presentation/bloc/transcation_bloc/transcation_event.dart';
+import 'package:spendio/features/transcation/presentation/components/category_section/components/category_grid/components/category_grid_item.dart';
+import 'package:spendio/features/transcation/presentation/faces/category_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class CategoryGrid extends StatelessWidget {
   final BudgetModel? budgetModel;
   final TransactionSource flowType;
-  final List<CategoryHiveModel> categories;
-  final List<CategoryHiveModel> selectedCategories;
+  final List<CategoryModel> categories;
+  final List<CategoryModel> selectedCategories;
 
   const CategoryGrid({
     super.key,
@@ -25,8 +26,27 @@ class CategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (categories.isEmpty) {
-      return const Center(
-        child: Text('No Category found', style: TextStyle(fontSize: 16)),
+      final t = AppLocalizations.of(context)!;
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off_rounded,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              t.noResultsFound,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
+        ),
       );
     }
 
@@ -34,7 +54,7 @@ class CategoryGrid extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.80,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),

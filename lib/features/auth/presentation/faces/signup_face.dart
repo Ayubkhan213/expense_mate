@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:expense_mate/core/common/custom_snackbar.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/common/custom_snackbar.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
 
-import 'package:expense_mate/features/auth/presentation/bloc/signup_bloc/signup_bloc.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/features/auth/presentation/bloc/signup_bloc/signup_bloc.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,24 +13,44 @@ import 'package:image_picker/image_picker.dart';
 // ─────────────────────────────────────────────────────────────────────────────
 // Security question banks
 // ─────────────────────────────────────────────────────────────────────────────
-const List<String> _kSecurityQuestions1 = [
-  'What was the name of your first pet?',
-  'What is the name of the city where you were born?',
-  'What was the make of your first car?',
-  'What is your mother\'s maiden name?',
-  'What was the name of your elementary school?',
-  'What was your childhood nickname?',
-  'What is the name of the street you grew up on?',
+// const List<String> _kSecurityQuestions1 = [
+//   'What was the name of your first pet?',
+//   'What is the name of the city where you were born?',
+//   'What was the make of your first car?',
+//   'What is your mother\'s maiden name?',
+//   'What was the name of your elementary school?',
+//   'What was your childhood nickname?',
+//   'What is the name of the street you grew up on?',
+// ];
+
+// const List<String> _kSecurityQuestions2 = [
+//   'What is the name of your oldest sibling?',
+//   'What was the first concert you attended?',
+//   'What was the name of your favorite teacher?',
+//   'In what city did you meet your spouse/partner?',
+//   'What was the first album you purchased?',
+//   'What is your oldest cousin\'s first name?',
+//   'What was the name of your first stuffed animal or toy?',
+// ];
+// REMOVE the two const lists at the top and REPLACE WITH:
+List<String> _getSecurityQuestions1(AppLocalizations t) => [
+  t.secQ1_1,
+  t.secQ1_2,
+  t.secQ1_3,
+  t.secQ1_4,
+  t.secQ1_5,
+  t.secQ1_6,
+  t.secQ1_7,
 ];
 
-const List<String> _kSecurityQuestions2 = [
-  'What is the name of your oldest sibling?',
-  'What was the first concert you attended?',
-  'What was the name of your favorite teacher?',
-  'In what city did you meet your spouse/partner?',
-  'What was the first album you purchased?',
-  'What is your oldest cousin\'s first name?',
-  'What was the name of your first stuffed animal or toy?',
+List<String> _getSecurityQuestions2(AppLocalizations t) => [
+  t.secQ2_1,
+  t.secQ2_2,
+  t.secQ2_3,
+  t.secQ2_4,
+  t.secQ2_5,
+  t.secQ2_6,
+  t.secQ2_7,
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -80,6 +100,8 @@ class _SignupFaceState extends State<SignupFace> {
         AnimatedSnackbar.showError(context, t.pleasSelectBothQuestions);
         return;
       }
+      print(state.securityAnswer1.trim());
+      print(state.securityAnswer2.trim());
       if (state.securityAnswer1.trim().isEmpty ||
           state.securityAnswer2.trim().isEmpty) {
         AnimatedSnackbar.showError(context, t.pleaseAnswerBothQuestions);
@@ -643,7 +665,7 @@ class _SignupFaceState extends State<SignupFace> {
                         AnimatedSnackbar.showSuccess(context, 'Key copied!');
                       },
                       icon: const Icon(Icons.copy_rounded, size: 16),
-                      label: const Text('Copy One'),
+                      label: Text(t.copyOne),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: primary,
                         side: BorderSide(color: primary.withValues(alpha: 0.4)),
@@ -660,13 +682,10 @@ class _SignupFaceState extends State<SignupFace> {
                     child: OutlinedButton.icon(
                       onPressed: () {
                         Clipboard.setData(ClipboardData(text: keys.join('\n')));
-                        AnimatedSnackbar.showSuccess(
-                          context,
-                          'All keys copied!',
-                        );
+                        AnimatedSnackbar.showSuccess(context, t.allKeysCopied);
                       },
                       icon: const Icon(Icons.content_copy_rounded, size: 16),
-                      label: const Text('Copy All'),
+                      label: Text(t.copyAll),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: primary,
                         side: BorderSide(color: primary.withValues(alpha: 0.4)),
@@ -686,10 +705,7 @@ class _SignupFaceState extends State<SignupFace> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context); // close dialog
-                    AnimatedSnackbar.showSuccess(
-                      context,
-                      'Account created successfully!',
-                    );
+                    AnimatedSnackbar.showSuccess(context, t.keyCopied);
                     Navigator.pop(context); // back to login
                   },
                   style: ElevatedButton.styleFrom(
@@ -701,7 +717,7 @@ class _SignupFaceState extends State<SignupFace> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(
-                    'I Have Saved My Keys',
+                    t.iHaveSavedMyKeys,
                     style: AppTextStyles.labelMedium.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -1143,7 +1159,7 @@ class _SecurityQuestionsSection extends StatelessWidget {
                           dropdownColor: isDark
                               ? theme.colorScheme.surface
                               : Colors.white,
-                          items: _kSecurityQuestions1.map((q) {
+                          items: _getSecurityQuestions1(t).map((q) {
                             return DropdownMenuItem(
                               value: q,
                               child: Text(
@@ -1213,7 +1229,7 @@ class _SecurityQuestionsSection extends StatelessWidget {
                           dropdownColor: isDark
                               ? theme.colorScheme.surface
                               : Colors.white,
-                          items: _kSecurityQuestions2.map((q) {
+                          items: _getSecurityQuestions2(t).map((q) {
                             return DropdownMenuItem(
                               value: q,
                               child: Text(

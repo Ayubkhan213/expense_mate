@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────
 // FILE: features/home/presentation/bloc/all_transactions/all_transactions_event.dart
 // ─────────────────────────────────────────
-import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/enums.dart';
 
 abstract class AllTransactionsEvent {}
 

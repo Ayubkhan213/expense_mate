@@ -1,21 +1,25 @@
 import 'dart:io';
 
-import 'package:expense_mate/core/app_export.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/debt_payment_sql_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
 
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/data/models/debt_payment_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/transaction_item_model.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/data/models/transcation_result.dart';
-import 'package:expense_mate/core/domain/use_cases/add_debt_payment_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/add_debt_transcation_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/add_debt_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/add_transcation_usecase.dart';
-import 'package:expense_mate/core/domain/use_cases/save_budget_transcation_usecase.dart';
-import 'package:expense_mate/core/services/app_prefs.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_event.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_item_sql_model.dart';
+
+import 'package:spendio/core/data/models/transcation_result.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/domain/use_cases/add_debt_payment_usecase.dart';
+import 'package:spendio/core/domain/use_cases/add_debt_transcation_usecase.dart';
+import 'package:spendio/core/domain/use_cases/add_debt_usecase.dart';
+import 'package:spendio/core/domain/use_cases/add_transcation_usecase.dart';
+import 'package:spendio/core/domain/use_cases/save_budget_transcation_usecase.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_event.dart';
+import 'package:spendio/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,13 +34,14 @@ class CategoryBottomSheetBloc
   AddDebtUsecase addDebtUsecase;
 
   CategoryBottomSheetBloc({
-    required CategoryHiveModel category,
+    required CategoryModel category,
     required this.saveBudgetTranscationUsecase,
     required this.addDebtUsecase,
     required this.addDebtPaymentUseCase,
     required this.saveNormalTranscationUsecase,
     required this.saveDebtTranscationUsecase,
   }) : super(CategoryBottomSheetState.initial(category)) {
+    on<UpdateTransaction>(_onUpdateTransaction);
     on<NumberPressed>((event, emit) {
       String display = state.display == '0'
           ? event.number
@@ -44,7 +49,9 @@ class CategoryBottomSheetBloc
       String currentNumber = state.currentNumber + event.number;
       emit(state.copyWith(display: display, currentNumber: currentNumber));
     });
-
+    on<PreFillDate>((event, emit) {
+      emit(state.copyWith(selectedDateTime: event.date));
+    });
     on<OperationPressed>((event, emit) {
       if (state.currentNumber.isEmpty) return;
 
@@ -246,35 +253,89 @@ class CategoryBottomSheetBloc
     );
   }
 
+  Future<void> _onUpdateTransaction(
+    UpdateTransaction event,
+    Emitter<CategoryBottomSheetState> emit,
+  ) async {
+    try {
+      final amount = double.tryParse(state.display) ?? 0;
+
+      if (amount <= 0) {
+        await _emitError(emit, 'Amount cannot be zero');
+        return;
+      }
+
+      // Build updated transaction keeping the same ID
+      final updated = TransactionModel(
+        id: event.existingTransaction.id, //  same ID = update not insert
+        userId: event.existingTransaction.userId,
+        type: state.transactionType,
+        items: [
+          TransactionItemModel(
+            transactionId: event.existingTransaction.id,
+            category: state.category.key,
+            amount: amount,
+            note: state.note,
+          ),
+        ],
+        totalAmount: amount,
+        paymentMethod: state.paymentMethod,
+        date: state.selectedDateTime,
+        isDebt: event.existingTransaction.isDebt,
+        debtId: event.existingTransaction.debtId,
+        attachmentPath:
+            state.selectedImage?.path ??
+            event.existingTransaction.attachmentPath,
+        budgetId: event.existingTransaction.budgetId,
+        createdAt: event.existingTransaction.createdAt,
+        updatedAt: DateTime.now(),
+      );
+
+      await saveNormalTranscationUsecase.transactionRepository
+          .updateTransaction(updated);
+
+      emit(state.copyWith(transactionStatus: TransactionStatus.success));
+    } catch (e) {
+      await _emitError(emit, e.toString());
+    }
+  }
+
   Future<void> _onSaveBudgetTransaction(
     SaveBudgetTransaction event,
     Emitter<CategoryBottomSheetState> emit,
   ) async {
     try {
-      // 1️ Validation
-      if (double.parse(state.display) <= 0) {
-        emit(
-          state.copyWith(
-            transactionStatus: TransactionStatus.error,
-            errorMessage: 'Amount cannot be zero',
-          ),
+      final amount = double.tryParse(state.display) ?? 0;
+
+      // ── Validation ────────────────────────────────────────────────────
+      if (amount <= 0) {
+        await _emitError(emit, 'Amount cannot be zero');
+        return;
+      }
+
+      // ✅ Check remaining budget amount
+      final remaining = event.budgetModel.remainingAmount;
+      if (amount > remaining) {
+        await _emitError(
+          emit,
+          'Amount \$${amount.toStringAsFixed(2)} exceeds remaining budget of \$${remaining.toStringAsFixed(2)}',
         );
         return;
       }
 
-      // 2️ Create Transaction Item
-      final item = TransactionItem(
+      // ── Create item ───────────────────────────────────────────────────
+      final item = TransactionItemModel(
         category: state.category.key,
-        amount: double.parse(state.display),
+        amount: amount,
         note: state.note,
+        transactionId: '',
       );
 
-      // 3️ Create Transaction Model
       final transaction = TransactionModel(
         id: const Uuid().v4(),
         type: TransactionType.expense,
         items: [item],
-        totalAmount: double.parse(state.display),
+        totalAmount: amount,
         paymentMethod: state.paymentMethod,
         date: state.selectedDateTime,
         isDebt: state.isDebt,
@@ -282,16 +343,19 @@ class CategoryBottomSheetBloc
         attachmentPath: state.selectedImage?.path,
         budgetId: event.budgetModel.id,
         userId: AppPrefs.instance.userId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
-      // 4️ Call UseCase
-      TransactionResult transactionResult = await saveBudgetTranscationUsecase(
+      final transactionResult = await saveBudgetTranscationUsecase(
         transaction: transaction,
         budget: event.budgetModel,
       );
+
       if (transactionResult.success) {
-        // 5️ Emit Success
         emit(state.copyWith(transactionStatus: TransactionStatus.success));
+      } else {
+        await _emitError(emit, 'Transaction failed');
       }
     } catch (e) {
       emit(
@@ -339,10 +403,11 @@ class CategoryBottomSheetBloc
         id: transcationId,
         type: state.transactionType,
         items: [
-          TransactionItem(
+          TransactionItemModel(
             category: state.category.key,
             amount: amount,
             note: state.note,
+            transactionId: '',
           ),
         ],
         totalAmount: amount,
@@ -353,6 +418,8 @@ class CategoryBottomSheetBloc
         attachmentPath: state.selectedImage?.path,
         budgetId: null,
         userId: AppPrefs.instance.userId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       final transactionResult = await saveNormalTranscationUsecase(
@@ -376,14 +443,12 @@ class CategoryBottomSheetBloc
     Emitter<CategoryBottomSheetState> emit,
   ) async {
     try {
-      // -------------------- 1️ VALIDATION --------------------
       final amount = double.tryParse(state.display) ?? 0;
 
       if (amount <= 0) {
         await _emitError(emit, 'Amount cannot be zero');
         return;
       }
-
       if (state.personName == null || state.personName!.isEmpty) {
         await _emitError(emit, 'Please add person name');
         return;
@@ -393,45 +458,31 @@ class CategoryBottomSheetBloc
         return;
       }
 
-      // -------------------- 2️ CREATE DEBT (ONLY IF NEEDED) --------------------
-      String? debtId = const Uuid().v4();
-      String transcationId = const Uuid().v4();
+      final String debtId = const Uuid().v4();
+      final String transactionId = const Uuid().v4();
 
-      final debtModel = DebtModel(
-        id: debtId,
-        transactionId: transcationId, // will link via transaction later
-        personName: state.personName!,
-        totalAmount: amount,
-        debtType: state.debtType!,
-        expectedReturnDate: state.expectedReturnDate!,
-      );
-
-      final debtResult = await addDebtUsecase(debt: debtModel);
-
-      if (!debtResult.success) {
-        await _emitError(emit, 'Failed to create debt');
-        return; //  STOP – no transaction
-      }
-
-      // -------------------- 3️ CREATE TRANSACTION --------------------
+      // ── 1. CREATE TRANSACTION FIRST (debt FK references it) ──────────
       final transaction = TransactionModel(
-        id: transcationId,
+        id: transactionId,
         type: state.transactionType,
         items: [
-          TransactionItem(
+          TransactionItemModel(
             category: state.category.key,
             amount: amount,
             note: state.note,
+            transactionId: '',
           ),
         ],
         totalAmount: amount,
         paymentMethod: state.paymentMethod,
         date: state.selectedDateTime,
-        isDebt: state.isDebt,
+        isDebt: true,
         debtId: debtId,
         attachmentPath: state.selectedImage?.path,
         budgetId: null,
         userId: AppPrefs.instance.userId,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       final transactionResult = await saveDebtTranscationUsecase(
@@ -443,7 +494,26 @@ class CategoryBottomSheetBloc
         return;
       }
 
-      // -------------------- 4️ SUCCESS --------------------
+      // ── 2. CREATE DEBT AFTER transaction exists ───────────────────────
+      final debtModel = DebtModel(
+        id: debtId,
+        transactionId: transactionId,
+        personName: state.personName!,
+        totalAmount: amount,
+        debtType: state.debtType!,
+        expectedReturnDate: state.expectedReturnDate!,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        userId: AppPrefs.instance.userId,
+      );
+
+      final debtResult = await addDebtUsecase(debt: debtModel);
+
+      if (!debtResult.success) {
+        await _emitError(emit, 'Failed to create debt');
+        return;
+      }
+
       emit(state.copyWith(transactionStatus: TransactionStatus.success));
     } catch (e) {
       await _emitError(emit, e.toString());
@@ -463,6 +533,7 @@ class CategoryBottomSheetBloc
         amount: double.parse(state.display),
         paymentDate: state.selectedDateTime,
         paymentMethod: state.paymentMethod,
+        createdAt: DateTime.now(),
       );
 
       final result = await addDebtPaymentUseCase(

@@ -1,40 +1,52 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/utils/utils.dart';
-import 'package:hive/hive.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/repository_imp/db_constants.dart';
+import 'package:spendio/core/database/sqflite_helper.dart';
+import 'package:spendio/core/utils/utils.dart';
 
 class CategorySeeder {
-  static const String categoryBox = 'categories';
+  static final SqliteHelper _db = SqliteHelper.instance;
 
+  /// Seeds income and expense categories on first launch.
+  /// Safe to call every time — checks for existing rows first.
   static Future<void> seedIfFirstTime() async {
-    final box = Hive.box<CategoryHiveModel>(categoryBox);
+    final existing = await _db.queryAll(DbConstants.tableCategories);
 
-    //  If data already exists → DO NOTHING
-    if (box.isNotEmpty) return;
+    // Already seeded → do nothing
+    if (existing.isNotEmpty) return;
 
     final utils = Utils();
+    final now = DateTime.now().toIso8601String();
 
-    //  Income categories
+    final List<Map<String, dynamic>> rows = [];
+
     for (final item in utils.incomeCategories) {
-      await box.add(
-        CategoryHiveModel(
+      rows.add(
+        CategoryModel(
           key: item.keyName,
           iconCode: item.icon.codePoint,
           colorValue: item.color.value,
           isIncome: true,
-        ),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ).toMap(),
       );
     }
 
-    //  Expense categories
     for (final item in utils.expenseCategories) {
-      await box.add(
-        CategoryHiveModel(
+      rows.add(
+        CategoryModel(
           key: item.keyName,
           iconCode: item.icon.codePoint,
           colorValue: item.color.value,
           isIncome: false,
-        ),
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ).toMap(),
       );
     }
+
+    await _db.insertBatch(DbConstants.tableCategories, rows);
+
+    print('✅ ${rows.length} categories seeded.');
   }
 }

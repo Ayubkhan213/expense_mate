@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+
+import 'package:spendio/core/data/models/enums.dart';
+
+import '../../../../../core/domain/entity/debt_payment_entity.dart';
 
 /// Enum to track transaction status
 enum TransactionStatus { initial, loading, success, error }
@@ -16,7 +19,7 @@ class CategoryBottomSheetState extends Equatable {
   final File? selectedImage;
   final DateTime selectedDateTime;
   final String note;
-  final CategoryHiveModel category;
+  final CategoryModel category;
   final TransactionType transactionType;
   final bool isDebt;
   final DebtType? debtType;
@@ -47,7 +50,7 @@ class CategoryBottomSheetState extends Equatable {
     this.errorMessage,
   });
 
-  factory CategoryBottomSheetState.initial(CategoryHiveModel category) {
+  factory CategoryBottomSheetState.initial(CategoryModel category) {
     return CategoryBottomSheetState(
       display: '0',
       currentNumber: '',
@@ -78,7 +81,7 @@ class CategoryBottomSheetState extends Equatable {
     File? selectedImage,
     DateTime? selectedDateTime,
     String? note,
-    CategoryHiveModel? category,
+    CategoryModel? category,
     TransactionType? transactionType,
     bool? isDebt,
     DebtType? debtType,

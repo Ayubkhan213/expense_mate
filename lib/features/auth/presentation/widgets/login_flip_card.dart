@@ -2,8 +2,8 @@
 
 import 'dart:math' as math;
 
-import 'package:expense_mate/features/auth/presentation/component/login_component.dart';
-import 'package:expense_mate/features/auth/presentation/component/quick_login_component.dart';
+import 'package:spendio/features/auth/presentation/component/login_component.dart';
+import 'package:spendio/features/auth/presentation/component/quick_login_component.dart';
 import 'package:flutter/material.dart';
 
 class LoginFlipCard extends StatelessWidget {

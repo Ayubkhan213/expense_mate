@@ -1,11 +1,11 @@
 // lib/features/auth/presentation/pages/forgot_password_face.dart
 
-import 'package:expense_mate/core/common/custom_snackbar.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/forget_password_bloc/forget_password_bloc.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/forget_password_bloc/forget_password_event.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/forget_password_bloc/forget_password_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/common/custom_snackbar.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/auth/presentation/bloc/forget_password_bloc/forget_password_bloc.dart';
+import 'package:spendio/features/auth/presentation/bloc/forget_password_bloc/forget_password_event.dart';
+import 'package:spendio/features/auth/presentation/bloc/forget_password_bloc/forget_password_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

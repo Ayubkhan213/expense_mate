@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
 
 abstract class CategoryBottomSheetEvent extends Equatable {
   const CategoryBottomSheetEvent();
-
   @override
   List<Object?> get props => [];
 }
@@ -34,6 +34,10 @@ class DatePressed extends CategoryBottomSheetEvent {
 
 class ImagePicked extends CategoryBottomSheetEvent {}
 
+class ImagePickedFromCamera extends CategoryBottomSheetEvent {}
+
+class ImageRemoved extends CategoryBottomSheetEvent {}
+
 class NoteChanged extends CategoryBottomSheetEvent {
   final String note;
   const NoteChanged({required this.note});
@@ -54,10 +58,8 @@ class ExpectedReturnDatePressed extends CategoryBottomSheetEvent {
   const ExpectedReturnDatePressed(this.context);
 }
 
-// Add this new event class
 class PaymentMethodChanged extends CategoryBottomSheetEvent {
   final PaymentMethod paymentMethod;
-
   const PaymentMethodChanged(this.paymentMethod);
 }
 
@@ -79,8 +81,15 @@ class SaveDebtPayment extends CategoryBottomSheetEvent {
   const SaveDebtPayment({required this.debtModel});
 }
 
+//  NEW — update existing transaction
+class UpdateTransaction extends CategoryBottomSheetEvent {
+  final TransactionModel existingTransaction;
+  const UpdateTransaction({required this.existingTransaction});
+}
+
 class ResetTransactionStatus extends CategoryBottomSheetEvent {}
 
-class ImagePickedFromCamera extends CategoryBottomSheetEvent {}
-
-class ImageRemoved extends CategoryBottomSheetEvent {}
+class PreFillDate extends CategoryBottomSheetEvent {
+  final DateTime date;
+  const PreFillDate(this.date);
+}

@@ -1,7 +1,7 @@
-import 'package:expense_mate/features/auth/data/data_source/currency_data_source.dart';
-import 'package:expense_mate/features/auth/domain/repository/currency_repository.dart';
+import 'package:spendio/core/data/models/currency_model.dart';
+import 'package:spendio/features/auth/data/data_source/currency_local_datasource.dart';
 
-import '../../../../core/data/models/currency_model.dart';
+import 'package:spendio/features/auth/domain/repository/sql/currency_repository.dart';
 
 class CurrencyRepositoryImpl implements CurrencyRepository {
   final CurrencyLocalDataSource localDataSource;

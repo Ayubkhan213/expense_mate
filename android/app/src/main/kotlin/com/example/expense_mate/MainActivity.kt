@@ -1,4 +1,4 @@
-package com.example.expense_mate
+package com.aandktech.spendio
 
 import io.flutter.embedding.android.FlutterActivity
 

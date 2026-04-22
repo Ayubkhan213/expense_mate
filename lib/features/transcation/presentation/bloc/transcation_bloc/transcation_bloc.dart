@@ -1,14 +1,15 @@
 // ignore_for_file: avoid_print
 
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
+import 'package:spendio/core/data/models/category_model.dart';
 
-import 'package:expense_mate/core/domain/repository/category_repository.dart';
-// import 'package:expense_mate/features/transcation/domain/use_cases/create_budget_transcation.dart';
-import 'package:expense_mate/features/transcation/domain/use_cases/create_debt_transcation.dart';
-import 'package:expense_mate/features/transcation/domain/use_cases/create_normal_transcation.dart';
-import 'package:expense_mate/features/transcation/domain/use_cases/create_recurring_transcation.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_event.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/transcation_bloc/transcation_state.dart';
+import 'package:spendio/core/domain/repository/category_repository.dart';
+import 'package:spendio/core/domain/repository/sql/category_repository.dart';
+// import 'package:spendio/features/transcation/domain/use_cases/create_budget_transcation.dart';
+import 'package:spendio/features/transcation/domain/use_cases/create_debt_transcation.dart';
+import 'package:spendio/features/transcation/domain/use_cases/create_normal_transcation.dart';
+import 'package:spendio/features/transcation/domain/use_cases/create_recurring_transcation.dart';
+import 'package:spendio/features/transcation/presentation/bloc/transcation_bloc/transcation_event.dart';
+import 'package:spendio/features/transcation/presentation/bloc/transcation_bloc/transcation_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TranscationBloc extends Bloc<TransactionEvent, TranscationState> {
@@ -105,10 +106,10 @@ class TranscationBloc extends Bloc<TransactionEvent, TranscationState> {
   _fetcAllhExpanceCategory(
     FetchAllExpancesEvent event,
     Emitter<TranscationState> emit,
-  ) {
+  ) async {
     emit(state.copyWith(status: TranscationStatus.loading));
     try {
-      List<CategoryHiveModel> expanceList = categoryRepository.getExpense();
+      List<CategoryModel> expanceList = await categoryRepository.getExpense();
       emit(
         state.copyWith(
           status: TranscationStatus.success,
@@ -130,10 +131,10 @@ class TranscationBloc extends Bloc<TransactionEvent, TranscationState> {
   _fetchAllIncomCategory(
     FetchAllIncomEvent event,
     Emitter<TranscationState> emit,
-  ) {
+  ) async {
     try {
       emit(state.copyWith(status: TranscationStatus.loading));
-      List<CategoryHiveModel> incomeList = categoryRepository.getIncome();
+      List<CategoryModel> incomeList = await categoryRepository.getIncome();
       emit(
         state.copyWith(
           status: TranscationStatus.success,
@@ -156,7 +157,7 @@ class TranscationBloc extends Bloc<TransactionEvent, TranscationState> {
     ToggleCategorySelection event,
     Emitter<TranscationState> emit,
   ) {
-    final currentSelected = List<CategoryHiveModel>.from(
+    final currentSelected = List<CategoryModel>.from(
       state.selectedCategies ?? [],
     );
     final index = currentSelected.indexWhere(

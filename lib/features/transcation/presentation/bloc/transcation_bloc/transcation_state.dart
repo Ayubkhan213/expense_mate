@@ -1,12 +1,12 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
+import 'package:spendio/core/data/models/category_model.dart';
 
 enum TranscationStatus { initial, loading, success, error }
 
 class TranscationState {
   bool isMultipleMode;
-  List<CategoryHiveModel>? incomCategies;
-  List<CategoryHiveModel>? expanceCategies;
-  List<CategoryHiveModel>? selectedCategies;
+  List<CategoryModel>? incomCategies;
+  List<CategoryModel>? expanceCategies;
+  List<CategoryModel>? selectedCategies;
   final TranscationStatus status;
   final String? errorMessage;
   TranscationState({
@@ -19,9 +19,9 @@ class TranscationState {
   });
   TranscationState copyWith({
     bool? isMultipleMode,
-    List<CategoryHiveModel>? incomCategies,
-    List<CategoryHiveModel>? expanceCategies,
-    List<CategoryHiveModel>? selectedCategies,
+    List<CategoryModel>? incomCategies,
+    List<CategoryModel>? expanceCategies,
+    List<CategoryModel>? selectedCategies,
     TranscationStatus? status,
     String? errorMessage,
   }) {

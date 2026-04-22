@@ -1,12 +1,12 @@
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/core/theme/typography/text_style_extension.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/theme/typography/text_style_extension.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,7 +50,6 @@ class _BudgetCalculatorState extends State<BudgetCalculator> {
             () => _activePanel = _activePanel == panel ? null : panel,
           ),
         ),
-
         const SizedBox(height: 8),
         AnimatedSize(
           duration: const Duration(milliseconds: 220),
@@ -64,8 +63,10 @@ class _BudgetCalculatorState extends State<BudgetCalculator> {
                   bloc: bloc,
                 ),
         ),
-
-        _buildCalcGrid(theme, bloc, state),
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: _buildCalcGrid(theme, bloc, state),
+        ),
       ],
     );
   }
@@ -164,19 +165,34 @@ class _BudgetCalculatorState extends State<BudgetCalculator> {
       );
       return;
     }
-    print('-------------- Budget -------------');
-    context.read<BudgetBloc>().add(
-      CreateBudgetEvent(
-        name: state.name,
-        type: state.selectedType,
-        totalAmount: amount,
-        startDate: state.startDate,
-        endDate: state.endDate,
-        category: state.selectedCategory,
-        icon: state.selectedIcon.codePoint.toString(),
-        colorCode: state.selectedColor.value,
-      ),
-    );
+
+    // ✅ Edit mode — fire UpdateBudgetEvent
+    if (state.isEditMode) {
+      context.read<BudgetBloc>().add(
+        UpdateBudgetEvent(
+          budgetId: state.editingBudgetId!,
+          name: state.name,
+          totalAmount: amount,
+          isActive: true,
+          isArchived: false,
+        ),
+      );
+    } else {
+      // Create mode — fire CreateBudgetEvent
+      context.read<BudgetBloc>().add(
+        CreateBudgetEvent(
+          name: state.name,
+          type: state.selectedType,
+          totalAmount: amount,
+          startDate: state.startDate,
+          endDate: state.endDate,
+          category: state.selectedCategory,
+          icon: state.selectedIcon.codePoint.toString(),
+          colorCode: state.selectedColor.value,
+        ),
+      );
+    }
+
     Navigator.pop(context);
   }
 }
@@ -201,7 +217,9 @@ class _QuickToolbar extends StatelessWidget {
       children: [
         _ToolbarChip(
           icon: Icons.label_outline,
-          label: state.name.isNotEmpty ? state.name : t.name,
+          label: state.displayName.isNotEmpty
+              ? state.displayName
+              : (state.name.isNotEmpty ? context.tr(state.name) : t.name),
           isActive: activePanel == 'name',
           activeColor: color,
           onTap: () => onToggle('name'),
@@ -304,7 +322,6 @@ class _ToolbarChip extends StatelessWidget {
   }
 }
 
-// ── Panel container ──
 class _PanelContent extends StatelessWidget {
   final String panel;
   final BudgetFormState state;
@@ -345,7 +362,6 @@ class _PanelContent extends StatelessWidget {
   }
 }
 
-// ── Name panel ──
 class _NamePanel extends StatelessWidget {
   final BudgetFormState state;
   final TextEditingController nameController;
@@ -362,8 +378,6 @@ class _NamePanel extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     final color = state.selectedColor;
     final cs = Theme.of(context).colorScheme;
-
-    //  always get fresh translated categories
     final categories =
         context.budgetCategoryPresets[state.selectedType] ?? <String>[];
 
@@ -406,14 +420,27 @@ class _NamePanel extends StatelessWidget {
             spacing: 6,
             runSpacing: 6,
             children: categories.map((cat) {
-              // compare using translated value
-              final isSel = state.selectedCategory == cat;
+              final allPresetsEn = context.budgetCategoryPresetsEn;
+              final enCategories = allPresetsEn[state.selectedType] ?? [];
+              final allPresetsLocal = context.budgetCategoryPresets;
+              final localCategories = allPresetsLocal[state.selectedType] ?? [];
+              final index = localCategories.indexOf(cat);
+              final englishKey = (index >= 0 && index < enCategories.length)
+                  ? enCategories[index]
+                  : cat;
+              final isSel = state.selectedCategory == englishKey;
               return GestureDetector(
                 onTap: () {
-                  bloc.add(
-                    BudgetFormCategorySelected(cat),
-                  ); //  stores translated
-                  bloc.add(BudgetFormNameChanged(cat));
+                  final enCats =
+                      context.budgetCategoryPresetsEn[state.selectedType] ?? [];
+                  final localCats =
+                      context.budgetCategoryPresets[state.selectedType] ?? [];
+                  final idx = localCats.indexOf(cat);
+                  final key = (idx >= 0 && idx < enCats.length)
+                      ? enCats[idx]
+                      : cat;
+                  bloc.add(BudgetFormCategorySelected(key, cat));
+                  bloc.add(BudgetFormNameChanged(key));
                   nameController.text = cat;
                 },
                 child: AnimatedContainer(
@@ -434,7 +461,7 @@ class _NamePanel extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    cat, //  already translated
+                    cat,
                     style: AppTextStyles.categoryLabel
                         .withColor(isSel ? color : cs.onSurface)
                         .copyWith(
@@ -453,7 +480,6 @@ class _NamePanel extends StatelessWidget {
   }
 }
 
-// ── Dates panel ──
 class _DatesPanel extends StatelessWidget {
   final BudgetFormState state;
   final BudgetFormBloc bloc;
@@ -515,7 +541,7 @@ class _DatesPanel extends StatelessWidget {
                 Icon(Icons.schedule, size: 12, color: color),
                 const SizedBox(width: 4),
                 Text(
-                  '${state.durationInDays} ${t.days} ',
+                  '${state.durationInDays} ${t.days}',
                   style: AppTextStyles.captionSmall.withColor(color).semiBold,
                 ),
               ],
@@ -530,7 +556,9 @@ class _DatesPanel extends StatelessWidget {
     final picked = await showDatePicker(
       context: context,
       initialDate: isStart ? state.startDate : state.endDate,
-      firstDate: isStart ? DateTime.now() : state.startDate,
+      firstDate: isStart
+          ? DateTime.now().subtract(const Duration(days: 365))
+          : state.startDate,
       lastDate: DateTime.now().add(const Duration(days: 3650)),
     );
     if (picked != null) {
@@ -600,7 +628,6 @@ class _DateTile extends StatelessWidget {
   }
 }
 
-// ── Appearance panel ──
 class _AppearancePanel extends StatelessWidget {
   final BudgetFormState state;
   final BudgetFormBloc bloc;
@@ -685,7 +712,6 @@ class _AppearancePanel extends StatelessWidget {
   }
 }
 
-// ── Calculator button ──
 class _CalcButton extends StatelessWidget {
   final String label;
   final ThemeData theme;
@@ -725,7 +751,8 @@ class _CalcButton extends StatelessWidget {
           alignment: Alignment.center,
           child: isSubmit
               ? Icon(
-                  Icons.check_rounded,
+                  // ✅ Show edit icon in edit mode
+                  state.isEditMode ? Icons.save_rounded : Icons.check_rounded,
                   color: enabled ? Colors.white : Colors.white54,
                   size: 22,
                 )
@@ -753,7 +780,7 @@ class _CalcButton extends StatelessWidget {
     if (isSubmit) {
       final hasAmount = (double.tryParse(state.amount) ?? 0) > 0;
       return (hasAmount && state.name.isNotEmpty)
-          ? Colors.green
+          ? (state.isEditMode ? Colors.blue : Colors.green)
           : Colors.grey.shade400;
     }
     if (isDelete) return Colors.redAccent;

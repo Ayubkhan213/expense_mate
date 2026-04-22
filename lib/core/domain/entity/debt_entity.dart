@@ -1,4 +1,4 @@
-enum DebtType { borrowed, lent }
+import 'package:spendio/core/data/models/enums.dart';
 
 class DebtEntity {
   final String id;

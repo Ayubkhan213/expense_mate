@@ -1,4 +1,4 @@
-// import 'package:expense_mate/l10n/app_localizations.dart';
+// import 'package:spendio/l10n/app_localizations.dart';
 // import 'package:flutter/material.dart';
 
 // class ColorSelector extends StatelessWidget {

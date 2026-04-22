@@ -1,12 +1,12 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/features/budgets/domain/use_cases/get_budget_detail_usease.dart';
-import 'package:expense_mate/features/budgets/domain/use_cases/get_transactions_by_budget_usecase.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_state.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/features/budgets/data/data_source/sql/budget_local_datasource.dart';
+import 'package:spendio/features/budgets/domain/use_cases/get_budget_detail_usease.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetDetailsBloc extends Bloc<BudgetDetailsEvent, BudgetDetailsState> {
-  // final GetTransactionsByBudgetUseCase getTransactionsByBudgetUseCase;
   final GetBudgetDetailsUseCase getBudgetDetailsUseCase;
 
   BudgetDetailsBloc({required this.getBudgetDetailsUseCase})
@@ -14,23 +14,45 @@ class BudgetDetailsBloc extends Bloc<BudgetDetailsEvent, BudgetDetailsState> {
     on<LoadBudgetDetailsEvent>(_onLoadBudgetDetails);
     on<RefreshBudgetDetailsEvent>(_onRefreshBudgetDetails);
     on<FilterBudgetTransactionsEvent>(_onFilterTransactions);
+    on<DeleteBudgetTransactionEvent>(_onDeleteTransaction);
   }
 
   Future<void> _onLoadBudgetDetails(
     LoadBudgetDetailsEvent event,
     Emitter<BudgetDetailsState> emit,
   ) async {
-    emit(state.copyWith(status: BudgetDetailsStatus.loading, clearError: true));
+    final isFirstLoad = state.transactions.isEmpty;
+    if (isFirstLoad) {
+      emit(
+        state.copyWith(status: BudgetDetailsStatus.loading, clearError: true),
+      );
+    }
 
     try {
       final data = await getBudgetDetailsUseCase(event.budgetId);
 
+      // ✅ Calculate spent from actual transactions (not stored spent_amount)
+      final transactions = data.transactions;
+      final totalSpent = transactions.fold<double>(
+        0.0,
+        (sum, t) => sum + t.totalAmount,
+      );
+      final budget = data.budget;
+      final totalBudget = budget?.totalAmount ?? 0.0;
+      final remaining = totalBudget - totalSpent;
+      final progress = totalBudget > 0
+          ? (totalSpent / totalBudget).clamp(0.0, 1.0)
+          : 0.0;
+
       emit(
         state.copyWith(
           status: BudgetDetailsStatus.success,
-          budget: data.budget,
-          transactions: data.transactions,
-          filteredTransactions: data.transactions,
+          budget: budget,
+          transactions: transactions,
+          filteredTransactions: transactions,
+          totalSpent: totalSpent, // ✅ calculated from txns
+          remainingAmount: remaining, // ✅ calculated
+          progressPercentage: progress, // ✅ calculated
         ),
       );
     } catch (e) {
@@ -47,7 +69,40 @@ class BudgetDetailsBloc extends Bloc<BudgetDetailsEvent, BudgetDetailsState> {
     RefreshBudgetDetailsEvent event,
     Emitter<BudgetDetailsState> emit,
   ) async {
+    // ✅ Force full reload on refresh — reset transactions so loading shows
+    emit(
+      state.copyWith(
+        status: BudgetDetailsStatus.loading,
+        clearTransactions: true,
+      ),
+    );
     add(LoadBudgetDetailsEvent(event.budgetId));
+  }
+
+  Future<void> _onDeleteTransaction(
+    DeleteBudgetTransactionEvent event,
+    Emitter<BudgetDetailsState> emit,
+  ) async {
+    try {
+      await TransactionLocalDataSourceImpl().deleteTransaction(
+        event.transactionId,
+      );
+      await BudgetLocalDataSourceImpl().removeTransactionFromBudget(
+        event.budgetId,
+        event.transactionId,
+        event.amount,
+      );
+      // ✅ Force reload after delete
+      emit(state.copyWith(clearTransactions: true));
+      add(LoadBudgetDetailsEvent(event.budgetId));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: BudgetDetailsStatus.error,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   void _onFilterTransactions(
@@ -61,7 +116,6 @@ class BudgetDetailsBloc extends Bloc<BudgetDetailsEvent, BudgetDetailsState> {
       case TransactionFilter.all:
         filtered = state.transactions;
         break;
-
       case TransactionFilter.thisWeek:
         final weekStart = now.subtract(Duration(days: now.weekday - 1));
         final weekEnd = weekStart.add(const Duration(days: 6));
@@ -70,7 +124,6 @@ class BudgetDetailsBloc extends Bloc<BudgetDetailsEvent, BudgetDetailsState> {
               t.date.isBefore(weekEnd.add(const Duration(days: 1)));
         }).toList();
         break;
-
       case TransactionFilter.thisMonth:
         final monthStart = DateTime(now.year, now.month, 1);
         final monthEnd = DateTime(now.year, now.month + 1, 0);
@@ -79,9 +132,7 @@ class BudgetDetailsBloc extends Bloc<BudgetDetailsEvent, BudgetDetailsState> {
               t.date.isBefore(monthEnd.add(const Duration(days: 1)));
         }).toList();
         break;
-
       case TransactionFilter.custom:
-        // You can implement custom date range picker here
         filtered = state.transactions;
         break;
     }

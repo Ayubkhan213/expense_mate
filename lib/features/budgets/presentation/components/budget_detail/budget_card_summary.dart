@@ -1,4 +1,5 @@
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/l10n/app_localizations.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
 import 'package:flutter/material.dart';
 
 class BudgetSummaryCard extends StatelessWidget {
@@ -8,6 +9,8 @@ class BudgetSummaryCard extends StatelessWidget {
   final double remainingAmount;
   final double progressPercentage;
   final double availableHeight;
+  final VoidCallback? onShare;
+  final bool canShare;
 
   const BudgetSummaryCard({
     super.key,
@@ -17,6 +20,8 @@ class BudgetSummaryCard extends StatelessWidget {
     required this.remainingAmount,
     required this.progressPercentage,
     required this.availableHeight,
+    this.onShare,
+    this.canShare = false,
   });
 
   @override
@@ -31,8 +36,7 @@ class BudgetSummaryCard extends StatelessWidget {
     return ClipRect(
       child: Container(
         clipBehavior: Clip.hardEdge,
-        // margin: const EdgeInsets.all(16),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10.0),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -62,19 +66,38 @@ class BudgetSummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).padding.top + 2),
-                // Header
+
+                // ── Header row: back | label | status badge | share ──
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    // Back button
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 10),
+
+                    // "Total Budget" label
+                    Expanded(
                       child: Text(
                         t.totalBudget,
                         style: TextStyle(
                           color: isDark
                               ? Colors.white.withValues(alpha: 0.9)
                               : Colors.white,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           shadows: isDark
                               ? null
@@ -88,10 +111,12 @@ class BudgetSummaryCard extends StatelessWidget {
                         ),
                       ),
                     ),
+
+                    // Status badge
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
+                        horizontal: 10,
+                        vertical: 5,
                       ),
                       decoration: BoxDecoration(
                         color: _getStatusColor(
@@ -116,20 +141,55 @@ class BudgetSummaryCard extends StatelessWidget {
                         ),
                         style: TextStyle(
                           color: _getStatusColor(isOverBudget, isNearLimit),
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 8),
+
+                    // Share button
+                    GestureDetector(
+                      onTap: canShare ? onShare : null,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(
+                            alpha: canShare ? 0.15 : 0.06,
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.ios_share_rounded,
+                          color: canShare ? Colors.white : Colors.white30,
+                          size: 16,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+
+                const SizedBox(height: 14),
+
+                // Budget name
+                Text(
+                  budgetName,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.75),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
 
                 // Total Amount
                 Text(
-                  '\$${_formatAmount(totalAmount)}',
+                  CurrencyFormatter.format(totalAmount),
                   style: TextStyle(
-                    color: isDark ? Colors.white : Colors.white,
+                    color: Colors.white,
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
@@ -144,26 +204,43 @@ class BudgetSummaryCard extends StatelessWidget {
                           ],
                   ),
                 ),
-                const SizedBox(height: 20),
 
-                // Progress Bar
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: LinearProgressIndicator(
-                    value: progressPercentage.clamp(0.0, 1.0),
-                    minHeight: 10,
-                    backgroundColor: isDark
-                        ? Colors.white.withValues(alpha: 0.1)
-                        : Colors.white.withValues(alpha: 0.3),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      isOverBudget
-                          ? const Color(0xFFef4444)
-                          : isNearLimit
-                          ? const Color(0xFFf59e0b)
-                          : const Color(0xFF10b981),
+                const SizedBox(height: 18),
+
+                // Progress Bar with percentage label
+                Row(
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: LinearProgressIndicator(
+                          value: progressPercentage.clamp(0.0, 1.0),
+                          minHeight: 10,
+                          backgroundColor: isDark
+                              ? Colors.white.withValues(alpha: 0.1)
+                              : Colors.white.withValues(alpha: 0.3),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            isOverBudget
+                                ? const Color(0xFFef4444)
+                                : isNearLimit
+                                ? const Color(0xFFf59e0b)
+                                : const Color(0xFF10b981),
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '${(progressPercentage * 100).clamp(0, 999).toStringAsFixed(0)}%',
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: 16),
 
                 // Spent and Remaining Row
@@ -188,7 +265,7 @@ class BudgetSummaryCard extends StatelessWidget {
                             : const Color(0xFF10b981),
                         isDark: isDark,
                         icon: isOverBudget
-                            ? Icons.warning
+                            ? Icons.warning_rounded
                             : Icons.trending_down,
                         isNegative: isOverBudget,
                       ),
@@ -220,18 +297,9 @@ class BudgetSummaryCard extends StatelessWidget {
     return '${(progress * 100).toStringAsFixed(0)}% ${t.used}';
   }
 
-  String _formatAmount(double amount) {
-    if (amount >= 1000) {
-      return amount
-          .toStringAsFixed(0)
-          .replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (Match m) => '${m[1]},',
-          );
-    }
-    return amount.toStringAsFixed(2);
-  }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _AmountBox extends StatelessWidget {
   final String label;
@@ -291,7 +359,7 @@ class _AmountBox extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '${isNegative ? '-' : ''}\$${_formatAmount(amount)}',
+            '${isNegative ? '-' : ''}${CurrencyFormatter.format(amount)}',
             style: TextStyle(
               color: color,
               fontSize: 18,
@@ -304,15 +372,4 @@ class _AmountBox extends StatelessWidget {
     );
   }
 
-  String _formatAmount(double amount) {
-    if (amount >= 1000) {
-      return amount
-          .toStringAsFixed(0)
-          .replaceAllMapped(
-            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-            (Match m) => '${m[1]},',
-          );
-    }
-    return amount.toStringAsFixed(2);
-  }
 }

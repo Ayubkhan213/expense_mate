@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 extension TranslationHelper on BuildContext {
@@ -92,8 +92,8 @@ extension TranslationHelper on BuildContext {
       'petFood': l.petFood,
       'vet': l.vet,
       'petSupplies': l.petSupplies,
-      'savings': l.savings, // ✅ fixed typo: was 'saving'
-      'investment': l.investment, // ✅ fixed typo: was 'investmen'
+      'savings': l.savings,
+      'investment': l.investment,
       'loanPayment': l.loanPayment,
       'creditCard': l.creditCard,
       'bankFees': l.bankFees,
@@ -151,7 +151,7 @@ extension TranslationHelper on BuildContext {
   Map<BudgetType, List<String>> get budgetCategoryPresets {
     return {
       BudgetType.monthly: [
-        tr('groceries'), // 'this.tr(...)' — no context needed
+        tr('groceries'),
         tr('transport'),
         tr('entertainment'),
         tr('bills'),
@@ -165,6 +165,27 @@ extension TranslationHelper on BuildContext {
         tr('carPurchase'),
       ],
       BudgetType.custom: [tr('customBudgetLabel')],
+    };
+  }
+
+  // Add this alongside budgetCategoryPresets:
+  Map<BudgetType, List<String>> get budgetCategoryPresetsEn {
+    return {
+      BudgetType.monthly: [
+        'groceries',
+        'transport',
+        'entertainment',
+        'bills',
+        'shopping',
+      ],
+      BudgetType.project: [
+        'wedding',
+        'vacation',
+        'homeRenovation',
+        'education',
+        'carPurchase',
+      ],
+      BudgetType.custom: ['customBudgetLabel'],
     };
   }
 }

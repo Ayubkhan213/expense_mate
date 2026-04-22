@@ -1,5 +1,6 @@
 // ================== MODEL ==================
-import 'package:expense_mate/core/app_export.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/app_export.dart';
 
 class CategoryItem {
   final String keyName;

@@ -1,5 +1,6 @@
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/l10n/app_localizations.dart' show AppLocalizations;
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/l10n/app_localizations.dart' show AppLocalizations;
 import 'package:flutter/material.dart';
 
 class RecurringDetailStats extends StatelessWidget {
@@ -45,7 +46,7 @@ class RecurringDetailStats extends StatelessWidget {
                 Expanded(
                   child: _StatCard(
                     label: t.totalAmount,
-                    value: totalSpent.toStringAsFixed(2),
+                    value: CurrencyFormatter.format(totalSpent),
                     icon: Icons.attach_money,
                     color: isIncome ? Colors.green : Colors.red,
                   ),

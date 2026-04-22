@@ -1,10 +1,12 @@
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/services/recurring_background_service.dart';
-import 'package:expense_mate/features/recurring/domain/repository.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/core/services/recurring_background_service.dart';
+import 'package:spendio/core/services/recurring_background_sql_services.dart';
+import 'package:spendio/features/recurring/domain/repository.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
 import 'package:uuid/uuid.dart';
 
 class AddEditRecurringBloc
@@ -233,6 +235,7 @@ class AddEditRecurringBloc
         note: state.note.isEmpty ? null : state.note,
         frequency: state.frequency,
         type: state.transactionType,
+        userId: AppPrefs.instance.userId,
         paymentMethod: state.paymentMethod,
         startDate: state.startDate,
         endDate: state.endDate,
@@ -240,6 +243,8 @@ class AddEditRecurringBloc
         dayOfMonth: state.dayOfMonth,
         dayOfWeek: state.dayOfWeek,
         isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       if (state.recurringId != null && state.recurringId != '') {

@@ -1,8 +1,11 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_category/recurring_category_card.dart';
+import 'package:flutter/material.dart';
+
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_category/recurring_category_card.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class RecurringCategoryGrid extends StatelessWidget {
-  final List<CategoryHiveModel> categories;
+  final List<CategoryModel> categories;
   final bool isIncome;
 
   const RecurringCategoryGrid({

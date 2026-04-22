@@ -299,7 +299,8 @@
 //     return NumberFormat('#,##0.00').format(amount.abs());
 //   }
 // }
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -358,8 +359,8 @@ class FinancialSummaryCard extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: isDark
               ? [
-                  colorScheme.surface,
-                  colorScheme.surface.withValues(alpha: 0.92),
+                  colorScheme.primary,
+                  colorScheme.primary.withValues(alpha: 0.92),
                 ]
               : [
                   colorScheme.primary,
@@ -407,7 +408,7 @@ class FinancialSummaryCard extends StatelessWidget {
 
             // ── Balance Amount ───────────────────────────────────
             Text(
-              '\$${NumberFormat('#,##0.00').format(totalBalance)}',
+              CurrencyFormatter.format(totalBalance),
               style: TextStyle(
                 color: onCard,
                 fontSize: 32,
@@ -550,12 +551,6 @@ class _StatItem extends StatelessWidget {
     required this.onCardSubtle,
   });
 
-  String _formatAmount(double value) {
-    if (value >= 1000) {
-      return NumberFormat('#,##0').format(value.abs());
-    }
-    return NumberFormat('#,##0.00').format(value.abs());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -629,7 +624,7 @@ class _StatItem extends StatelessWidget {
                 ),
               ),
               Text(
-                '$prefix\$${_formatAmount(amount)}',
+                '$prefix${CurrencyFormatter.format(amount)}',
                 style: TextStyle(
                   color: amountTextColor, // white or black — always readable
                   fontSize: 15,

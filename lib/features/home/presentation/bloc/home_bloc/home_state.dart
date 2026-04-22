@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/data/models/debt_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
 
 enum HomeTab { transactions, debts }
 

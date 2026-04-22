@@ -1,8 +1,13 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/features/recurring/presentation/faces/recurring_bottomsheet.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/utils/icon_mapper.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_bottomsheet.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class RecurringCategoryCard extends StatelessWidget {
-  final CategoryHiveModel category;
+  final CategoryModel category;
 
   const RecurringCategoryCard({super.key, required this.category});
 
@@ -40,7 +45,7 @@ class RecurringCategoryCard extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                IconData(category.iconCode, fontFamily: 'MaterialIcons'),
+                IconMapper.getIcon(category.iconCode),
                 color: Color(category.colorValue),
                 size: 28,
               ),

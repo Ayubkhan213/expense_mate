@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/features/budgets/domain/repository/budget_repository.dart';
 
 class GetTransactionsByBudgetUseCase {
   final BudgetRepository repository;

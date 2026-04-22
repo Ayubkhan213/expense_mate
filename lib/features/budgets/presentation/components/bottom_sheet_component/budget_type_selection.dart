@@ -1,5 +1,5 @@
-// import 'package:expense_mate/core/data/models/budget_model.dart';
-// import 'package:expense_mate/l10n/app_localizations.dart';
+// import 'package:spendio/core/data/models/budget_model.dart';
+// import 'package:spendio/l10n/app_localizations.dart';
 // import 'package:flutter/material.dart';
 
 // class BudgetTypeSelector extends StatelessWidget {

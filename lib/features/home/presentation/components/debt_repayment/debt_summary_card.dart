@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
 import 'package:intl/intl.dart';
 
 class DebtSummaryCard extends StatelessWidget {
@@ -172,7 +173,7 @@ class DebtSummaryCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '\$${_formatAmount(remainingAmount)}',
+                      CurrencyFormatter.format(remainingAmount),
                       style: TextStyle(
                         color: const Color(0xFFef4444),
                         fontSize: 24,
@@ -227,12 +228,6 @@ class DebtSummaryCard extends StatelessWidget {
     );
   }
 
-  String _formatAmount(double amount) {
-    if (amount >= 1000) {
-      return NumberFormat('#,##0').format(amount);
-    }
-    return NumberFormat('#,##0.00').format(amount);
-  }
 }
 
 class _AmountBox extends StatelessWidget {
@@ -276,7 +271,7 @@ class _AmountBox extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            '\$${_formatAmount(amount)}',
+            CurrencyFormatter.format(amount),
             style: TextStyle(
               color: color,
               fontSize: 18,
@@ -289,10 +284,4 @@ class _AmountBox extends StatelessWidget {
     );
   }
 
-  String _formatAmount(double amount) {
-    if (amount >= 1000) {
-      return NumberFormat('#,##0').format(amount);
-    }
-    return NumberFormat('#,##0.00').format(amount);
-  }
 }

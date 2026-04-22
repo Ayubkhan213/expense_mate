@@ -1,12 +1,20 @@
-// ==================== MAIN FRAME ====================
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/utils/enum.dart';
-import 'package:expense_mate/features/budgets/presentation/faces/add_budget_bottomsheet.dart';
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_state.dart';
-import 'package:expense_mate/features/home/presentation/faces/home_face.dart';
-import 'package:expense_mate/features/budgets/presentation/faces/budget_face.dart';
-import 'package:expense_mate/features/recurring/presentation/faces/recurring_category_selection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/navigation/bloc/nav_bloc.dart';
+import 'package:spendio/core/navigation/bloc/nav_event.dart';
+import 'package:spendio/core/navigation/bloc/nav_state.dart';
+import 'package:spendio/core/navigation/route_name.dart';
+import 'package:spendio/core/utils/enum.dart';
+import 'package:spendio/features/analytics/presentation/faces/analytics_face.dart';
+import 'package:spendio/features/budgets/presentation/faces/add_budget_bottomsheet.dart';
+import 'package:spendio/features/budgets/presentation/faces/budget_face.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_state.dart';
+import 'package:spendio/features/home/presentation/faces/home_face.dart';
+import 'package:spendio/features/profile/presentation/faces/profile_face.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_category_selection.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_face.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class MainFrame extends StatelessWidget {
   MainFrame({super.key});
@@ -785,4 +793,363 @@ void _showCreateBudgetBottomSheet(BuildContext context) {
 //   final String label;
 
 //   IconOption(this.emoji, this.label);
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//===================================== NEw  -------------------
+// class MainFrame extends StatelessWidget {
+//   MainFrame({super.key});
+
+//   final List<Widget> pages = [
+//     HomeFace(),
+//     const BudgetsFace(),
+//     const AnalyticsFace(),
+//     const ProfileFace(),
+//   ];
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//       create: (_) => NavBloc(),
+//       child: BlocBuilder<NavBloc, NavState>(
+//         builder: (context, state) {
+//           return Scaffold(
+//             backgroundColor: Theme.of(context).colorScheme.surface,
+//             // extendBody so page content flows under the floating bar
+//             extendBody: true,
+//             body: pages[state.index],
+//             // ── No scaffold FAB — we use a Stack inside bottomNavigationBar ──
+//             bottomNavigationBar: _SpendioBottomNav(currentIndex: state.index),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+
+// // ═══════════════════════════════════════════════════════════════
+// // Premium Bottom Nav  —  floating bar + elevated FAB above it
+// // ═══════════════════════════════════════════════════════════════
+// class _SpendioBottomNav extends StatelessWidget {
+//   final int currentIndex;
+//   const _SpendioBottomNav({required this.currentIndex});
+
+//   static const double _barHeight = 72.0;
+//   static const double _fabSize = 58.0;
+//   static const double _fabOffset = 28.0; // how much FAB sits above bar top
+//   static const double _totalHeight = _barHeight + _fabOffset;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final t = AppLocalizations.of(context)!;
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
+//     final primary = Theme.of(context).primaryColor;
+
+//     final barBg = isDark ? const Color(0xFF16161E) : Colors.white;
+//     final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+//     return SizedBox(
+//       height: _totalHeight + bottomPadding,
+//       child: Stack(
+//         clipBehavior: Clip.none,
+//         alignment: Alignment.bottomCenter,
+//         children: [
+//           // ── Floating Bar ──────────────────────────────────────
+//           Positioned(
+//             left: 10,
+//             right: 10,
+//             bottom: bottomPadding - 10,
+//             child: Container(
+//               height: _barHeight,
+//               decoration: BoxDecoration(
+//                 color: barBg,
+//                 borderRadius: BorderRadius.circular(26),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: isDark
+//                         ? Colors.black.withOpacity(0.55)
+//                         : Colors.black.withOpacity(0.10),
+//                     blurRadius: 32,
+//                     spreadRadius: 0,
+//                     offset: const Offset(0, 8),
+//                   ),
+//                   if (!isDark)
+//                     BoxShadow(
+//                       color: Colors.black.withOpacity(0.04),
+//                       blurRadius: 8,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                 ],
+//               ),
+//               child: Row(
+//                 children: [
+//                   // Left: Home + Budgets
+//                   Expanded(
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                       children: [
+//                         _NavItem(
+//                           icon: Icons.home_rounded,
+//                           label: t.home,
+//                           isActive: currentIndex == 0,
+//                           onTap: () =>
+//                               context.read<NavBloc>().add(ChangeTabEvent(0)),
+//                         ),
+//                         _NavItem(
+//                           icon: Icons.account_balance_wallet_rounded,
+//                           label: t.budgets,
+//                           isActive: currentIndex == 1,
+//                           onTap: () =>
+//                               context.read<NavBloc>().add(ChangeTabEvent(1)),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   // Center gap — reserved for the FAB footprint
+//                   const SizedBox(width: _fabSize + 16),
+
+//                   // Right: Analytics + Profile
+//                   Expanded(
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                       children: [
+//                         _NavItem(
+//                           icon: Icons.bar_chart_rounded,
+//                           label: t.analytics,
+//                           isActive: currentIndex == 2,
+//                           onTap: () =>
+//                               context.read<NavBloc>().add(ChangeTabEvent(2)),
+//                         ),
+//                         _NavItem(
+//                           icon: Icons.person_rounded,
+//                           label: t.profile,
+//                           isActive: currentIndex == 3,
+//                           onTap: () =>
+//                               context.read<NavBloc>().add(ChangeTabEvent(3)),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+
+//           // ── Floating FAB — elevated above the bar ────────────
+//           Positioned(
+//             bottom:
+//                 bottomPadding +
+//                 (_barHeight / 2) -
+//                 (_fabSize / 2) +
+//                 _fabOffset -
+//                 10,
+//             child: _PremiumFAB(currentIndex: currentIndex, size: _fabSize),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// // ═══════════════════════════════════════════════════════════════
+// // Premium FAB — floats above the bar with layered shadow ring
+// // ═══════════════════════════════════════════════════════════════
+// class _PremiumFAB extends StatefulWidget {
+//   final int currentIndex;
+//   final double size;
+//   const _PremiumFAB({required this.currentIndex, required this.size});
+
+//   @override
+//   State<_PremiumFAB> createState() => _PremiumFABState();
+// }
+
+// class _PremiumFABState extends State<_PremiumFAB>
+//     with SingleTickerProviderStateMixin {
+//   late final AnimationController _ctrl;
+//   late final Animation<double> _scaleAnim;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _ctrl = AnimationController(
+//       vsync: this,
+//       duration: const Duration(milliseconds: 120),
+//       lowerBound: 0.0,
+//       upperBound: 1.0,
+//     );
+//     _scaleAnim = Tween<double>(
+//       begin: 1.0,
+//       end: 0.91,
+//     ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
+//   }
+
+//   @override
+//   void dispose() {
+//     _ctrl.dispose();
+//     super.dispose();
+//   }
+
+//   void _onTapDown(_) => _ctrl.forward();
+//   void _onTapUp(_) => _ctrl.reverse();
+//   void _onTapCancel() => _ctrl.reverse();
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final primary = Theme.of(context).primaryColor;
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+//     return GestureDetector(
+//       onTapDown: _onTapDown,
+//       onTapUp: _onTapUp,
+//       onTapCancel: _onTapCancel,
+//       onTap: () {
+//         HapticFeedback.lightImpact();
+//         _handleFABPress(context);
+//       },
+//       child: AnimatedBuilder(
+//         animation: _scaleAnim,
+//         builder: (_, child) =>
+//             Transform.scale(scale: _scaleAnim.value, child: child),
+//         child: Container(
+//           width: widget.size,
+//           height: widget.size,
+//           decoration: BoxDecoration(
+//             shape: BoxShape.circle,
+//             // Outer glow ring
+//             boxShadow: [
+//               BoxShadow(
+//                 color: primary.withOpacity(isDark ? 0.55 : 0.35),
+//                 blurRadius: 22,
+//                 spreadRadius: 1,
+//                 offset: const Offset(0, 6),
+//               ),
+//               BoxShadow(
+//                 color: primary.withOpacity(0.15),
+//                 blurRadius: 6,
+//                 spreadRadius: 0,
+//                 offset: const Offset(0, 2),
+//               ),
+//             ],
+//           ),
+//           child: Container(
+//             decoration: BoxDecoration(shape: BoxShape.circle, color: primary),
+//             child: const Icon(Icons.add_rounded, size: 28, color: Colors.white),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   void _handleFABPress(BuildContext context) {
+//     switch (widget.currentIndex) {
+//       case 0:
+//         final homeState = context.read<HomeBloc>().state;
+//         final isTransactions = homeState.selectedTab == HomeTab.transactions;
+//         Navigator.pushNamed(
+//           context,
+//           RouteName.addRecord,
+//           arguments: isTransactions
+//               ? null
+//               : {'flowType': TransactionSource.debt},
+//         );
+//         break;
+//       case 1:
+//         AddBudgetBottomSheet.show(context);
+//         break;
+//       default:
+//         Navigator.pushNamed(context, RouteName.addRecord);
+//         break;
+//     }
+//   }
+// }
+
+// // ═══════════════════════════════════════════════════════════════
+// // Nav Item
+// // ═══════════════════════════════════════════════════════════════
+// class _NavItem extends StatelessWidget {
+//   final IconData icon;
+//   final String label;
+//   final bool isActive;
+//   final VoidCallback onTap;
+
+//   const _NavItem({
+//     required this.icon,
+//     required this.label,
+//     required this.isActive,
+//     required this.onTap,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final primary = Theme.of(context).primaryColor;
+//     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+//     final activeColor = primary;
+//     final inactiveColor = isDark
+//         ? Colors.white.withOpacity(0.28)
+//         : const Color(0xFFB0B0C3);
+
+//     final color = isActive ? activeColor : inactiveColor;
+
+//     return GestureDetector(
+//       onTap: () {
+//         HapticFeedback.selectionClick();
+//         onTap();
+//       },
+//       behavior: HitTestBehavior.opaque,
+//       child: Padding(
+//         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             AnimatedContainer(
+//               duration: const Duration(milliseconds: 240),
+//               curve: Curves.easeInOut,
+//               padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 5),
+//               decoration: BoxDecoration(
+//                 color: isActive
+//                     ? primary.withOpacity(0.11)
+//                     : Colors.transparent,
+//                 borderRadius: BorderRadius.circular(14),
+//               ),
+//               child: AnimatedScale(
+//                 scale: isActive ? 1.10 : 1.0,
+//                 duration: const Duration(milliseconds: 240),
+//                 curve: Curves.easeOutBack,
+//                 child: Icon(icon, color: color, size: 22),
+//               ),
+//             ),
+//             const SizedBox(height: 3),
+//             AnimatedDefaultTextStyle(
+//               duration: const Duration(milliseconds: 240),
+//               style: TextStyle(
+//                 color: color,
+//                 fontSize: 10,
+//                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+//                 letterSpacing: isActive ? 0.4 : 0.1,
+//               ),
+//               child: Text(label),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 // }

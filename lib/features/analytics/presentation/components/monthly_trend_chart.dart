@@ -1,6 +1,7 @@
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -53,7 +54,7 @@ class MonthlyTrendChart extends StatelessWidget {
                         final month = monthlyTrends[groupIndex].month;
                         final label = rodIndex == 0 ? t.income : t.expense;
                         return BarTooltipItem(
-                          '$month\n$label\n\$${rod.toY.toStringAsFixed(0)}',
+                          '$month\n$label\n${CurrencyFormatter.format(rod.toY, decimalDigits: 0)}',
                           AppTextStyles.labelSmall.copyWith(
                             color: Colors.white,
                           ),
@@ -88,7 +89,7 @@ class MonthlyTrendChart extends StatelessWidget {
                         reservedSize: 50,
                         getTitlesWidget: (value, meta) {
                           return Text(
-                            '\$${(value / 1000).toStringAsFixed(0)}k',
+                            '${CurrencyFormatter.symbol}${(value / 1000).toStringAsFixed(0)}k',
                             style: AppTextStyles.caption,
                           );
                         },

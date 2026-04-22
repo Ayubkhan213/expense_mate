@@ -1,8 +1,5 @@
-enum TransactionType { income, expense }
-
-enum PaymentMethod { cash, card, bank, wallet }
-
-enum RecurrenceFrequency { daily, weekly, biweekly, monthly, quarterly, yearly }
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
 
 class RecurringTransactionEntity {
   final String id;
@@ -21,6 +18,7 @@ class RecurringTransactionEntity {
   final int dayOfMonth;
   final int? dayOfWeek;
   final DateTime createdAt;
+  final DateTime updatedAt;
 
   const RecurringTransactionEntity({
     required this.id,
@@ -39,32 +37,49 @@ class RecurringTransactionEntity {
     this.dayOfMonth = 1,
     this.dayOfWeek,
     required this.createdAt,
+    required this.updatedAt,
   });
 
   bool get hasEnded => endDate != null && DateTime.now().isAfter(endDate!);
   bool get isDue => DateTime.now().isAfter(nextOccurrence);
 
-  RecurringTransactionEntity copyWith({
+  // Add this method to RecurringTransactionModel in recurring_transcation_sql_model.dart
+  RecurringTransactionModel copyWith({
+    String? id,
+    String? userId,
+    String? categoryKey,
+    double? amount,
+    String? note,
+    RecurrenceFrequency? frequency,
+    TransactionType? type,
+    PaymentMethod? paymentMethod,
+    DateTime? startDate,
+    DateTime? endDate,
     DateTime? nextOccurrence,
     List<String>? generatedTransactionIds,
     bool? isActive,
-  }) => RecurringTransactionEntity(
-    id: id,
-    userId: userId,
-    categoryKey: categoryKey,
-    amount: amount,
-    note: note,
-    frequency: frequency,
-    type: type,
-    paymentMethod: paymentMethod,
-    startDate: startDate,
-    endDate: endDate,
+    int? dayOfMonth,
+    int? dayOfWeek,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => RecurringTransactionModel(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    categoryKey: categoryKey ?? this.categoryKey,
+    amount: amount ?? this.amount,
+    note: note ?? this.note,
+    frequency: frequency ?? this.frequency,
+    type: type ?? this.type,
+    paymentMethod: paymentMethod ?? this.paymentMethod,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
     nextOccurrence: nextOccurrence ?? this.nextOccurrence,
     generatedTransactionIds:
         generatedTransactionIds ?? this.generatedTransactionIds,
     isActive: isActive ?? this.isActive,
-    dayOfMonth: dayOfMonth,
-    dayOfWeek: dayOfWeek,
-    createdAt: createdAt,
+    dayOfMonth: dayOfMonth ?? this.dayOfMonth,
+    dayOfWeek: dayOfWeek ?? this.dayOfWeek,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
   );
 }

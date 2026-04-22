@@ -1,76 +1,84 @@
-// import 'package:expense_mate/core/data/models/budget_sql_model.dart';
-// import 'package:expense_mate/core/data/models/debt_model.dart';
-// import 'package:expense_mate/core/data/models/debt_payment_model.dart';
-// import 'package:expense_mate/core/data/models/enums.dart';
-// import 'package:expense_mate/core/data/models/transcation_result.dart';
-// import 'package:expense_mate/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/debt_payment_sql_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_result.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
 
-// abstract class TransactionRepository {
-//   // CREATE
-//   // Future<String> createTransaction(TransactionModel transaction);
+abstract class TransactionRepository {
+  // ═══════════════════════════════════
+  // TRANSACTIONS — READ
+  // ═══════════════════════════════════
 
-//   // READ
-//   TransactionModel? getTransactionById(String id);
+  Future<TransactionModel?> getTransactionById(String id);
 
-//   List<TransactionModel> getAllTransactions();
+  Future<List<TransactionModel>> getAllTransactions();
 
-//   List<TransactionModel> getTransactionsByDateRange(
-//     DateTime startDate,
-//     DateTime endDate,
-//   );
+  Future<List<TransactionModel>> getTransactionsByDateRange(
+    DateTime startDate,
+    DateTime endDate,
+  );
 
-//   List<TransactionModel> getTransactionsByType(TransactionType type);
+  Future<List<TransactionModel>> getTransactionsByType(TransactionType type);
 
-//   List<TransactionModel> getTransactionsByCategory(String categoryKey);
+  Future<List<TransactionModel>> getTransactionsByCategory(String categoryKey);
 
-//   // List<TransactionModel> getTransactionsByBudget(String budgetId);
+  Future<List<TransactionModel>> getDebtTransactions();
 
-//   List<TransactionModel> getDebtTransactions();
+  Future<List<TransactionModel>> getRecurringTransactions();
 
-//   List<TransactionModel> getRecurringTransactions();
+  Future<List<TransactionModel>> getRecentTransactions({int limit = 10});
 
-//   List<TransactionModel> getRecentTransactions({int limit = 10});
+  // ═══════════════════════════════════
+  // TRANSACTIONS — WRITE
+  // ═══════════════════════════════════
 
-//   // UPDATE
-//   Future<void> updateTransaction(TransactionModel transaction);
+  Future<void> updateTransaction(TransactionModel transaction);
 
-//   // DELETE
-//   Future<void> deleteTransaction(String id); // Soft delete
-//   Future<void> permanentlyDeleteTransaction(String id); // Hard delete
+  Future<void> deleteTransaction(String id);
 
-//   // STATISTICS
-//   // double getTotalIncome({DateTime? startDate, DateTime? endDate});
+  Future<void> permanentlyDeleteTransaction(String id);
 
-//   // double getTotalExpense({DateTime? startDate, DateTime? endDate});
+  // ═══════════════════════════════════
+  // STATISTICS
+  // ═══════════════════════════════════
 
-//   double getBalance({DateTime? startDate, DateTime? endDate});
+  Future<double> getTotalIncome({DateTime? startDate, DateTime? endDate});
 
-//   Future<TransactionResult> saveBudgetTransactionUseCase({
-//     required TransactionModel transaction,
-//     required BudgetModel budget,
-//   });
-//   Future<TransactionResult> saveNormalTransactionUseCase({
-//     required TransactionModel transaction,
-//   });
-//   Map<String, double> getCategoryBreakdown({
-//     required TransactionType type,
-//     DateTime? startDate,
-//     DateTime? endDate,
-//   });
+  Future<double> getTotalExpense({DateTime? startDate, DateTime? endDate});
 
-//   /// Create a new debt
-//   Future<TransactionResult> createDebt(DebtModel debt);
+  Future<double> getBalance({DateTime? startDate, DateTime? endDate});
 
-//   /// Get a debt by ID
-//   DebtModel? getDebtById(String id);
+  Future<Map<String, double>> getCategoryBreakdown({
+    required TransactionType type,
+    DateTime? startDate,
+    DateTime? endDate,
+  });
 
-//   /// Update a debt
-//   Future<void> updateDebt(DebtModel debt);
+  // ═══════════════════════════════════
+  // USE CASES
+  // ═══════════════════════════════════
 
-//   /// Delete a debt
-//   Future<void> deleteDebt(String id);
-//   //get pure transcation
-//   // List<TransactionModel> getPureTransactions({int? limit});
+  Future<TransactionResult> saveBudgetTransactionUseCase({
+    required TransactionModel transaction,
+    required BudgetModel budget,
+  });
 
-//   Future<TransactionResult> addDebtPayment(DebtPaymentModel payment);
-// }
+  Future<TransactionResult> saveNormalTransactionUseCase({
+    required TransactionModel transaction,
+  });
+
+  // ═══════════════════════════════════
+  // DEBTS
+  // ═══════════════════════════════════
+
+  Future<TransactionResult> createDebt(DebtModel debt);
+
+  Future<DebtModel?> getDebtById(String id);
+
+  Future<void> updateDebt(DebtModel debt);
+
+  Future<void> deleteDebt(String id);
+
+  Future<TransactionResult> addDebtPayment(DebtPaymentModel payment);
+}

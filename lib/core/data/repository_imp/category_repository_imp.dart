@@ -1,42 +1,29 @@
-import 'package:expense_mate/core/domain/repository/category_repository.dart';
-import 'package:hive/hive.dart';
-import '../models/category_hive_model.dart';
+import 'package:spendio/core/data/data_sources/local/category_local_datasource.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/domain/repository/sql/category_repository.dart';
 
 class CategoryRepositoryImp extends CategoryRepository {
-  static const String _boxName = 'categories';
+  final CategoryLocalDataSource localDataSource;
 
-  Box<CategoryHiveModel> get _box => Hive.box<CategoryHiveModel>(_boxName);
-  @override
-  // READ
-  List<CategoryHiveModel> getAll() {
-    return _box.values.toList();
-  }
+  CategoryRepositoryImp({required this.localDataSource});
 
   @override
-  List<CategoryHiveModel> getIncome() {
-    return _box.values.where((e) => e.isIncome).toList();
-  }
+  Future<List<CategoryModel>> getAll() => localDataSource.getAll();
 
   @override
-  List<CategoryHiveModel> getExpense() {
-    return _box.values.where((e) => !e.isIncome).toList();
-  }
+  Future<List<CategoryModel>> getIncome() => localDataSource.getIncome();
 
   @override
-  // CREATE
-  Future<void> add(CategoryHiveModel category) async {
-    await _box.add(category);
-  }
+  Future<List<CategoryModel>> getExpense() => localDataSource.getExpense();
 
   @override
-  // UPDATE
-  Future<void> update(CategoryHiveModel category) async {
-    await category.save(); // HiveObject power
-  }
+  Future<void> add(CategoryModel category) => localDataSource.add(category);
 
   @override
-  //  DELETE
-  Future<void> delete(CategoryHiveModel category) async {
-    await category.delete();
-  }
+  Future<void> update(CategoryModel category) =>
+      localDataSource.update(category);
+
+  @override
+  Future<void> delete(CategoryModel category) =>
+      localDataSource.delete(category);
 }

@@ -1,19 +1,22 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart';
-import 'package:expense_mate/features/recurring/data/repositort_imp/recurring_repo_impl.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring_detail/recurring_detail_bloc.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring_detail/recurring_detail_event.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring_detail/recurring_detail_state.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_detail/recurring_detail_info.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_detail/recurring_detail_monthly_estimate.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_detail/recurring_detail_stats.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_detail/recurring_generated_transactions_list.dart';
-import 'package:expense_mate/features/recurring/presentation/faces/recurring_bottomsheet.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/recurring/data/data_source/recurring_local_datasource.dart';
+
+import 'package:spendio/features/recurring/data/repositort_imp/recurring_repo_impl.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring_detail/recurring_detail_bloc.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring_detail/recurring_detail_event.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring_detail/recurring_detail_state.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_detail/recurring_detail_info.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_detail/recurring_detail_monthly_estimate.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_detail/recurring_detail_stats.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_detail/recurring_generated_transactions_list.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_bottomsheet.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,6 +31,8 @@ class RecurringDetailPage extends StatelessWidget {
       create: (_) => RecurringDetailBloc(
         repository: RecurringRepositoryImpl(
           localDataSource: RecurringLocalDataSourceImpl(),
+          transactionDataSource:
+              TransactionLocalDataSourceImpl(), // ← only here
         ),
       )..add(LoadRecurringDetail(recurringId)),
       child: const _RecurringDetailView(),
@@ -307,7 +312,7 @@ class _ExpandedHeader extends StatelessWidget {
 
                     // ── Amount ──
                     Text(
-                      '${isIncome ? '+' : '-'}\$${state.recurring.amount.toStringAsFixed(2)}',
+                      '${isIncome ? '+' : '-'}${CurrencyFormatter.format(state.recurring.amount)}',
                       style: AppTextStyles.currencyLarge.copyWith(
                         color: accentColor,
                         fontWeight: FontWeight.w800,
@@ -339,11 +344,13 @@ class _ExpandedHeader extends StatelessWidget {
   }
 
   void _showEditSheet(BuildContext context, RecurringTransactionModel r) {
-    final category = CategoryHiveModel(
+    final category = CategoryModel(
       key: r.categoryKey,
       isIncome: r.type == TransactionType.income,
       colorValue: 0xFF6200EA,
       iconCode: Icons.category.codePoint,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
     RecurringTransactionBottomSheet.show(
       context,
@@ -400,7 +407,7 @@ class _CollapsedHeader extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${isIncome ? '+' : '-'}\$${state.recurring.amount.toStringAsFixed(2)}',
+                  '${isIncome ? '+' : '-'}${CurrencyFormatter.format(state.recurring.amount)}',
                   style: AppTextStyles.h5.copyWith(
                     color: accentColor,
                     fontWeight: FontWeight.w800,
@@ -412,11 +419,13 @@ class _CollapsedHeader extends StatelessWidget {
           _IconBtn(
             icon: Icons.edit_rounded,
             onTap: () {
-              final category = CategoryHiveModel(
+              final category = CategoryModel(
                 key: state.recurring.categoryKey,
                 isIncome: state.recurring.type == TransactionType.income,
                 colorValue: 0xFF6200EA,
                 iconCode: Icons.category.codePoint,
+                createdAt: DateTime.now(),
+                updatedAt: DateTime.now(),
               );
               RecurringTransactionBottomSheet.show(
                 context,

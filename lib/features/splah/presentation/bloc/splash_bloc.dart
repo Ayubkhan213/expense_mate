@@ -1,11 +1,10 @@
-// lib/features/splah/presentation/bloc/splash_bloc.dart
-
-import 'package:expense_mate/core/services/app_prefs.dart';
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
-import 'package:expense_mate/features/auth/domain/repository/currency_repository.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_event.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/currency_repository.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_event.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_state.dart';
+
+import '../../../../core/services/app_prefs.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final AuthRepository authRepository;

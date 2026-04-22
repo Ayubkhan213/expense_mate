@@ -1,6 +1,6 @@
 // // lib/features/auth/presentation/bloc/auth_state.dart
 // import 'package:equatable/equatable.dart';
-// import 'package:expense_mate/core/data/models/currency_model.dart';
+// import 'package:spendio/core/data/models/currency_model.dart';
 // import '../../../../core/data/models/user_model.dart';
 
 // enum AuthStatus {

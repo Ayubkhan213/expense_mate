@@ -2,9 +2,17 @@
 // IMPROVED BUDGET CARD WIDGET
 // ============================================
 
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+
 import 'package:intl/intl.dart';
+import 'package:spendio/core/utils/icon_mapper.dart';
+import 'package:spendio/core/navigation/route_name.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class BudgetCard extends StatelessWidget {
   final BudgetModel budget;
@@ -19,7 +27,7 @@ class BudgetCard extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final color = Color(budget.colorCode ?? theme.colorScheme.primary.value);
     final icon = budget.icon != null
-        ? IconData(int.parse(budget.icon!), fontFamily: 'MaterialIcons')
+        ? IconMapper.getIcon(int.tryParse(budget.icon!))
         : Icons.account_balance_wallet;
 
     final isOverBudget = budget.isOverBudget;
@@ -153,51 +161,64 @@ class BudgetCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t.spent,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.6,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              t.spent,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.6,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '\$${budget.spentAmount.toStringAsFixed(0)}',
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isOverBudget
-                                  ? theme.colorScheme.error
-                                  : theme.colorScheme.onSurface,
+                            SizedBox(height: 4),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                CurrencyFormatter.format(budget.spentAmount),
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: isOverBudget
+                                      ? theme.colorScheme.error
+                                      : theme.colorScheme.onSurface,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            isOverBudget ? t.overBy : t.remaining,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(
-                                0.6,
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              isOverBudget ? t.overBy : t.remaining,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurface.withOpacity(
+                                  0.6,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            '\$${remaining.abs().toStringAsFixed(0)}',
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isOverBudget
-                                  ? theme.colorScheme.error
-                                  : color,
+                            SizedBox(height: 4),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                CurrencyFormatter.format(remaining.abs()),
+                                style: theme.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: isOverBudget
+                                      ? theme.colorScheme.error
+                                      : color,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -344,4 +365,5 @@ class BudgetCard extends StatelessWidget {
         return t.custom;
     }
   }
+
 }

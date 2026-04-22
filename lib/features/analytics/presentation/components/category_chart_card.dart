@@ -1,9 +1,11 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:spendio/core/utils/icon_mapper.dart';
 
 class CategoryChartCard extends StatelessWidget {
   final List<CategoryBreakdown> categoryBreakdown;
@@ -139,7 +141,7 @@ class CategoryChartCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  IconData(category.iconCode, fontFamily: 'MaterialIcons'),
+                  IconMapper.getIcon(category.iconCode),
                   color: Color(category.colorValue),
                   size: 20,
                 ),
@@ -174,7 +176,7 @@ class CategoryChartCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '\$${category.amount.toStringAsFixed(2)}',
+                    CurrencyFormatter.format(category.amount),
                     style: AppTextStyles.currencyTiny.copyWith(
                       color: Color(category.colorValue),
                     ),

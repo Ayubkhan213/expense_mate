@@ -1,6 +1,8 @@
 import 'dart:io';
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 // =============================================================================
 // NoteInputField

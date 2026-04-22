@@ -1,8 +1,9 @@
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/enums.dart';
 
 /// Recurring Transaction Card Component
 /// Displays individual recurring transaction with actions
@@ -94,7 +95,7 @@ class RecurringTransactionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              '${isIncome ? '+' : '-'}${transaction.amount.toStringAsFixed(2)}',
+              '${isIncome ? '+' : '-'}${CurrencyFormatter.format(transaction.amount)}',
               style: theme.textTheme.titleLarge?.copyWith(
                 color: isIncome ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,

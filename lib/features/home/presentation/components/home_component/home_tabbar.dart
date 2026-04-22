@@ -1,6 +1,6 @@
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

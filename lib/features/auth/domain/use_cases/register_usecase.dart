@@ -1,5 +1,7 @@
-import 'package:expense_mate/core/data/models/user_model.dart';
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
+// import 'package:spendio/core/data/models/user_model.dart';
+import 'package:spendio/core/data/models/user_sql_model.dart';
+import 'package:spendio/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
 
 class RegisterUseCase {
   final AuthRepository repository;
@@ -40,8 +42,13 @@ class RegisterUseCase {
       securityQuestion2: securityQuestion2,
       securityAnswer2: securityAnswer2,
       recoveryKeys: recoveryKeys,
+      lastLoginAt: DateTime.now(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
     );
 
     return await repository.register(newUser);
   }
 }
+
+//TODO correct the lastloginAt created at and updated at

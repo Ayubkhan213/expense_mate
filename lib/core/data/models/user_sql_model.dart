@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:expense_mate/core/domain/entity/user_entity.dart';
+import 'package:spendio/core/domain/entity/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({

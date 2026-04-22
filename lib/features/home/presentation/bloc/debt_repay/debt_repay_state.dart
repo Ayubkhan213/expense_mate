@@ -1,6 +1,4 @@
-// lib/features/debt/presentation/bloc/debt_repayment_state.dart
-
-import 'package:expense_mate/core/data/models/debt_payment_model.dart';
+import 'package:spendio/core/data/models/debt_payment_sql_model.dart';
 
 abstract class DebtRepaymentState {}
 

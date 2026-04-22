@@ -1,4 +1,4 @@
-enum BudgetType { monthly, project, custom }
+import 'package:spendio/core/data/models/enums.dart';
 
 class BudgetEntity {
   final String id;
@@ -9,6 +9,7 @@ class BudgetEntity {
   final double spentAmount;
   final DateTime startDate;
   final DateTime endDate;
+  final List<String> transactionIds; // IDs of linked transactions
   final String? category;
   final String? icon;
   final int? colorCode;
@@ -26,6 +27,7 @@ class BudgetEntity {
     this.spentAmount = 0,
     required this.startDate,
     required this.endDate,
+    this.transactionIds = const [],
     this.category,
     this.icon,
     this.colorCode,
@@ -35,7 +37,7 @@ class BudgetEntity {
     required this.updatedAt,
   });
 
-  // Computed helpers
+  // ── Computed helpers ───────────────────────────────────────────────────────
   double get remainingAmount => totalAmount - spentAmount;
   double get spentPercentage => (spentAmount / totalAmount * 100).clamp(0, 100);
   bool get isOverBudget => spentAmount > totalAmount;
@@ -44,6 +46,7 @@ class BudgetEntity {
 
   BudgetEntity copyWith({
     double? spentAmount,
+    List<String>? transactionIds,
     bool? isActive,
     bool? isArchived,
     DateTime? updatedAt,
@@ -56,6 +59,7 @@ class BudgetEntity {
     spentAmount: spentAmount ?? this.spentAmount,
     startDate: startDate,
     endDate: endDate,
+    transactionIds: transactionIds ?? this.transactionIds,
     category: category,
     icon: icon,
     colorCode: colorCode,

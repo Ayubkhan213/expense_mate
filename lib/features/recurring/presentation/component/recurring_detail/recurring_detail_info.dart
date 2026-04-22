@@ -1,6 +1,6 @@
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class RecurringDetailInfo extends StatelessWidget {

@@ -1,4 +1,5 @@
-import 'package:expense_mate/core/domain/entity/debt_payment_entity.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/debt_payment_entity.dart';
 
 class DebtPaymentModel extends DebtPaymentEntity {
   const DebtPaymentModel({

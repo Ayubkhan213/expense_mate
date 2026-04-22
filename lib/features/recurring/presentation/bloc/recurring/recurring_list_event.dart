@@ -1,4 +1,4 @@
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
 
 abstract class RecurringListEvent {}
 

@@ -1784,10 +1784,10 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get splashAppName => 'ExpenseMate';
+  String get splashAppName => 'Spendio';
 
   @override
-  String get splashTagline => 'ARGENT INTELLIGENT · VOUS ENCORE PLUS';
+  String get splashTagline => 'SUIVRE  ·  BUDGÉTER  ·  PROSPÉRER';
 
   @override
   String get transactionDetails => 'Détails de la Transaction';
@@ -1839,4 +1839,58 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteCurrentAttachment => 'Supprimer la pièce jointe actuelle';
+
+  @override
+  String get secQ1_1 => 'Quel était le nom de votre premier animal de compagnie?';
+
+  @override
+  String get secQ1_2 => 'Quel est le nom de la ville où vous êtes né?';
+
+  @override
+  String get secQ1_3 => 'Quelle était la marque de votre première voiture?';
+
+  @override
+  String get secQ1_4 => 'Quel est le nom de jeune fille de votre mère?';
+
+  @override
+  String get secQ1_5 => 'Quel était le nom de votre école primaire?';
+
+  @override
+  String get secQ1_6 => 'Quel était votre surnom d\'enfance?';
+
+  @override
+  String get secQ1_7 => 'Quel est le nom de la rue où vous avez grandi?';
+
+  @override
+  String get secQ2_1 => 'Quel est le prénom de votre frère ou sœur aîné?';
+
+  @override
+  String get secQ2_2 => 'Quel était le premier concert auquel vous avez assisté?';
+
+  @override
+  String get secQ2_3 => 'Quel était le nom de votre professeur préféré?';
+
+  @override
+  String get secQ2_4 => 'Dans quelle ville avez-vous rencontré votre conjoint?';
+
+  @override
+  String get secQ2_5 => 'Quel était le premier album que vous avez acheté?';
+
+  @override
+  String get secQ2_6 => 'Quel est le prénom de votre plus vieux cousin?';
+
+  @override
+  String get secQ2_7 => 'Quel était le nom de votre premier animal en peluche?';
+
+  @override
+  String get deleteTransaction => 'Supprimer la transaction';
+
+  @override
+  String get deleteTransactionConfirm => 'Êtes-vous sûr de vouloir supprimer cette transaction ? Cette action est irréversible.';
+
+  @override
+  String get update => 'Mettre à jour';
+
+  @override
+  String get transactionUpdatedSuccess => 'Transaction mise à jour avec succès !';
 }

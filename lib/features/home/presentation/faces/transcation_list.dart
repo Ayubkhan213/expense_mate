@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/extension/responsive_extension.dart';
-import 'package:expense_mate/features/home/presentation/components/home_component/transcation_card.dart';
+import 'package:spendio/core/extension/responsive_extension.dart';
+import 'package:spendio/features/home/presentation/components/home_component/transcation_card.dart';
 import 'package:flutter/material.dart';
 
 class TransactionsList extends StatelessWidget {

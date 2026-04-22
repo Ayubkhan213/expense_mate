@@ -3,9 +3,9 @@
 // // Path: lib/features/add_transaction/domain/usecases/process_due_recurring.dart
 // // ============================================
 
-// import 'package:expense_mate/core/data/models/enums.dart';
-// import 'package:expense_mate/core/domain/repository/recurrin_repository.dart';
-// import 'package:expense_mate/features/transcation/domain/use_cases/create_normal_transcation.dart';
+// import 'package:spendio/core/data/models/enums.dart';
+// import 'package:spendio/core/domain/repository/recurrin_repository.dart';
+// import 'package:spendio/features/transcation/domain/use_cases/create_normal_transcation.dart';
 
 // class ProcessDueRecurring {
 //   final RecurringRepository recurringRepository;

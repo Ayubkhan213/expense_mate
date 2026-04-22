@@ -1,13 +1,13 @@
 // lib/features/profile/presentation/faces/edit_profile_face.dart
 
 import 'dart:io';
-import 'package:expense_mate/core/common/custom_snackbar.dart'
-    show AnimatedSnackbar;
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/profile_event.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/profile_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/common/custom_snackbar.dart' show AnimatedSnackbar;
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/data/models/currency_model.dart';
+import 'package:spendio/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:spendio/features/profile/presentation/bloc/profile_event.dart';
+import 'package:spendio/features/profile/presentation/bloc/profile_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -140,11 +140,13 @@ class _EditProfileFaceState extends State<EditProfileFace> {
 
   void _save(BuildContext context) {
     if (!_formKey.currentState!.validate()) return;
+    final s = context.read<ProfileBloc>().state;
     context.read<ProfileBloc>().add(
       UpdateProfile(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),
-        profileImagePath: context.read<ProfileBloc>().state.profileImagePath,
+        profileImagePath: s.profileImagePath,
+        currency: s.userCurrency,
       ),
     );
   }
@@ -382,6 +384,62 @@ class _EditProfileFaceState extends State<EditProfileFace> {
                           v == null || !v.contains('@') || !v.contains('.')
                           ? t.enterValidEmail
                           : null,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // ── Currency section ──────────────────────────────────────
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    t.preferredCurrency,
+                    style: AppTextStyles.overline.copyWith(
+                      color: primary.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                _FieldCard(
+                  isDark: isDark,
+                  children: [
+                    BlocBuilder<ProfileBloc, ProfileState>(
+                      buildWhen: (p, c) => p.userCurrency != c.userCurrency,
+                      builder: (ctx, state) {
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: state.userCurrency ?? 'USD',
+                            isExpanded: true,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            icon: Icon(Icons.expand_more_rounded, color: primary),
+                            dropdownColor: isDark
+                                ? theme.colorScheme.surface
+                                : Colors.white,
+                            items: CurrencyList.currencies.map((c) {
+                              return DropdownMenuItem(
+                                value: c.code,
+                                child: Text(
+                                  '${c.flag}  ${c.code} — ${c.name}',
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: theme.colorScheme.onSurface,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (v) {
+                              if (v != null) {
+                                ctx.read<ProfileBloc>().add(
+                                  ProfileCurrencyChanged(v),
+                                );
+                              }
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

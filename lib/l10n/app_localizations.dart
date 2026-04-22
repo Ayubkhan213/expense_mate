@@ -3648,13 +3648,13 @@ abstract class AppLocalizations {
   /// No description provided for @splashAppName.
   ///
   /// In en, this message translates to:
-  /// **'ExpenseMate'**
+  /// **'Spendio'**
   String get splashAppName;
 
   /// No description provided for @splashTagline.
   ///
   /// In en, this message translates to:
-  /// **'SMART MONEY · SMARTER YOU'**
+  /// **'TRACK  ·  BUDGET  ·  PROSPER'**
   String get splashTagline;
 
   /// No description provided for @transactionDetails.
@@ -3758,6 +3758,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete the current attachment'**
   String get deleteCurrentAttachment;
+
+  /// No description provided for @secQ1_1.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the name of your first pet?'**
+  String get secQ1_1;
+
+  /// No description provided for @secQ1_2.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the name of the city where you were born?'**
+  String get secQ1_2;
+
+  /// No description provided for @secQ1_3.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the make of your first car?'**
+  String get secQ1_3;
+
+  /// No description provided for @secQ1_4.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your mother\'s maiden name?'**
+  String get secQ1_4;
+
+  /// No description provided for @secQ1_5.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the name of your elementary school?'**
+  String get secQ1_5;
+
+  /// No description provided for @secQ1_6.
+  ///
+  /// In en, this message translates to:
+  /// **'What was your childhood nickname?'**
+  String get secQ1_6;
+
+  /// No description provided for @secQ1_7.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the name of the street you grew up on?'**
+  String get secQ1_7;
+
+  /// No description provided for @secQ2_1.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the name of your oldest sibling?'**
+  String get secQ2_1;
+
+  /// No description provided for @secQ2_2.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the first concert you attended?'**
+  String get secQ2_2;
+
+  /// No description provided for @secQ2_3.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the name of your favorite teacher?'**
+  String get secQ2_3;
+
+  /// No description provided for @secQ2_4.
+  ///
+  /// In en, this message translates to:
+  /// **'In what city did you meet your spouse/partner?'**
+  String get secQ2_4;
+
+  /// No description provided for @secQ2_5.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the first album you purchased?'**
+  String get secQ2_5;
+
+  /// No description provided for @secQ2_6.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your oldest cousin\'s first name?'**
+  String get secQ2_6;
+
+  /// No description provided for @secQ2_7.
+  ///
+  /// In en, this message translates to:
+  /// **'What was the name of your first stuffed animal or toy?'**
+  String get secQ2_7;
+
+  /// No description provided for @deleteTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Transaction'**
+  String get deleteTransaction;
+
+  /// No description provided for @deleteTransactionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this transaction? This cannot be undone.'**
+  String get deleteTransactionConfirm;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @transactionUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction updated successfully!'**
+  String get transactionUpdatedSuccess;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

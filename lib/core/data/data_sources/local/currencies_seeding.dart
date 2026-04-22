@@ -1,19 +1,30 @@
-import 'package:expense_mate/core/data/models/currency_model.dart';
-import 'package:hive/hive.dart';
+import 'package:spendio/core/data/models/currency_model.dart';
+import 'package:spendio/core/data/repository_imp/db_constants.dart';
+import 'package:spendio/core/database/sqflite_helper.dart';
 
 class CurrenciesSeeding {
-  static const String currencyBox = 'currencies';
+  static final SqliteHelper _db = SqliteHelper.instance;
 
-  /// Seed currencies on first launch
+  /// Seeds all pre-defined currencies on first launch.
   static Future<void> seedCurrenciesIfFirstTime() async {
-    final box = Hive.box<CurrencyModel>(currencyBox);
+    final existing = await _db.queryAll(DbConstants.tableCurrencies);
+    if (existing.isNotEmpty) return;
 
-    if (box.isEmpty) {
-      print('🌍 Seeding currencies...');
-      for (var currency in CurrencyList.currencies) {
-        await box.put(currency.code, currency);
-      }
-      print('✅ ${box.length} currencies seeded!');
-    }
+    print('🌍 Seeding currencies...');
+
+    final rows = CurrencyList.currencies
+        .map(
+          (c) => {
+            DbConstants.colCurrencyCode: c.code,
+            DbConstants.colCurrencyName: c.name,
+            DbConstants.colCurrencySymbol: c.symbol,
+            DbConstants.colCurrencyFlag: c.flag,
+          },
+        )
+        .toList();
+
+    await _db.insertBatch(DbConstants.tableCurrencies, rows);
+
+    print('✅ ${rows.length} currencies seeded!');
   }
 }

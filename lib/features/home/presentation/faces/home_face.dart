@@ -1,11 +1,15 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/extension/responsive_extension.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/extension/responsive_extension.dart';
+import 'package:spendio/core/navigation/route_name.dart';
 
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/home/presentation/components/home_component/financial_summary_card.dart';
-import 'package:expense_mate/features/home/presentation/components/home_component/home_tabbar.dart';
-import 'package:expense_mate/features/home/presentation/faces/debt_list.dart';
-import 'package:expense_mate/features/home/presentation/faces/transcation_list.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/home/presentation/components/home_component/financial_summary_card.dart';
+import 'package:spendio/features/home/presentation/components/home_component/home_tabbar.dart';
+import 'package:spendio/features/home/presentation/faces/debt_list.dart';
+import 'package:spendio/features/home/presentation/faces/transcation_list.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 import '../bloc/home_bloc/home_bloc.dart';
 import '../bloc/home_bloc/home_state.dart';
@@ -20,7 +24,9 @@ class HomeFace extends StatelessWidget {
 
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        if (state.isLoading) {
+        if (state.isLoading &&
+            state.transactions.isEmpty &&
+            state.debts.isEmpty) {
           return const Center(
             child: CircularProgressIndicator(color: Colors.amber),
           );
@@ -84,7 +90,7 @@ class HomeFace extends StatelessWidget {
                       alignment: Alignment.center,
                       child: Text(
                         //  Was: 'Balance: \$${state.totalBalance.toStringAsFixed(2)}'
-                        '${t.balancePrefix}: \$${state.totalBalance.toStringAsFixed(2)}',
+                        '${t.balancePrefix}: ${CurrencyFormatter.format(state.totalBalance)}',
                         style: AppTextStyles.currencyMedium.copyWith(
                           color: Colors.white,
                         ),

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 
-import 'package:expense_mate/core/theme/themes/theme_persistence.dart';
+import 'package:spendio/core/theme/themes/theme_persistence.dart';
 
 import 'theme_event.dart';
 import 'theme_state.dart';

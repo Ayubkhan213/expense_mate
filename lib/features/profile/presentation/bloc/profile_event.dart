@@ -1,5 +1,3 @@
-// lib/features/profile/presentation/bloc/profile_event.dart
-
 import 'package:equatable/equatable.dart';
 
 abstract class ProfileEvent extends Equatable {
@@ -24,18 +22,26 @@ class UpdateProfileName extends ProfileEvent {
   List<Object?> get props => [name];
 }
 
-/// Persists name + email + image to Hive
 class UpdateProfile extends ProfileEvent {
   final String name;
   final String email;
   final String? profileImagePath;
+  final String? currency;
   const UpdateProfile({
     required this.name,
     required this.email,
     this.profileImagePath,
+    this.currency,
   });
   @override
-  List<Object?> get props => [name, email, profileImagePath];
+  List<Object?> get props => [name, email, profileImagePath, currency];
 }
 
 class ProfileLogout extends ProfileEvent {}
+
+class ProfileCurrencyChanged extends ProfileEvent {
+  final String currency;
+  const ProfileCurrencyChanged(this.currency);
+  @override
+  List<Object?> get props => [currency];
+}

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
 
 import 'analytics_event.dart';
 

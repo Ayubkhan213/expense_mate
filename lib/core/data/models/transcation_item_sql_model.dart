@@ -1,4 +1,4 @@
-import 'package:expense_mate/core/domain/entity/transcation_item_entity.dart';
+import 'package:spendio/core/domain/entity/transcation_item_entity.dart';
 
 class TransactionItemModel extends TransactionItemEntity {
   const TransactionItemModel({

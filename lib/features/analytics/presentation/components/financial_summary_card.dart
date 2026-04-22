@@ -1,6 +1,7 @@
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class FinancialSummaryCard extends StatelessWidget {
@@ -96,7 +97,7 @@ class FinancialSummaryCard extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '${isPositive ? '+' : ''}\$${summary.netBalance.abs().toStringAsFixed(2)}',
+                  '${isPositive ? '+' : ''}${CurrencyFormatter.format(summary.netBalance.abs())}',
                   style: AppTextStyles.currencyLarge.copyWith(
                     color: balanceColor,
                   ),
@@ -139,7 +140,7 @@ class FinancialSummaryCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '\$${amount.toStringAsFixed(2)}',
+            CurrencyFormatter.format(amount),
             style: AppTextStyles.currencySmall.copyWith(color: color),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -166,7 +167,7 @@ class FinancialSummaryCard extends StatelessWidget {
             Expanded(
               child: _buildStatItem(
                 t.avgDaily,
-                '\$${summary.averageDailyExpense.toStringAsFixed(0)}',
+                CurrencyFormatter.format(summary.averageDailyExpense, decimalDigits: 0),
                 Icons.calendar_today,
                 theme,
               ),
@@ -179,7 +180,7 @@ class FinancialSummaryCard extends StatelessWidget {
             Expanded(
               child: _buildStatItem(
                 t.avgTransaction,
-                '\$${summary.averageTransactionAmount.toStringAsFixed(0)}',
+                CurrencyFormatter.format(summary.averageTransactionAmount, decimalDigits: 0),
                 Icons.payments,
                 theme,
               ),

@@ -1,12 +1,12 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
 
 abstract class AddEditRecurringEvent {}
 
 /// Initialize form with category and optional existing recurring
 class InitializeForm extends AddEditRecurringEvent {
-  final CategoryHiveModel category;
+  final CategoryModel category;
   final RecurringTransactionModel? existing;
 
   InitializeForm({required this.category, this.existing});

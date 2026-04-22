@@ -1,5 +1,6 @@
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/debt_payment_entity.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
@@ -78,7 +79,7 @@ class PaymentMethodChip extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return GestureDetector(
-      onTap: () => onTap(value), // ✅ enum returned
+      onTap: () => onTap(value), //  enum returned
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

@@ -1,4 +1,4 @@
-import 'package:expense_mate/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/enums.dart';
 
 abstract class AllDebtTransactionsEvent {}
 

@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:expense_mate/features/profile/presentation/bloc/notification/notification_bloc.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/notification/notification_event.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/notification/notification_state.dart';
+import 'package:spendio/features/profile/presentation/bloc/notification/notification_bloc.dart';
+import 'package:spendio/features/profile/presentation/bloc/notification/notification_event.dart';
+import 'package:spendio/features/profile/presentation/bloc/notification/notification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';

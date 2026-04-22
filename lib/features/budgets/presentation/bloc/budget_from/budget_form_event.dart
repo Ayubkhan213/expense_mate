@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
+import 'package:flutter/material.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/enums.dart';
 
 abstract class BudgetFormEvent extends Equatable {
   const BudgetFormEvent();
@@ -17,10 +18,9 @@ class BudgetFormTypeChanged extends BudgetFormEvent {
 }
 
 class BudgetFormCategorySelected extends BudgetFormEvent {
-  final String category;
-  const BudgetFormCategorySelected(this.category);
-  @override
-  List<Object?> get props => [category];
+  final String category; // English key → stored in DB
+  final String displayName; // Translated label → shown in UI
+  const BudgetFormCategorySelected(this.category, this.displayName);
 }
 
 class BudgetFormColorChanged extends BudgetFormEvent {

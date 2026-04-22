@@ -1,10 +1,12 @@
-import 'package:expense_mate/core/data/models/budget_sql_model.dart';
-import 'package:expense_mate/core/data/models/transcation_item_sql_model.dart';
-import 'package:expense_mate/core/data/models/transcation_sql_model.dart';
-import 'package:expense_mate/core/database/db_constants.dart';
-import 'package:expense_mate/core/database/sqflite_helper.dart';
-import 'package:expense_mate/core/domain/entity/budget_entity.dart';
-import 'package:expense_mate/core/domain/entity/transcation_item_entity.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_item_sql_model.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/data/repository_imp/db_constants.dart';
+import 'package:spendio/core/database/sqflite_helper.dart';
+import 'package:spendio/core/domain/entity/transcation_item_entity.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+
+import '../../../../../core/data/models/budget_model.dart';
 
 abstract class BudgetLocalDataSource {
   Future<String> createBudget(BudgetModel budget);
@@ -36,9 +38,57 @@ abstract class BudgetLocalDataSource {
 class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
   final SqliteHelper _db = SqliteHelper.instance;
 
-  // ── private helper ─────────────────────────────────────────────────────────
+  String get _userId => AppPrefs.instance.userId ?? '';
 
-  /// Patch a single budget row without fetching and rewriting everything.
+  // ── private helpers ────────────────────────────────────────────────────────
+
+  Future<List<String>> _getTransactionIds(String budgetId) async {
+    final rows = await _db.queryWhere(
+      DbConstants.tableTransactions,
+      columns: [DbConstants.colId],
+      where:
+          '${DbConstants.colTxnBudgetId} = ? '
+          'AND ${DbConstants.colIsDeleted} = 0 '
+          'AND ${DbConstants.colUserId} = ?',
+      whereArgs: [budgetId, _userId],
+    );
+    return rows.map((r) => r[DbConstants.colId] as String).toList();
+  }
+
+  Future<BudgetModel> _buildBudget(Map<String, dynamic> row) async {
+    final budgetId = row['id'] as String;
+    final txnIds = await _getTransactionIds(budgetId);
+
+    // ✅ Calculate actual spent amount from transactions table (source of truth)
+    final spentRows = await _db.rawQuery(
+      'SELECT SUM(${DbConstants.colTxnTotalAmount}) as total '
+      'FROM ${DbConstants.tableTransactions} '
+      'WHERE ${DbConstants.colTxnBudgetId} = ? '
+      'AND ${DbConstants.colIsDeleted} = 0 '
+      'AND ${DbConstants.colUserId} = ?',
+      [budgetId, _userId],
+    );
+    final actualSpent = (spentRows.first['total'] as num?)?.toDouble() ?? 0.0;
+
+    // ✅ Create a mutable copy and override the potentially outdated spent_amount
+    final updatedRow = Map<String, dynamic>.from(row);
+    updatedRow[DbConstants.colBudgetSpentAmount] = actualSpent;
+
+    return BudgetModel.fromMap(updatedRow, transactionIds: txnIds);
+  }
+
+  Future<TransactionModel> _buildTransaction(Map<String, dynamic> row) async {
+    final itemRows = await _db.queryWhere(
+      DbConstants.tableTransactionItems,
+      where: '${DbConstants.colTxnItemTransactionId} = ?',
+      whereArgs: [row['id'] as String],
+    );
+    final items = itemRows
+        .map<TransactionItemEntity>((r) => TransactionItemModel.fromMap(r))
+        .toList();
+    return TransactionModel.fromMap(row, items);
+  }
+
   Future<void> _patchBudget(
     String budgetId,
     Map<String, dynamic> fields,
@@ -46,23 +96,9 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
     await _db.update(
       DbConstants.tableBudgets,
       {...fields, DbConstants.colUpdatedAt: DateTime.now().toIso8601String()},
-      where: '${DbConstants.colId} = ?',
-      whereArgs: [budgetId],
+      where: '${DbConstants.colId} = ? AND ${DbConstants.colUserId} = ?',
+      whereArgs: [budgetId, _userId],
     );
-  }
-
-  /// Build a full [TransactionModel] (items fetched from child table).
-  Future<TransactionModel> _buildTransaction(Map<String, dynamic> row) async {
-    final itemRows = await _db.queryWhere(
-      DbConstants.tableTransactionItems,
-      where: '${DbConstants.colTxnItemTransactionId} = ?',
-      whereArgs: [row['id'] as String],
-    );
-    // TransactionItemModel extends TransactionItemEntity — upcast is safe
-    final items = itemRows
-        .map<TransactionItemEntity>((r) => TransactionItemModel.fromMap(r))
-        .toList();
-    return TransactionModel.fromMap(row, items);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -86,48 +122,52 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
   Future<BudgetModel?> getBudgetById(String id) async {
     final rows = await _db.queryWhere(
       DbConstants.tableBudgets,
-      where: '${DbConstants.colId} = ?',
-      whereArgs: [id],
+      where: '${DbConstants.colId} = ? AND ${DbConstants.colUserId} = ?',
+      whereArgs: [id, _userId],
       limit: 1,
     );
     if (rows.isEmpty) return null;
-    return BudgetModel.fromMap(rows.first);
+    return _buildBudget(rows.first);
   }
 
   @override
   Future<List<BudgetModel>> getAllBudgets() async {
-    final rows = await _db.queryAll(
+    final rows = await _db.queryWhere(
       DbConstants.tableBudgets,
+      where: '${DbConstants.colUserId} = ?',
+      whereArgs: [_userId],
       orderBy: '${DbConstants.colCreatedAt} DESC',
     );
-    return rows.map((r) => BudgetModel.fromMap(r)).toList();
+    return Future.wait(rows.map((r) => _buildBudget(r)));
   }
 
   @override
   Future<List<BudgetModel>> getActiveBudgets() async {
     final now = DateTime.now().toIso8601String();
-    // Active = is_active=1, not archived, end_date not yet passed
     final rows = await _db.queryWhere(
       DbConstants.tableBudgets,
       where:
-          '${DbConstants.colIsActive} = 1 '
+          '${DbConstants.colUserId} = ? '
+          'AND ${DbConstants.colIsActive} = 1 '
           'AND ${DbConstants.colBudgetIsArchived} = 0 '
           'AND ${DbConstants.colBudgetEndDate} >= ?',
-      whereArgs: [now],
+      whereArgs: [_userId, now],
       orderBy: '${DbConstants.colBudgetEndDate} ASC',
     );
-    return rows.map((r) => BudgetModel.fromMap(r)).toList();
+    return Future.wait(rows.map((r) => _buildBudget(r)));
   }
 
   @override
   Future<List<BudgetModel>> getArchivedBudgets() async {
     final rows = await _db.queryWhere(
       DbConstants.tableBudgets,
-      where: '${DbConstants.colBudgetIsArchived} = ?',
-      whereArgs: [1],
+      where:
+          '${DbConstants.colUserId} = ? '
+          'AND ${DbConstants.colBudgetIsArchived} = ?',
+      whereArgs: [_userId, 1],
       orderBy: '${DbConstants.colUpdatedAt} DESC',
     );
-    return rows.map((r) => BudgetModel.fromMap(r)).toList();
+    return Future.wait(rows.map((r) => _buildBudget(r)));
   }
 
   @override
@@ -135,52 +175,63 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
     final rows = await _db.queryWhere(
       DbConstants.tableBudgets,
       where:
-          '${DbConstants.colBudgetType} = ? '
+          '${DbConstants.colUserId} = ? '
+          'AND ${DbConstants.colBudgetType} = ? '
           'AND ${DbConstants.colBudgetIsArchived} = 0',
-      whereArgs: [type.name],
+      whereArgs: [_userId, type.name],
       orderBy: '${DbConstants.colCreatedAt} DESC',
     );
-    return rows.map((r) => BudgetModel.fromMap(r)).toList();
+    return Future.wait(rows.map((r) => _buildBudget(r)));
   }
 
   @override
   Future<List<BudgetModel>> getOverBudgets() async {
-    // spent_amount > total_amount and not archived
-    final rows = await _db.rawQuery('''
-      SELECT * FROM ${DbConstants.tableBudgets}
-      WHERE ${DbConstants.colBudgetSpentAmount} > ${DbConstants.colBudgetTotalAmount}
-        AND ${DbConstants.colBudgetIsArchived} = 0
-      ORDER BY ${DbConstants.colBudgetSpentAmount} DESC
-    ''');
-    return rows.map((r) => BudgetModel.fromMap(r)).toList();
+    // ✅ Use a subquery to calculate actual spent amount for filtering and sorting
+    final rows = await _db.rawQuery(
+      '''
+      SELECT b.*, 
+             (SELECT SUM(t.${DbConstants.colTxnTotalAmount}) 
+              FROM ${DbConstants.tableTransactions} t 
+              WHERE t.${DbConstants.colTxnBudgetId} = b.${DbConstants.colId} 
+                AND t.${DbConstants.colIsDeleted} = 0
+                AND t.${DbConstants.colUserId} = ?) as actual_spent
+      FROM ${DbConstants.tableBudgets} b
+      WHERE b.${DbConstants.colUserId} = ?
+        AND actual_spent > b.${DbConstants.colBudgetTotalAmount}
+        AND b.${DbConstants.colBudgetIsArchived} = 0
+      ORDER BY actual_spent DESC
+      ''',
+      [_userId, _userId],
+    );
+    return Future.wait(rows.map((r) => _buildBudget(r)));
   }
 
   @override
   Future<List<BudgetModel>> getExpiredBudgets() async {
     final now = DateTime.now().toIso8601String();
-    // end_date has passed and not archived
     final rows = await _db.queryWhere(
       DbConstants.tableBudgets,
       where:
-          '${DbConstants.colBudgetEndDate} < ? '
+          '${DbConstants.colUserId} = ? '
+          'AND ${DbConstants.colBudgetEndDate} < ? '
           'AND ${DbConstants.colBudgetIsArchived} = 0',
-      whereArgs: [now],
+      whereArgs: [_userId, now],
       orderBy: '${DbConstants.colBudgetEndDate} DESC',
     );
-    return rows.map((r) => BudgetModel.fromMap(r)).toList();
+    return Future.wait(rows.map((r) => _buildBudget(r)));
   }
 
   @override
   Future<List<TransactionModel>> getTransactionsByBudget(
     String budgetId,
   ) async {
-    // Transactions that reference this budget and are not soft-deleted
     final rows = await _db.queryWhere(
       DbConstants.tableTransactions,
       where:
           '${DbConstants.colTxnBudgetId} = ? '
-          'AND ${DbConstants.colIsDeleted} = 0',
-      whereArgs: [budgetId],
+          'AND ${DbConstants.colIsDeleted} = 0 '
+          'AND ${DbConstants.colUserId} = ?',
+      whereArgs: [budgetId, _userId],
       orderBy: '${DbConstants.colTxnDate} DESC',
     );
     return Future.wait(rows.map((r) => _buildTransaction(r)));
@@ -196,8 +247,8 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
       DbConstants.tableBudgets,
       BudgetModel.fromEntity(budget).toMap()
         ..[DbConstants.colUpdatedAt] = DateTime.now().toIso8601String(),
-      where: '${DbConstants.colId} = ?',
-      whereArgs: [budget.id],
+      where: '${DbConstants.colId} = ? AND ${DbConstants.colUserId} = ?',
+      whereArgs: [budget.id, _userId],
     );
   }
 
@@ -207,31 +258,26 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
     String transactionId,
     double amount,
   ) async {
-    // In SQLite the transaction list is not stored on the budget row —
-    // the transaction itself carries budget_id. So we just:
-    // 1. Point the transaction at this budget.
-    // 2. Increment spent_amount on the budget atomically.
     await _db.runTransaction((txn) async {
-      // Update the transaction's budget_id
       await txn.update(
         DbConstants.tableTransactions,
         {
           DbConstants.colTxnBudgetId: budgetId,
           DbConstants.colUpdatedAt: DateTime.now().toIso8601String(),
         },
-        where: '${DbConstants.colId} = ?',
-        whereArgs: [transactionId],
+        where: '${DbConstants.colId} = ? AND ${DbConstants.colUserId} = ?',
+        whereArgs: [transactionId, _userId],
       );
-
-      // Increment spent_amount on the budget
       await txn.rawUpdate(
         '''
         UPDATE ${DbConstants.tableBudgets}
-        SET ${DbConstants.colBudgetSpentAmount} = ${DbConstants.colBudgetSpentAmount} + ?,
+        SET ${DbConstants.colBudgetSpentAmount} =
+              ${DbConstants.colBudgetSpentAmount} + ?,
             ${DbConstants.colUpdatedAt} = ?
         WHERE ${DbConstants.colId} = ?
-      ''',
-        [amount, DateTime.now().toIso8601String(), budgetId],
+          AND ${DbConstants.colUserId} = ?
+        ''',
+        [amount, DateTime.now().toIso8601String(), budgetId, _userId],
       );
     });
   }
@@ -243,26 +289,25 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
     double amount,
   ) async {
     await _db.runTransaction((txn) async {
-      // Clear the budget_id on the transaction
       await txn.update(
         DbConstants.tableTransactions,
         {
           DbConstants.colTxnBudgetId: null,
           DbConstants.colUpdatedAt: DateTime.now().toIso8601String(),
         },
-        where: '${DbConstants.colId} = ?',
-        whereArgs: [transactionId],
+        where: '${DbConstants.colId} = ? AND ${DbConstants.colUserId} = ?',
+        whereArgs: [transactionId, _userId],
       );
-
-      // Decrement spent_amount, clamped to 0 via MAX()
       await txn.rawUpdate(
         '''
         UPDATE ${DbConstants.tableBudgets}
-        SET ${DbConstants.colBudgetSpentAmount} = MAX(0, ${DbConstants.colBudgetSpentAmount} - ?),
+        SET ${DbConstants.colBudgetSpentAmount} =
+              MAX(0, ${DbConstants.colBudgetSpentAmount} - ?),
             ${DbConstants.colUpdatedAt} = ?
         WHERE ${DbConstants.colId} = ?
-      ''',
-        [amount, DateTime.now().toIso8601String(), budgetId],
+          AND ${DbConstants.colUserId} = ?
+        ''',
+        [amount, DateTime.now().toIso8601String(), budgetId, _userId],
       );
     });
   }
@@ -283,8 +328,8 @@ class BudgetLocalDataSourceImpl implements BudgetLocalDataSource {
   Future<void> deleteBudget(String id) async {
     await _db.delete(
       DbConstants.tableBudgets,
-      where: '${DbConstants.colId} = ?',
-      whereArgs: [id],
+      where: '${DbConstants.colId} = ? AND ${DbConstants.colUserId} = ?',
+      whereArgs: [id, _userId],
     );
   }
 }

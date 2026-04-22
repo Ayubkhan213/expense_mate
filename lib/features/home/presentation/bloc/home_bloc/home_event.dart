@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/features/home/presentation/bloc/home_bloc/home_state.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_state.dart';
 
 abstract class HomeEvent extends Equatable {
   const HomeEvent();
@@ -20,3 +21,14 @@ class TabChanged extends HomeEvent {
 }
 
 class RefreshHomeData extends HomeEvent {}
+
+class DeleteTransaction extends HomeEvent {
+  final String transactionId;
+  const DeleteTransaction({required this.transactionId});
+}
+
+// Event:
+class DeleteDebt extends HomeEvent {
+  final DebtModel debt;
+  const DeleteDebt({required this.debt});
+}

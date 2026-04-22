@@ -1,8 +1,5 @@
-import 'package:expense_mate/core/domain/entity/transcation_item_entity.dart';
-
-enum TransactionType { income, expense }
-
-enum PaymentMethod { cash, card, bank, wallet }
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/transcation_item_entity.dart';
 
 class TransactionEntity {
   final String id;

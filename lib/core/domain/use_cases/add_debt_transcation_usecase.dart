@@ -1,6 +1,7 @@
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/data/models/transcation_result.dart';
-import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+
+import '../../data/models/transcation_result.dart';
+import '../repository/sql/transcation_repository.dart';
 
 class SaveDebtTranscationUsecase {
   final TransactionRepository transactionRepository;

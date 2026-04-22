@@ -1,12 +1,12 @@
 // lib/features/auth/presentation/pages/login_face.dart
 
-import 'package:expense_mate/core/common/custom_snackbar.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
-import 'package:expense_mate/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
-import 'package:expense_mate/features/auth/presentation/widgets/login_flip_card.dart';
-import 'package:expense_mate/features/auth/presentation/widgets/login_header.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/common/custom_snackbar.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/presentation/bloc/login_bloc/login_bloc.dart';
+import 'package:spendio/features/auth/presentation/widgets/login_flip_card.dart';
+import 'package:spendio/features/auth/presentation/widgets/login_header.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,12 +66,12 @@ class _LoginFaceState extends State<LoginFace>
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
     final isDark = theme.brightness == Brightness.dark;
-
+    final t = AppLocalizations.of(context)!;
     return BlocListener<LoginBloc, LoginState>(
       listenWhen: (p, c) => p.status != c.status,
       listener: (ctx, state) {
         if (state.status == LoginStatus.authenticated) {
-          AnimatedSnackbar.showSuccess(ctx, 'Login successful 🎉');
+          AnimatedSnackbar.showSuccess(ctx, t.loginSuccessful);
           Navigator.pushReplacementNamed(ctx, 'home');
         }
         if (state.status == LoginStatus.error && state.errorMessage != null) {

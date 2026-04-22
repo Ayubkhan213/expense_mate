@@ -1,4 +1,4 @@
-import 'package:expense_mate/features/analytics/domain/repository/analytics_repository.dart';
+import 'package:spendio/features/analytics/domain/repository/analytics_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'analytics_event.dart';
 import 'analytics_state.dart';

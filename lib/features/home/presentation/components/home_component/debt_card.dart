@@ -1,11 +1,16 @@
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/navigation/route_name.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/navigation/route_name.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/home_bloc/home_event.dart';
+import 'package:spendio/features/home/presentation/components/debt_edit_sheet.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class DebtCard extends StatelessWidget {
-  final DebtModel debt; // Replace with DebtModel
+  final DebtModel debt;
 
   const DebtCard({super.key, required this.debt});
 
@@ -14,18 +19,141 @@ class DebtCard extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    return Dismissible(
+      key: Key(debt.id),
+      direction: DismissDirection.horizontal,
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          return await _showDeleteDialog(context, t);
+        } else {
+          _openEditSheet(context);
+          return false;
+        }
+      },
+      onDismissed: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          context.read<HomeBloc>().add(DeleteDebt(debt: debt));
+        }
+      },
+
+      // ── Swipe right = edit ───────────────────────────────────────────
+      background: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+        decoration: BoxDecoration(
+          color: colorScheme.primary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.edit_rounded, color: Colors.white, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              t.edit,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      // ── Swipe left = delete ──────────────────────────────────────────
+      secondaryBackground: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.delete_rounded, color: Colors.white, size: 24),
+            const SizedBox(height: 4),
+            Text(
+              t.delete,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      child: _DebtCardBody(debt: debt),
+    );
+  }
+
+  void _openEditSheet(BuildContext context) {
+    DebtEditSheet.show(context, debt); // ✅ dedicated edit sheet
+  }
+
+  Future<bool> _showDeleteDialog(
+    BuildContext context,
+    AppLocalizations t,
+  ) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(t.deleteTransaction),
+            content: const Text(
+              'This will also delete all repayments and the linked transaction. This cannot be undone.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(t.cancel),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Text(
+                  t.delete,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Card body — extracted so Dismissible child stays clean
+// ─────────────────────────────────────────────────────────────────────────────
+class _DebtCardBody extends StatelessWidget {
+  final DebtModel debt;
+  const _DebtCardBody({required this.debt});
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
 
-    // Assuming debt has these properties
-    final debtType = debt.debtType; // DebtType.borrowed or DebtType.lent
+    final debtType = debt.debtType;
     final color = debtType.toString().contains('borrowed')
-        ? Color(0xFFef4444)
-        : Color(0xFF10b981);
+        ? const Color(0xFFef4444)
+        : const Color(0xFF10b981);
     final isOverdue = debt.isOverdue ?? false;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 6),
-      padding: EdgeInsets.all(14),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: isDark ? colorScheme.surface : Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -39,7 +167,7 @@ class DebtCard extends StatelessWidget {
           BoxShadow(
             color: colorScheme.primary.withValues(alpha: 0.05),
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -62,7 +190,7 @@ class DebtCard extends StatelessWidget {
                   color: color,
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
 
               // Info
               Expanded(
@@ -79,9 +207,9 @@ class DebtCard extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 2),
+                    const SizedBox(height: 2),
                     Text(
-                      '\$${debt.remainingAmount.toStringAsFixed(2)} ${t.remaining}',
+                      '${CurrencyFormatter.format(debt.remainingAmount)} ${t.remaining}',
                       style: TextStyle(
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                         fontSize: 12,
@@ -104,7 +232,7 @@ class DebtCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
           // Progress Bar
           ClipRRect(
@@ -118,7 +246,7 @@ class DebtCard extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation(color),
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
           // Footer
           Row(
@@ -135,7 +263,7 @@ class DebtCard extends StatelessWidget {
               if (isOverdue)
                 Text(
                   '⚠️ ${debt.daysOverdue} ${t.daysOverdue}',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

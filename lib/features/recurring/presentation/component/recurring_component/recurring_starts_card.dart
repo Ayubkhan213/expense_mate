@@ -1,5 +1,6 @@
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Stats card showing active, due soon, and monthly estimates
@@ -98,7 +99,7 @@ class RecurringStatsCard extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           Text(
-            'Net: ${netMonthly >= 0 ? '+' : ''}${netMonthly.toStringAsFixed(2)}',
+            'Net: ${netMonthly >= 0 ? '+' : ''}${CurrencyFormatter.format(netMonthly)}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -166,7 +167,7 @@ class _MonthlyEstimate extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '${isIncome ? '+' : '-'}${amount.toStringAsFixed(2)}',
+          '${isIncome ? '+' : '-'}${CurrencyFormatter.format(amount)}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,

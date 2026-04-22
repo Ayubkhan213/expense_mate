@@ -1,9 +1,7 @@
-// budget_details_state.dart
 import 'package:equatable/equatable.dart';
-
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_detail/budget_detail_event.dart';
 
 enum BudgetDetailsStatus { initial, loading, success, error }
 
@@ -55,16 +53,25 @@ class BudgetDetailsState extends Equatable {
     double? progressPercentage,
     String? errorMessage,
     bool clearError = false,
+    bool clearTransactions = false, // ✅ force reload flag
   }) {
     return BudgetDetailsState(
       status: status ?? this.status,
       budget: budget ?? this.budget,
-      transactions: transactions ?? this.transactions,
-      filteredTransactions: filteredTransactions ?? this.filteredTransactions,
+      transactions: clearTransactions
+          ? []
+          : (transactions ?? this.transactions),
+      filteredTransactions: clearTransactions
+          ? []
+          : (filteredTransactions ?? this.filteredTransactions),
       selectedFilter: selectedFilter ?? this.selectedFilter,
-      totalSpent: totalSpent ?? this.totalSpent,
-      remainingAmount: remainingAmount ?? this.remainingAmount,
-      progressPercentage: progressPercentage ?? this.progressPercentage,
+      totalSpent: clearTransactions ? 0.0 : (totalSpent ?? this.totalSpent),
+      remainingAmount: clearTransactions
+          ? 0.0
+          : (remainingAmount ?? this.remainingAmount),
+      progressPercentage: clearTransactions
+          ? 0.0
+          : (progressPercentage ?? this.progressPercentage),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }

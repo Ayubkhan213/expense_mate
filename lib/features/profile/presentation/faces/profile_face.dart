@@ -1,21 +1,31 @@
 // lib/features/profile/presentation/faces/profile_face.dart
 
 import 'dart:io';
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/di/injection_container.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/auth/domain/use_cases/logout_usecase.dart';
-import 'package:expense_mate/features/auth/domain/use_cases/update_profile_usecase.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/profile_event.dart';
-import 'package:expense_mate/features/profile/presentation/bloc/profile_state.dart';
-import 'package:expense_mate/features/profile/presentation/faces/daily_notification_face.dart';
-import 'package:expense_mate/features/profile/presentation/faces/edit_profile_face.dart';
-import 'package:expense_mate/features/profile/presentation/widgets/profile_menu_item.dart';
-import 'package:expense_mate/features/profile/presentation/widgets/profile_section_header.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_bloc.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_event.dart';
-import 'package:expense_mate/features/splah/presentation/bloc/splash_state.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/common/custom_snackbar.dart';
+import 'package:spendio/core/database/sqflite_helper.dart';
+import 'package:spendio/core/navigation/route_name.dart';
+import 'package:spendio/core/theme/bloc/theme_bloc.dart';
+import 'package:spendio/core/theme/bloc/theme_event.dart';
+import 'package:spendio/core/theme/bloc/theme_state.dart';
+
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+
+import 'package:spendio/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:spendio/features/profile/presentation/bloc/profile_event.dart';
+import 'package:spendio/features/profile/presentation/bloc/profile_state.dart';
+import 'package:spendio/features/profile/presentation/faces/daily_notification_face.dart';
+import 'package:spendio/features/profile/presentation/faces/edit_profile_face.dart';
+import 'package:spendio/features/profile/presentation/widgets/profile_menu_item.dart';
+import 'package:spendio/features/profile/presentation/widgets/profile_section_header.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_bloc.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_event.dart';
+import 'package:spendio/features/splah/presentation/bloc/splash_state.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 class ProfileFace extends StatelessWidget {
   const ProfileFace({super.key});
@@ -117,40 +127,39 @@ class _ProfileView extends StatelessWidget {
                         icon: Icons.security_outlined,
                         title: t.menuPrivacy,
                         subtitle: t.menuPrivacySubtitle,
-                        onTap: () {},
+                        onTap: () => _showPrivacySheet(context, t), // ← add
                       ),
-                      ProfileMenuItem(
-                        icon: Icons.notifications_outlined,
-                        title: t.menuNotifications,
-                        subtitle: t.menuNotificationsSubtitle,
-                        onTap: () {},
-                      ),
-                      ProfileMenuItem(
-                        icon: Icons.notifications_active_outlined,
-                        title: t.menuDailyNotification,
-                        subtitle: t.menuDailyNotificationSubtitle,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const DailyNotificationFace(),
-                          ),
-                        ),
-                      ),
+                      // ProfileMenuItem(
+                      //   icon: Icons.notifications_outlined,
+                      //   title: t.menuNotifications,
+                      //   subtitle: t.menuNotificationsSubtitle,
+                      //   onTap: () {},
+                      // ),
+                      // ProfileMenuItem(
+                      //   icon: Icons.notifications_active_outlined,
+                      //   title: t.menuDailyNotification,
+                      //   subtitle: t.menuDailyNotificationSubtitle,
+                      //   onTap: () => Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (_) => const DailyNotificationFace(),
+                      //     ),
+                      //   ),
+                      // ),
 
                       // ── DATA ──
-                      ProfileSectionHeader(title: t.sectionData),
-                      ProfileMenuItem(
-                        icon: Icons.backup_outlined,
-                        title: t.menuBackup,
-                        subtitle: t.menuBackupSubtitle,
-                        onTap: () {},
-                      ),
-                      ProfileMenuItem(
-                        icon: Icons.download_outlined,
-                        title: t.menuExport,
-                        subtitle: t.menuExportSubtitle,
-                        onTap: () {},
-                      ),
+                      // ProfileMenuItem(
+                      //   icon: Icons.backup_outlined,
+                      //   title: t.menuBackup,
+                      //   subtitle: t.menuBackupSubtitle,
+                      //   onTap: () => _handleBackup(context, t), // ← add
+                      // ),
+                      // ProfileMenuItem(
+                      //   icon: Icons.download_outlined,
+                      //   title: t.menuExport,
+                      //   subtitle: t.menuExportSubtitle,
+                      //   onTap: () => _handleExport(context), // ← add
+                      // ),
 
                       // ── SUPPORT ──
                       ProfileSectionHeader(title: t.sectionSupport),
@@ -158,7 +167,7 @@ class _ProfileView extends StatelessWidget {
                         icon: Icons.help_outline,
                         title: t.menuHelp,
                         subtitle: t.menuHelpSubtitle,
-                        onTap: () {},
+                        onTap: () => _showHelpSheet(context), // ← add
                       ),
                       ProfileMenuItem(
                         icon: Icons.info_outline,
@@ -508,11 +517,22 @@ class _ExpandedHeader extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _StatItem(label: 'Member since', value: '2024'),
+                      _StatItem(
+                        label: t.memberSince,
+                        value: state.memberSince.isEmpty
+                            ? '—'
+                            : state.memberSince, // ← real
+                      ),
                       _Divider(),
-                      _StatItem(label: t.transactions, value: '128'),
+                      _StatItem(
+                        label: t.transactions,
+                        value: '${state.totalTransactions}', // ← real
+                      ),
                       _Divider(),
-                      _StatItem(label: t.budgets, value: '5'),
+                      _StatItem(
+                        label: t.budgets,
+                        value: '${state.totalBudgets}', // ← real
+                      ),
                     ],
                   ),
                 ),
@@ -680,4 +700,324 @@ class _Divider extends StatelessWidget {
       color: Colors.white.withValues(alpha: 0.2),
     );
   }
+}
+
+void _showPrivacySheet(BuildContext context, AppLocalizations t) {
+  final theme = Theme.of(context);
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (_) => Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Icon(Icons.security_outlined, color: theme.colorScheme.primary),
+              const SizedBox(width: 10),
+              Text(
+                'Privacy & Security',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _PrivacyRow(
+            icon: Icons.lock_outline,
+            label: 'Data Storage',
+            value: 'Local only — never uploaded',
+          ),
+          _PrivacyRow(
+            icon: Icons.cloud_off_outlined,
+            label: 'Cloud Sync',
+            value: 'Disabled — fully offline',
+          ),
+          _PrivacyRow(
+            icon: Icons.fingerprint,
+            label: 'Biometric',
+            value: 'Protected by device security',
+          ),
+          _PrivacyRow(
+            icon: Icons.pin_outlined,
+            label: 'PIN Lock',
+            value: 'Encrypted hash stored',
+          ),
+          _PrivacyRow(
+            icon: Icons.delete_outline,
+            label: 'Data Deletion',
+            value: 'Logout clears all sessions',
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _PrivacyRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  const _PrivacyRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: theme.colorScheme.primary.withValues(alpha: 0.7),
+          ),
+          const SizedBox(width: 14),
+          Expanded(child: Text(label, style: theme.textTheme.bodyMedium)),
+          Text(
+            value,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// void _handleBackup(BuildContext context, AppLocalizations t) async {
+//   final theme = Theme.of(context);
+
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (_) => const Center(child: CircularProgressIndicator()),
+//   );
+
+//   try {
+//     final path = await SqliteHelper.instance.exportDatabaseToDownloads();
+//     if (context.mounted) Navigator.pop(context); // close loader
+
+//     if (path != null && context.mounted) {
+//       showDialog(
+//         context: context,
+//         builder: (_) => AlertDialog(
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(20),
+//           ),
+//           title: Row(
+//             children: [
+//               Icon(Icons.check_circle_outline, color: Colors.green),
+//               const SizedBox(width: 10),
+//               const Text('Backup Successful'),
+//             ],
+//           ),
+//           content: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               const Text('Your data has been exported to:'),
+//               const SizedBox(height: 8),
+//               Container(
+//                 padding: const EdgeInsets.all(10),
+//                 decoration: BoxDecoration(
+//                   color: theme.colorScheme.surface,
+//                   borderRadius: BorderRadius.circular(10),
+//                 ),
+//                 child: Text(
+//                   path,
+//                   style: const TextStyle(fontSize: 12, fontFamily: 'monospace'),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           actions: [
+//             ElevatedButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: const Text('Done'),
+//             ),
+//           ],
+//         ),
+//       );
+//     } else if (context.mounted) {
+//       AnimatedSnackbar.showError(context, 'Backup failed — permission denied');
+//     }
+//   } catch (e) {
+//     if (context.mounted) {
+//       Navigator.pop(context);
+//       AnimatedSnackbar.showError(context, 'Backup failed: $e');
+//     }
+//   }
+// }
+
+// void _handleExport(BuildContext context) async {
+//   showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (_) => const Center(child: CircularProgressIndicator()),
+//   );
+
+//   try {
+//     final db = await SqliteHelper.instance.database;
+
+//     // Fetch all transactions with category key
+//     final rows = await db.rawQuery('''
+//       SELECT t.amount, t.type, t.category_key, t.note, t.payment_method, t.created_at
+//       FROM transactions t
+//       ORDER BY t.created_at DESC
+//     ''');
+
+//     // Build CSV
+//     final buffer = StringBuffer();
+//     buffer.writeln('Date,Type,Category,Amount,Payment Method,Note');
+//     for (final row in rows) {
+//       final date = row['created_at'].toString().split('T').first;
+//       final type = row['type'];
+//       final category = row['category_key'] ?? '';
+//       final amount = row['amount'];
+//       final method = row['payment_method'] ?? '';
+//       final note = (row['note'] ?? '').toString().replaceAll(',', ';');
+//       buffer.writeln('$date,$type,$category,$amount,$method,$note');
+//     }
+
+//     // Save to temp dir and share
+//     final dir = await getTemporaryDirectory();
+//     final fileName = 'spendio_${DateTime.now().millisecondsSinceEpoch}.csv';
+//     final file = File('${dir.path}/$fileName');
+//     await file.writeAsString(buffer.toString());
+
+//     if (context.mounted) Navigator.pop(context); // close loader
+
+//     await Share.shareXFiles([
+//       XFile(file.path),
+//     ], subject: 'Expense Mate — Transaction Export');
+//   } catch (e) {
+//     if (context.mounted) {
+//       Navigator.pop(context);
+//       AnimatedSnackbar.showError(context, 'Export failed: $e');
+//     }
+//   }
+// }
+
+void _showHelpSheet(BuildContext context) {
+  final theme = Theme.of(context);
+  final faqs = [
+    (
+      'How do I add a transaction?',
+      'Tap any category on the home screen to open the calculator and log your expense or income.',
+    ),
+    (
+      'How do I set a budget?',
+      'Go to the Budgets tab and tap the + button to create a monthly, project, or custom budget.',
+    ),
+    (
+      'How do I track debts?',
+      'On the home screen, select a category and toggle the Debt switch to mark it as borrowed or lent.',
+    ),
+    (
+      'Is my data safe?',
+      'All data is stored locally on your device. Nothing is sent to any server.',
+    ),
+    (
+      'How do I backup my data?',
+      'Go to Profile → Backup to export your database to your Downloads folder.',
+    ),
+    (
+      'How do I change the currency?',
+      'Currency is set during signup. Contact support to reset it.',
+    ),
+  ];
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (_) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.6,
+      maxChildSize: 0.92,
+      builder: (_, controller) => Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Icon(Icons.help_outline, color: theme.colorScheme.primary),
+                const SizedBox(width: 10),
+                Text(
+                  'Help & FAQ',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView.separated(
+                controller: controller,
+                itemCount: faqs.length,
+                separatorBuilder: (_, __) => const Divider(height: 1),
+                itemBuilder: (_, i) => ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: const EdgeInsets.only(bottom: 12),
+                  title: Text(
+                    faqs[i].$1,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  children: [
+                    Text(
+                      faqs[i].$2,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.6,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

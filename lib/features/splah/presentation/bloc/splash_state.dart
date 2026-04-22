@@ -1,8 +1,9 @@
 // lib/features/splah/presentation/bloc/splash_state.dart
 
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/currency_model.dart';
-import 'package:expense_mate/core/data/models/user_model.dart';
+import 'package:spendio/core/data/models/currency_model.dart';
+import 'package:spendio/core/data/models/user_sql_model.dart';
+// import 'package:spendio/core/data/models/user_model.dart';
 
 enum SplashStatus {
   checking,

@@ -1,7 +1,9 @@
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/core/theme/typography/text_style_extension.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/theme/typography/text_style_extension.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class BudgetCompactDisplay extends StatelessWidget {
@@ -13,7 +15,9 @@ class BudgetCompactDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final amount = state.amount.isNotEmpty ? state.amount : '0';
-    final name = state.name.isNotEmpty ? state.name : t.newBudget;
+    final name = state.displayName.isNotEmpty
+        ? state.displayName
+        : (state.name.isNotEmpty ? context.tr(state.name) : t.newBudget);
     final color = state.selectedColor;
 
     return Container(
@@ -54,7 +58,7 @@ class BudgetCompactDisplay extends StatelessWidget {
           ),
 
           Text(
-            '\$$amount',
+            CurrencyFormatter.format(double.tryParse(amount) ?? 0),
             style: AppTextStyles.currencyMedium.withColor(color),
           ),
         ],

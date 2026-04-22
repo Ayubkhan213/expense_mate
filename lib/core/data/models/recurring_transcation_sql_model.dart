@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:expense_mate/core/domain/entity/recurring_transcation_entity.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/recurring_transcation_entity.dart';
 
 class RecurringTransactionModel extends RecurringTransactionEntity {
   const RecurringTransactionModel({
@@ -20,6 +21,7 @@ class RecurringTransactionModel extends RecurringTransactionEntity {
     super.dayOfMonth,
     super.dayOfWeek,
     required super.createdAt,
+    required super.updatedAt,
   });
 
   factory RecurringTransactionModel.fromMap(Map<String, dynamic> map) =>
@@ -50,6 +52,7 @@ class RecurringTransactionModel extends RecurringTransactionEntity {
         dayOfMonth: map['day_of_month'] as int? ?? 1,
         dayOfWeek: map['day_of_week'] as int?,
         createdAt: DateTime.parse(map['created_at'] as String),
+        updatedAt: DateTime.parse(map['updated_at'] as String),
       );
 
   Map<String, dynamic> toMap() => {
@@ -71,6 +74,7 @@ class RecurringTransactionModel extends RecurringTransactionEntity {
     'day_of_month': dayOfMonth,
     'day_of_week': dayOfWeek,
     'created_at': createdAt.toIso8601String(),
+    'updated_at': updatedAt.toIso8601String(),
   };
 
   factory RecurringTransactionModel.fromEntity(RecurringTransactionEntity e) =>
@@ -91,5 +95,6 @@ class RecurringTransactionModel extends RecurringTransactionEntity {
         dayOfMonth: e.dayOfMonth,
         dayOfWeek: e.dayOfWeek,
         createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
       );
 }

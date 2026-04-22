@@ -1,18 +1,21 @@
-import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/sql/debt_local_datasource.dart';
-import 'package:expense_mate/core/data/data_sources/local/sql/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/features/home/data/data_source/home_datasource.dart';
-import 'package:expense_mate/features/home/data/repository_impl/home_repository_imp.dart';
+import 'package:spendio/core/data/data_sources/local/debt_local_datasource.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
 
-import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_event.dart';
-import 'package:expense_mate/features/home/presentation/bloc/all_transcation_bloc/all_transcation_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+
+import 'package:spendio/features/home/data/data_source/home_data_source.dart';
+
+import 'package:spendio/features/home/data/repository_impl/home_repository_imp.dart';
+
+import 'package:spendio/features/home/presentation/bloc/all_transcation_bloc/all_transcation_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/all_transcation_bloc/all_transcation_event.dart';
+import 'package:spendio/features/home/presentation/bloc/all_transcation_bloc/all_transcation_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +28,7 @@ class AllTransactionsFace extends StatelessWidget {
     return BlocProvider(
       create: (_) => AllTransactionsBloc(
         repository: HomeRepositoryImp(
-          homeDatasource: HomeDatasourceImp(),
+          homeDatasource: HomeDatasourceImpl(),
           localDataSource: TransactionLocalDataSourceImpl(),
           debtDataSource: DebtLocalDataSourceImpl(),
         ),
@@ -339,14 +342,14 @@ class _ExpandedHeader extends StatelessWidget {
                     children: [
                       _SummaryPill(
                         label: t.income,
-                        value: '\$${_fmt(totalIncome)}',
+                        value: CurrencyFormatter.format(totalIncome),
                         icon: Icons.arrow_downward_rounded,
                         color: const Color(0xFF10b981),
                       ),
                       const SizedBox(width: 10),
                       _SummaryPill(
                         label: t.expense,
-                        value: '\$${_fmt(totalExpense)}',
+                        value: CurrencyFormatter.format(totalExpense),
                         icon: Icons.arrow_upward_rounded,
                         color: const Color(0xFFef4444),
                       ),

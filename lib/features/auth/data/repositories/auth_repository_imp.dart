@@ -1,28 +1,30 @@
-// lib/features/auth/data/repositories/auth_repository_impl.dart
-import 'package:expense_mate/core/data/models/user_model.dart';
-
-import 'package:crypto/crypto.dart';
-import 'package:expense_mate/features/auth/data/data_source/auth_data_source.dart';
 import 'dart:convert';
 
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
-import 'package:hive/hive.dart';
+import 'package:crypto/crypto.dart';
+import 'package:spendio/core/data/models/user_sql_model.dart';
+import 'package:spendio/features/auth/data/data_source/auth_local_datasource.dart';
+
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource localDataSource;
 
   AuthRepositoryImpl({required this.localDataSource});
 
-  // Hash password (you should use a proper password hashing library like bcrypt)
+  // ── private ────────────────────────────────────────────────────────────────
   String _hashPassword(String password) {
     final bytes = utf8.encode(password);
-    final digest = sha256.convert(bytes);
-    return digest.toString();
+    return sha256.convert(bytes).toString();
   }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // REGISTRATION / AUTH
+  // ═══════════════════════════════════════════════════════════════════════════
 
   @override
   Future<UserModel> register(UserModel user) async {
     try {
+      // Hash the password before persisting
       final hashedUser = UserModel(
         id: user.id,
         name: user.name,
@@ -38,14 +40,13 @@ class AuthRepositoryImpl implements AuthRepository {
         lastLoginAt: user.lastLoginAt,
         pin: user.pin,
         useBiometric: user.useBiometric,
-        // ── New fields ──
         securityQuestion1: user.securityQuestion1,
         securityAnswer1: user.securityAnswer1,
         securityQuestion2: user.securityQuestion2,
         securityAnswer2: user.securityAnswer2,
         recoveryKeys: user.recoveryKeys,
+        updatedAt: DateTime.now(),
       );
-
       return await localDataSource.createUser(hashedUser);
     } catch (e) {
       throw Exception('Registration failed: $e');
@@ -73,18 +74,17 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout(String userId) async {
-    final box = Hive.box<UserModel>('users');
-
-    final user = box.get(userId);
-    if (user == null) return;
-
-    final updatedUser = user.copyWith(
-      isLoggedIn: false,
-      lastLoginAt: DateTime.now(),
-    );
-
-    await box.put(userId, updatedUser);
+    try {
+      // Delegates to the datasource — no direct Hive/SQLite access in repo
+      await localDataSource.logoutCurrentUser();
+    } catch (e) {
+      throw Exception('Logout failed: $e');
+    }
   }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CURRENT USER / SESSION
+  // ═══════════════════════════════════════════════════════════════════════════
 
   @override
   Future<UserModel?> getCurrentUser() async {
@@ -94,6 +94,28 @@ class AuthRepositoryImpl implements AuthRepository {
       return null;
     }
   }
+
+  @override
+  Future<UserModel?> getCurrentLoggedInUser() async {
+    try {
+      return await localDataSource.getCurrentUser();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> isLoggedIn() async {
+    try {
+      return await localDataSource.isAnyUserLoggedIn();
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ACCOUNT MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════════
 
   @override
   Future<UserModel> updateUserProfile(UserModel user) async {
@@ -125,20 +147,16 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> switchAccount(String userId) async {
     try {
+      // loginUser already calls logoutAllUsers first, then logs in the target
       await localDataSource.loginUser(userId);
     } catch (e) {
       throw Exception('Account switch failed: $e');
     }
   }
 
-  @override
-  Future<bool> isLoggedIn() async {
-    try {
-      return await localDataSource.isAnyUserLoggedIn();
-    } catch (e) {
-      return false;
-    }
-  }
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PASSWORD
+  // ═══════════════════════════════════════════════════════════════════════════
 
   @override
   Future<void> changePassword(
@@ -148,21 +166,30 @@ class AuthRepositoryImpl implements AuthRepository {
   ) async {
     try {
       final user = await localDataSource.getUserById(userId);
-      if (user == null) {
-        throw Exception('User not found');
-      }
+      if (user == null) throw Exception('User not found');
 
-      final hashedOldPassword = _hashPassword(oldPassword);
-      if (user.passwordHash != hashedOldPassword) {
+      if (user.passwordHash != _hashPassword(oldPassword)) {
         throw Exception('Incorrect old password');
       }
 
-      final hashedNewPassword = _hashPassword(newPassword);
-      await localDataSource.updatePassword(userId, hashedNewPassword);
+      await localDataSource.updatePassword(userId, _hashPassword(newPassword));
     } catch (e) {
       throw Exception('Password change failed: $e');
     }
   }
+
+  @override
+  Future<void> resetPassword(String userId, String newPassword) async {
+    try {
+      await localDataSource.updatePassword(userId, _hashPassword(newPassword));
+    } catch (e) {
+      throw Exception('Password reset failed: $e');
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PIN
+  // ═══════════════════════════════════════════════════════════════════════════
 
   @override
   Future<void> setPin(String userId, String pin) async {
@@ -186,6 +213,20 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<bool> checkPinExists({required String pin}) async {
+    try {
+      final user = await localDataSource.getUserByPin(pin);
+      return user != null;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BIOMETRIC
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  @override
   Future<void> enableBiometric(String userId) async {
     try {
       await localDataSource.toggleBiometric(userId, true);
@@ -203,6 +244,10 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LOOKUPS
+  // ═══════════════════════════════════════════════════════════════════════════
+
   @override
   Future<bool> checkEmailExists(String email) async {
     try {
@@ -210,37 +255,6 @@ class AuthRepositoryImpl implements AuthRepository {
       return user != null;
     } catch (e) {
       return false;
-    }
-  }
-
-  @override
-  Future<bool> checkPinExists({required String pin}) async {
-    try {
-      final user = await localDataSource.getUserByPin(pin);
-      return user != null;
-    } catch (_) {
-      return false;
-    }
-  }
-
-  @override
-  Future<UserModel?> getCurrentLoggedInUser() async {
-    final users = await localDataSource.getAllUsers();
-
-    try {
-      return users.firstWhere((user) => user.isLoggedIn);
-    } catch (_) {
-      return null;
-    }
-  }
-
-  @override
-  Future<void> resetPassword(String userId, String newPassword) async {
-    try {
-      final hashedPassword = _hashPassword(newPassword);
-      await localDataSource.updatePassword(userId, hashedPassword);
-    } catch (e) {
-      throw Exception('Password reset failed: $e');
     }
   }
 }

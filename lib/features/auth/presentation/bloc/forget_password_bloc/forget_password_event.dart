@@ -1,6 +1,6 @@
 // lib/features/auth/presentation/bloc/forgot_password/forgot_password_event.dart
 
-import 'package:expense_mate/features/auth/presentation/bloc/forget_password_bloc/forget_password_state.dart';
+import 'package:spendio/features/auth/presentation/bloc/forget_password_bloc/forget_password_state.dart';
 
 abstract class ForgotPasswordEvent {}
 

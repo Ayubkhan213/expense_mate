@@ -1784,10 +1784,10 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get splashAppName => 'إكسبنس ميت';
+  String get splashAppName => 'سبينديو';
 
   @override
-  String get splashTagline => 'مال ذكي · أنت أذكى';
+  String get splashTagline => 'تتبع · ميزانية · ازدهار';
 
   @override
   String get transactionDetails => 'تفاصيل المعاملة';
@@ -1838,5 +1838,59 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chooseFromLibrary => 'لائبریری سے منتخب کریں';
 
   @override
-  String get deleteCurrentAttachment => 'موجودہ منسلکہ حذف کریں';
+  String get deleteCurrentAttachment => 'Delete the current attachment';
+
+  @override
+  String get secQ1_1 => 'ما كان اسم حيوانك الأليف الأول؟';
+
+  @override
+  String get secQ1_2 => 'ما اسم المدينة التي وُلدت فيها؟';
+
+  @override
+  String get secQ1_3 => 'ما كانت ماركة سيارتك الأولى؟';
+
+  @override
+  String get secQ1_4 => 'ما اسم والدتك قبل الزواج؟';
+
+  @override
+  String get secQ1_5 => 'ما كان اسم مدرستك الابتدائية؟';
+
+  @override
+  String get secQ1_6 => 'ما كان لقبك في الطفولة؟';
+
+  @override
+  String get secQ1_7 => 'ما اسم الشارع الذي نشأت فيه؟';
+
+  @override
+  String get secQ2_1 => 'ما اسم أكبر إخوتك؟';
+
+  @override
+  String get secQ2_2 => 'ما كان أول حفل موسيقي حضرته؟';
+
+  @override
+  String get secQ2_3 => 'ما كان اسم معلمك المفضل؟';
+
+  @override
+  String get secQ2_4 => 'في أي مدينة التقيت بشريك حياتك؟';
+
+  @override
+  String get secQ2_5 => 'ما كان أول ألبوم اشتريته؟';
+
+  @override
+  String get secQ2_6 => 'ما الاسم الأول لأكبر أبناء عمك؟';
+
+  @override
+  String get secQ2_7 => 'ما كان اسم أول دمية أو لعبة محشوة لديك؟';
+
+  @override
+  String get deleteTransaction => 'حذف المعاملة';
+
+  @override
+  String get deleteTransactionConfirm => 'هل أنت متأكد من حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.';
+
+  @override
+  String get update => 'تحديث';
+
+  @override
+  String get transactionUpdatedSuccess => 'تم تحديث المعاملة بنجاح!';
 }

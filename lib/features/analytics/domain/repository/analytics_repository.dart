@@ -1,4 +1,4 @@
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
 
 abstract class AnalyticsRepository {
   /// Get comprehensive analytics data for the specified date range

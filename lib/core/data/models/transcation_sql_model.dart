@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:expense_mate/core/domain/entity/transcation_entity.dart';
-import 'package:expense_mate/core/domain/entity/transcation_item_entity.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/domain/entity/transcation_entity.dart';
+import 'package:spendio/core/domain/entity/transcation_item_entity.dart';
 
 class TransactionModel extends TransactionEntity {
   const TransactionModel({

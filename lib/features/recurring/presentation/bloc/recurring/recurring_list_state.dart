@@ -1,5 +1,5 @@
 // States
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
 
 abstract class RecurringListState {}
 

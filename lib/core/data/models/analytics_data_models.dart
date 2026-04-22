@@ -232,6 +232,7 @@ class TopTransaction extends Equatable {
   final double amount;
   final DateTime date;
   final String? note;
+  final bool isIncome;
 
   const TopTransaction({
     required this.id,
@@ -239,8 +240,9 @@ class TopTransaction extends Equatable {
     required this.amount,
     required this.date,
     this.note,
+    this.isIncome = false,
   });
 
   @override
-  List<Object?> get props => [id, categoryKey, amount, date, note];
+  List<Object?> get props => [id, categoryKey, amount, date, note, isIncome];
 }

@@ -3,13 +3,13 @@
 // // Path: lib/features/add_transaction/domain/usecases/create_debt_transaction.dart
 // // ============================================
 
-// import 'package:expense_mate/core/domain/repository/debt_repository.dart';
-// import 'package:expense_mate/core/domain/repository/transcation_repository.dart';
+// import 'package:spendio/core/domain/repository/debt_repository.dart';
+// import 'package:spendio/core/domain/repository/transcation_repository.dart';
 // import 'package:uuid/uuid.dart';
-// import 'package:expense_mate/core/data/models/transaction_model.dart';
-// import 'package:expense_mate/core/data/models/transaction_item_model.dart';
-// import 'package:expense_mate/core/data/models/debt_model.dart';
-// import 'package:expense_mate/core/data/models/enums.dart';
+// import 'package:spendio/core/data/models/transaction_model.dart';
+// import 'package:spendio/core/data/models/transaction_item_model.dart';
+// import 'package:spendio/core/data/models/debt_model.dart';
+// import 'package:spendio/core/data/models/enums.dart';
 
 // class CreateDebtTransaction {
 //   final TransactionRepository transactionRepository;

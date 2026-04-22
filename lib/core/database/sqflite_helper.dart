@@ -2,10 +2,10 @@
 
 import 'dart:io';
 
-import 'package:expense_mate/core/database/db_constants.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:spendio/core/data/repository_imp/db_constants.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
@@ -213,6 +213,7 @@ class SqliteHelper {
         ${DbConstants.colRecurringDayOfMonth}     INTEGER NOT NULL DEFAULT 1,
         ${DbConstants.colRecurringDayOfWeek}      INTEGER,
         ${DbConstants.colCreatedAt}               TEXT NOT NULL,
+        ${DbConstants.colUpdatedAt}               TEXT NOT NULL,
         FOREIGN KEY (${DbConstants.colUserId})
           REFERENCES ${DbConstants.tableUsers}(${DbConstants.colId})
           ON DELETE SET NULL

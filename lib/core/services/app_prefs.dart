@@ -17,6 +17,7 @@ class AppPrefs {
   static const String _onboardingSeen = 'onboarding_seen';
   static const String _isLoggedIn = 'is_logged_in';
   static const String _userId = 'user_id';
+  static const String _userCurrency = 'user_currency';
 
   // ---------------------------------------------------------------------------
   // ONBOARDING
@@ -43,6 +44,15 @@ class AppPrefs {
 
   Future<void> setUserId(String id) async {
     await _prefs.setString(_userId, id);
+  }
+
+  // ---------------------------------------------------------------------------
+  // USER CURRENCY
+  // ---------------------------------------------------------------------------
+  String get userCurrency => _prefs.getString(_userCurrency) ?? 'USD';
+
+  Future<void> setUserCurrency(String currency) async {
+    await _prefs.setString(_userCurrency, currency);
   }
 
   // ---------------------------------------------------------------------------

@@ -1,14 +1,80 @@
 // ignore_for_file: avoid_print
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
 
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-
-import 'package:expense_mate/features/recurring/data/data_source/recurring_local_data_source.dart';
-import 'package:expense_mate/features/recurring/domain/repository.dart';
+import 'package:spendio/core/data/models/recurring_transcation_sql_model.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/features/recurring/data/data_source/recurring_local_datasource.dart';
+import 'package:spendio/features/recurring/domain/repository.dart';
 
 class RecurringRepositoryImpl implements RecurringRepository {
   final RecurringLocalDataSource localDataSource;
+  final TransactionLocalDataSource transactionDataSource;
 
-  RecurringRepositoryImpl({required this.localDataSource});
+  RecurringRepositoryImpl({
+    required this.localDataSource,
+    required this.transactionDataSource,
+  });
+
+  @override
+  Future<List<TransactionModel>> getGeneratedTransactions(
+    List<String> ids,
+  ) async {
+    try {
+      if (ids.isEmpty) return [];
+      final all = await transactionDataSource.getAllTransactions();
+      return all.where((t) => ids.contains(t.id)).toList();
+    } catch (e) {
+      print('Repository getGeneratedTransactions error: $e');
+      return [];
+    }
+  }
+
+  @override
+  Future<void> toggleActive(String id) async {
+    // ← add
+    try {
+      await localDataSource.toggleActive(id);
+    } catch (e) {
+      print('Repository toggleActive error: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> pauseRecurring(String id) async {
+    try {
+      final recurring = await localDataSource.getRecurringById(id);
+      if (recurring != null) {
+        await localDataSource.updateRecurring(
+          recurring.copyWith(isActive: false), // ← copyWith instead of mutation
+        );
+      }
+    } catch (e) {
+      print('Repository pauseRecurring error: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> resumeRecurring(String id) async {
+    try {
+      final recurring = await localDataSource.getRecurringById(id);
+      if (recurring != null) {
+        await localDataSource.updateRecurring(
+          recurring.copyWith(
+            // ← copyWith instead of mutation
+            isActive: true,
+            nextOccurrence: recurring.nextOccurrence.isBefore(DateTime.now())
+                ? DateTime.now()
+                : recurring.nextOccurrence,
+          ),
+        );
+      }
+    } catch (e) {
+      print('Repository resumeRecurring error: $e');
+      rethrow;
+    }
+  }
 
   @override
   Future<void> createRecurring(RecurringTransactionModel recurring) async {
@@ -77,38 +143,6 @@ class RecurringRepositoryImpl implements RecurringRepository {
     } catch (e) {
       print('Repository getDueRecurring error: $e');
       return [];
-    }
-  }
-
-  @override
-  Future<void> pauseRecurring(String id) async {
-    try {
-      final recurring = await localDataSource.getRecurringById(id);
-      if (recurring != null) {
-        recurring.isActive = false;
-        await localDataSource.updateRecurring(recurring);
-      }
-    } catch (e) {
-      print('Repository pauseRecurring error: $e');
-      rethrow;
-    }
-  }
-
-  @override
-  Future<void> resumeRecurring(String id) async {
-    try {
-      final recurring = await localDataSource.getRecurringById(id);
-      if (recurring != null) {
-        recurring.isActive = true;
-        // Reset next occurrence if in past
-        if (recurring.nextOccurrence.isBefore(DateTime.now())) {
-          recurring.nextOccurrence = DateTime.now();
-        }
-        await localDataSource.updateRecurring(recurring);
-      }
-    } catch (e) {
-      print('Repository resumeRecurring error: $e');
-      rethrow;
     }
   }
 }

@@ -1,19 +1,17 @@
-// FILE: features/home/presentation/faces/all_debt_transactions_face.dart
-
-import 'package:expense_mate/core/data/data_sources/local/debt_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/sql/debt_local_datasource.dart';
-import 'package:expense_mate/core/data/data_sources/local/sql/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/data_sources/local/transcation_local_data_source.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/features/home/data/data_source/home_datasource.dart';
-import 'package:expense_mate/features/home/data/repository_impl/home_repository_imp.dart';
-import 'package:expense_mate/features/home/presentation/bloc/all_debt_bloc/all_debt_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/all_debt_bloc/all_debt_event.dart';
-import 'package:expense_mate/features/home/presentation/bloc/all_debt_bloc/all_debt_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/data_sources/local/debt_local_datasource.dart';
+import 'package:spendio/core/data/data_sources/local/transcation_local_data_source.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/home/data/data_source/home_data_source.dart';
+import 'package:spendio/features/home/data/repository_impl/home_repository_imp.dart';
+import 'package:spendio/features/home/presentation/bloc/all_debt_bloc/all_debt_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/all_debt_bloc/all_debt_event.dart';
+import 'package:spendio/features/home/presentation/bloc/all_debt_bloc/all_debt_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -26,9 +24,9 @@ class AllDebtTransactionsFace extends StatelessWidget {
     return BlocProvider(
       create: (_) => AllDebtTransactionsBloc(
         repository: HomeRepositoryImp(
-          homeDatasource: HomeDatasourceImp(),
           localDataSource: TransactionLocalDataSourceImpl(),
           debtDataSource: DebtLocalDataSourceImpl(),
+          homeDatasource: HomeDatasourceImpl(),
         ),
       )..add(LoadAllDebtTransactions()),
       child: const _AllDebtTransactionsView(),
@@ -36,6 +34,9 @@ class AllDebtTransactionsFace extends StatelessWidget {
   }
 }
 
+// =============================================================================
+// View
+// =============================================================================
 class _AllDebtTransactionsView extends StatefulWidget {
   const _AllDebtTransactionsView();
 
@@ -67,14 +68,11 @@ class _AllDebtTransactionsViewState extends State<_AllDebtTransactionsView> {
           return CustomScrollView(
             physics: const ClampingScrollPhysics(),
             slivers: [
-              // ── Hero SliverAppBar ──
               _DebtTxSliverAppBar(
                 state: state,
                 isDark: isDark,
                 searchController: _searchController,
               ),
-
-              // ── 2-row pinned filter bar ──
               SliverPersistentHeader(
                 pinned: true,
                 delegate: _FilterBarDelegate(
@@ -83,12 +81,8 @@ class _AllDebtTransactionsViewState extends State<_AllDebtTransactionsView> {
                   onDateTap: () => _showDatePicker(context, state),
                 ),
               ),
-
-              // ── Active filters banner ──
               if (state.hasActiveFilters)
                 SliverToBoxAdapter(child: _ActiveFiltersBanner(state: state)),
-
-              // ── Content ──
               if (state.status == AllDebtTxStatus.loading)
                 const SliverFillRemaining(child: _LoadingView())
               else if (state.status == AllDebtTxStatus.error)
@@ -98,8 +92,11 @@ class _AllDebtTransactionsViewState extends State<_AllDebtTransactionsView> {
               else if (state.filtered.isEmpty)
                 const SliverFillRemaining(child: _EmptyView())
               else
-                _DebtTxList(transactions: state.filtered),
-
+                // ← debtMap passed down from state; cards do a plain [] lookup
+                _DebtTxList(
+                  transactions: state.filtered,
+                  debtMap: state.debtMap,
+                ),
               const SliverToBoxAdapter(child: SizedBox(height: 110)),
             ],
           );
@@ -128,9 +125,9 @@ class _AllDebtTransactionsViewState extends State<_AllDebtTransactionsView> {
   }
 }
 
-// ─────────────────────────────────────────
+// =============================================================================
 // SliverAppBar
-// ─────────────────────────────────────────
+// =============================================================================
 class _DebtTxSliverAppBar extends StatelessWidget {
   final AllDebtTransactionsState state;
   final bool isDark;
@@ -202,7 +199,7 @@ class _DebtTxSliverAppBar extends StatelessWidget {
   }
 }
 
-// ── Expanded ──
+// ── Expanded ──────────────────────────────────────────────────────────────────
 class _ExpandedHeader extends StatelessWidget {
   final AllDebtTransactionsState state;
   final Color primary;
@@ -285,9 +282,7 @@ class _ExpandedHeader extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 14),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: _SearchField(
@@ -303,25 +298,21 @@ class _ExpandedHeader extends StatelessWidget {
                     },
                   ),
                 ),
-
                 const SizedBox(height: 14),
-
-                // Borrowed / Lent summary pills
-                // expense = money I borrowed (went out), income = money I lent (came in as debt)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     children: [
                       _SummaryPill(
                         label: t.borrowed,
-                        value: '\$${_fmt(state.totalBorrowed)}',
+                        value: CurrencyFormatter.format(state.totalBorrowed),
                         icon: Icons.arrow_upward_rounded,
                         color: const Color(0xFFef4444),
                       ),
                       const SizedBox(width: 10),
                       _SummaryPill(
                         label: t.lent,
-                        value: '\$${_fmt(state.totalLent)}',
+                        value: CurrencyFormatter.format(state.totalLent),
                         icon: Icons.arrow_downward_rounded,
                         color: const Color(0xFF10b981),
                       ),
@@ -340,7 +331,7 @@ class _ExpandedHeader extends StatelessWidget {
   String _fmt(double a) => NumberFormat('#,##0.00').format(a);
 }
 
-// ── Collapsed ──
+// ── Collapsed ─────────────────────────────────────────────────────────────────
 class _CollapsedHeader extends StatelessWidget {
   final Color primary;
   final double topPad;
@@ -450,11 +441,9 @@ class _CollapsedHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
-// 2-Row Pinned Filter Bar
-// Row 1: All | Borrowed | Lent  (type)
-// Row 2: Cash · Card · Bank · Wallet · Date
-// ─────────────────────────────────────────
+// =============================================================================
+// 2-Row pinned filter bar
+// =============================================================================
 class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
   final AllDebtTransactionsState state;
   final bool isDark;
@@ -493,7 +482,6 @@ class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Row 1: type filter
               Row(
                 children: [
                   _TypeSegment(
@@ -533,10 +521,7 @@ class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
                   ),
                 ],
               ),
-
               const SizedBox(height: 8),
-
-              // Row 2: payment method + date
               SizedBox(
                 height: 36,
                 child: ListView(
@@ -556,7 +541,6 @@ class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
                           isSelected: state.methodFilter == m,
                           isDark: isDark,
                           theme: theme,
-                          context: context,
                           onTap: () =>
                               context.read<AllDebtTransactionsBloc>().add(
                                 state.methodFilter == m
@@ -591,49 +575,53 @@ class _FilterBarDelegate extends SliverPersistentHeaderDelegate {
       old.state != state || old.isDark != isDark;
 }
 
-// ─────────────────────────────────────────
-// Transaction list + card
-// ─────────────────────────────────────────
+// =============================================================================
+// Transaction list — receives debtMap from state
+// =============================================================================
 class _DebtTxList extends StatelessWidget {
   final List<TransactionModel> transactions;
-  const _DebtTxList({required this.transactions});
+  final Map<String, DebtModel> debtMap;
+
+  const _DebtTxList({required this.transactions, required this.debtMap});
 
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => _DebtTxCard(transaction: transactions[index]),
-          childCount: transactions.length,
-        ),
+        delegate: SliverChildBuilderDelegate((context, index) {
+          final txn = transactions[index];
+          return _DebtTxCard(
+            transaction: txn,
+            // ← simple map lookup, synchronous, no repo
+            linkedDebt: txn.debtId != null ? debtMap[txn.debtId] : null,
+          );
+        }, childCount: transactions.length),
       ),
     );
   }
 }
 
+// =============================================================================
+// Card — linkedDebt is a plain DebtModel?, resolved before this widget builds
+// =============================================================================
 class _DebtTxCard extends StatelessWidget {
   final TransactionModel transaction;
-  const _DebtTxCard({required this.transaction});
+  final DebtModel? linkedDebt;
+
+  const _DebtTxCard({required this.transaction, required this.linkedDebt});
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    // expense = I borrowed (money went out), income = I lent (money came in as debt)
     final isBorrowed = transaction.type == TransactionType.expense;
     final color = isBorrowed
         ? const Color(0xFFef4444)
         : const Color(0xFF10b981);
     final firstItem = transaction.items.isNotEmpty
         ? transaction.items.first
-        : null;
-
-    // Lookup linked debt person name via bloc repo
-    final bloc = context.read<AllDebtTransactionsBloc>();
-    final linkedDebt = transaction.debtId != null
-        ? bloc.repository.getLinkedDebt(transaction.debtId!)
         : null;
 
     return Container(
@@ -675,7 +663,6 @@ class _DebtTxCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Person name if available, else category
                 Text(
                   linkedDebt?.personName ??
                       context.tr(firstItem?.category ?? t.debtTransaction),
@@ -688,7 +675,6 @@ class _DebtTxCard extends StatelessWidget {
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                    // Debt type badge
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 6,
@@ -714,7 +700,7 @@ class _DebtTxCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 3),
                     Text(
-                      '${_methodLabel(transaction.paymentMethod, context)} · ${DateFormat('MMM d, y').format(transaction.date)}',
+                      '${context.trMethod(transaction.paymentMethod.name)} · ${DateFormat('MMM d, y').format(transaction.date)}',
                       style: AppTextStyles.captionSmall.copyWith(
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.5,
@@ -723,17 +709,17 @@ class _DebtTxCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Due date if linked debt exists
+                // Due / overdue row
                 if (linkedDebt != null) ...[
                   const SizedBox(height: 2),
                   Row(
                     children: [
                       Icon(
-                        linkedDebt.isOverdue
+                        linkedDebt!.isOverdue
                             ? Icons.warning_amber_rounded
                             : Icons.event_rounded,
                         size: 11,
-                        color: linkedDebt.isOverdue
+                        color: linkedDebt!.isOverdue
                             ? const Color(0xFFef4444)
                             : theme.colorScheme.onSurface.withValues(
                                 alpha: 0.4,
@@ -741,23 +727,22 @@ class _DebtTxCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 3),
                       Text(
-                        linkedDebt.isOverdue
-                            ? '${linkedDebt.daysOverdue}d overdue'
-                            : '${t.due} ${DateFormat('MMM d').format(linkedDebt.expectedReturnDate)}',
+                        linkedDebt!.isOverdue
+                            ? '${linkedDebt!.daysOverdue}d overdue'
+                            : '${t.due} ${DateFormat('MMM d').format(linkedDebt!.expectedReturnDate)}',
                         style: AppTextStyles.overline.copyWith(
-                          color: linkedDebt.isOverdue
+                          color: linkedDebt!.isOverdue
                               ? const Color(0xFFef4444)
                               : theme.colorScheme.onSurface.withValues(
                                   alpha: 0.45,
                                 ),
-                          fontWeight: linkedDebt.isOverdue
+                          fontWeight: linkedDebt!.isOverdue
                               ? FontWeight.w700
                               : FontWeight.w400,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      // Settled badge
-                      if (linkedDebt.isReturned)
+                      if (linkedDebt!.isReturned)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 5,
@@ -786,7 +771,7 @@ class _DebtTxCard extends StatelessWidget {
 
           // Amount
           Text(
-            '${isBorrowed ? '-' : '+'}\$${NumberFormat('#,##0.00').format(transaction.totalAmount)}',
+            '${isBorrowed ? '-' : '+'}${CurrencyFormatter.format(transaction.totalAmount)}',
             style: AppTextStyles.labelLarge.copyWith(
               color: color,
               fontWeight: FontWeight.w800,
@@ -809,14 +794,11 @@ class _DebtTxCard extends StatelessWidget {
         return Icons.account_balance_wallet_rounded;
     }
   }
-
-  String _methodLabel(PaymentMethod m, BuildContext context) =>
-      context.trMethod(m.name);
 }
 
-// ─────────────────────────────────────────
+// =============================================================================
 // Shared filter widgets
-// ─────────────────────────────────────────
+// =============================================================================
 class _TypeSegment extends StatelessWidget {
   final String label;
   final IconData icon;
@@ -906,7 +888,6 @@ class _MethodPill extends StatelessWidget {
   final bool isDark;
   final ThemeData theme;
   final VoidCallback onTap;
-  final BuildContext context;
 
   const _MethodPill({
     required this.method,
@@ -914,13 +895,11 @@ class _MethodPill extends StatelessWidget {
     required this.isDark,
     required this.theme,
     required this.onTap,
-    required this.context,
   });
 
   @override
   Widget build(BuildContext context) {
     final primary = theme.colorScheme.primary;
-    // final label = method.name[0].toUpperCase() + method.name.substring(1);
     final label = context.trMethod(method.name);
     return GestureDetector(
       onTap: onTap,
@@ -1100,9 +1079,9 @@ class _DatePill extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
+// =============================================================================
 // Active filters banner
-// ─────────────────────────────────────────
+// =============================================================================
 class _ActiveFiltersBanner extends StatelessWidget {
   final AllDebtTransactionsState state;
   const _ActiveFiltersBanner({required this.state});
@@ -1148,9 +1127,9 @@ class _ActiveFiltersBanner extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────
-// Reusable widgets
-// ─────────────────────────────────────────
+// =============================================================================
+// Small reusable widgets
+// =============================================================================
 class _SearchField extends StatefulWidget {
   final TextEditingController controller;
   final ValueChanged<String> onChanged;

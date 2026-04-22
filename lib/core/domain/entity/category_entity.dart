@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spendio/core/utils/icon_mapper.dart';
 
 class CategoryEntity {
   final int? id;
@@ -24,7 +25,7 @@ class CategoryEntity {
   });
 
   // Computed helpers available at domain level
-  IconData get icon => IconData(iconCode, fontFamily: 'MaterialIcons');
+  IconData get icon => IconMapper.getIcon(iconCode);
   Color get color => Color(colorValue);
 
   CategoryEntity copyWith({bool? isActive, DateTime? updatedAt}) =>

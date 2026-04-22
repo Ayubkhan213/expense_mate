@@ -1,4 +1,4 @@
-# expense_mate
+# spendio
 
 A new Flutter project.
 

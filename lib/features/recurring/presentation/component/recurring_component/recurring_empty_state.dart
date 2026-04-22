@@ -1,4 +1,4 @@
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// Empty state when no recurring transactions exist

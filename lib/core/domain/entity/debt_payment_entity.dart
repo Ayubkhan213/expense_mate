@@ -1,4 +1,4 @@
-enum PaymentMethod { cash, card, bank, wallet }
+import 'package:spendio/core/data/models/enums.dart';
 
 class DebtPaymentEntity {
   final String id;

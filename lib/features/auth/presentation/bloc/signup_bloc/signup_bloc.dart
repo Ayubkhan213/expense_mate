@@ -4,11 +4,14 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/currency_model.dart';
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
-import 'package:expense_mate/features/auth/domain/repository/currency_repository.dart';
-import 'package:expense_mate/core/services/app_prefs.dart';
-import 'package:expense_mate/features/auth/domain/use_cases/register_usecase.dart';
+import 'package:spendio/core/data/models/currency_model.dart';
+import 'package:spendio/core/services/dummy_account_sedding.dart';
+import 'package:spendio/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/currency_repository.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/currency_repository.dart';
+import 'package:spendio/features/auth/domain/use_cases/register_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -167,8 +170,13 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
     try {
       // ── 0. Single-account enforcement ─────────────────────────────────────
+      // Filter out dummy account — it must never block real user signup
       final existingAccounts = await authRepository.getAllAccounts();
-      if (existingAccounts.isNotEmpty) {
+      final realAccounts = existingAccounts
+          .where((u) => u.email != DummyAccountSeeder.dummyEmail)
+          .toList();
+
+      if (realAccounts.isNotEmpty) {
         emit(
           state.copyWith(
             status: SignupStatus.error,
@@ -179,18 +187,23 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         return;
       }
 
-      // ── 1. Check uniqueness ────────────────────────────────────────────────
+      // ── 1. Check email uniqueness ──────────────────────────────────────────
       final emailExists = await authRepository.checkEmailExists(event.email);
       if (emailExists) throw Exception('Email already registered');
 
-      final pinExists = await authRepository.checkPinExists(
-        pin: event.pin ?? '0000',
-      );
-      if (pinExists) {
-        throw Exception('PIN already in use. Please choose another PIN');
+      // ── 2. Check PIN uniqueness ────────────────────────────────────────────
+      // If user entered a PIN, make sure it doesn't conflict with any account
+      // including the dummy account (PIN 1234 is reserved by dummy account)
+      if (event.pin != null && event.pin!.isNotEmpty) {
+        final pinExists = await authRepository.checkPinExists(pin: event.pin!);
+        if (pinExists) {
+          throw Exception(
+            'PIN ${event.pin} is already in use. Please choose a different PIN.',
+          );
+        }
       }
 
-      // ── 2. Copy profile image to permanent app storage ─────────────────────
+      // ── 3. Copy profile image to permanent app storage ─────────────────────
       String? savedImagePath;
       if (state.pendingProfileImagePath != null &&
           state.pendingProfileImagePath!.isNotEmpty) {
@@ -200,13 +213,13 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
         );
       }
 
-      // ── 3. Generate recovery keys only when security questions are enabled ──
+      // ── 4. Generate recovery keys only when security questions are enabled ──
       List<String>? recoveryKeys;
       if (state.securityQuestionsEnabled) {
         recoveryKeys = _generateRecoveryKeys(8);
       }
 
-      // ── 4. Register user ───────────────────────────────────────────────────
+      // ── 5. Register user ───────────────────────────────────────────────────
       final newUser = await registerUseCase(
         name: event.name,
         email: event.email,
@@ -229,8 +242,9 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
       AppPrefs.instance.setUserId(newUser.id);
       AppPrefs.instance.setLoggedIn(true);
+      AppPrefs.instance.setUserCurrency(state.selectedCurrency);
 
-      // ── 5. Emit success ────────────────────────────────────────────────────
+      // ── 6. Emit success ────────────────────────────────────────────────────
       emit(
         state.copyWith(
           status: SignupStatus.success,

@@ -1,4 +1,5 @@
-import 'package:expense_mate/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/auth_repository.dart';
+import 'package:spendio/features/auth/domain/repository/sql/auth_repository.dart';
 
 class ChangePasswordUseCase {
   final AuthRepository repository;

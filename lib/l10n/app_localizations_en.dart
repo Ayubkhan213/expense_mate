@@ -1784,10 +1784,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get splashAppName => 'ExpenseMate';
+  String get splashAppName => 'Spendio';
 
   @override
-  String get splashTagline => 'SMART MONEY · SMARTER YOU';
+  String get splashTagline => 'TRACK  ·  BUDGET  ·  PROSPER';
 
   @override
   String get transactionDetails => 'Transaction Details';
@@ -1839,4 +1839,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteCurrentAttachment => 'Delete the current attachment';
+
+  @override
+  String get secQ1_1 => 'What was the name of your first pet?';
+
+  @override
+  String get secQ1_2 => 'What is the name of the city where you were born?';
+
+  @override
+  String get secQ1_3 => 'What was the make of your first car?';
+
+  @override
+  String get secQ1_4 => 'What is your mother\'s maiden name?';
+
+  @override
+  String get secQ1_5 => 'What was the name of your elementary school?';
+
+  @override
+  String get secQ1_6 => 'What was your childhood nickname?';
+
+  @override
+  String get secQ1_7 => 'What is the name of the street you grew up on?';
+
+  @override
+  String get secQ2_1 => 'What is the name of your oldest sibling?';
+
+  @override
+  String get secQ2_2 => 'What was the first concert you attended?';
+
+  @override
+  String get secQ2_3 => 'What was the name of your favorite teacher?';
+
+  @override
+  String get secQ2_4 => 'In what city did you meet your spouse/partner?';
+
+  @override
+  String get secQ2_5 => 'What was the first album you purchased?';
+
+  @override
+  String get secQ2_6 => 'What is your oldest cousin\'s first name?';
+
+  @override
+  String get secQ2_7 => 'What was the name of your first stuffed animal or toy?';
+
+  @override
+  String get deleteTransaction => 'Delete Transaction';
+
+  @override
+  String get deleteTransactionConfirm => 'Are you sure you want to delete this transaction? This cannot be undone.';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get transactionUpdatedSuccess => 'Transaction updated successfully!';
 }

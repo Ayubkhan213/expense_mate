@@ -1,15 +1,18 @@
-import 'package:expense_mate/core/data/models/debt_model.dart';
-
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/core/utils/enum.dart';
-import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
-import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_event.dart';
-import 'package:expense_mate/features/home/presentation/bloc/debt_repay/debt_repay_state.dart';
-import 'package:expense_mate/features/home/presentation/components/debt_repayment/empty_payments_view.dart';
-import 'package:expense_mate/features/home/presentation/components/debt_repayment/payment_list_item.dart';
-import 'package:expense_mate/features/transcation/presentation/faces/category_bottom_sheet.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/utils/enum.dart';
+import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_bloc.dart';
+import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_event.dart';
+import 'package:spendio/features/home/presentation/bloc/debt_repay/debt_repay_state.dart';
+import 'package:spendio/features/home/presentation/components/debt_repayment/empty_payments_view.dart';
+import 'package:spendio/features/home/presentation/components/debt_repayment/payment_list_item.dart';
+import 'package:spendio/features/transcation/presentation/faces/category_bottom_sheet.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/services/debt_pdf_service.dart';
+import 'package:spendio/core/data/models/debt_payment_sql_model.dart';
 import 'package:intl/intl.dart';
 
 class DebtTransactionRepayFace extends StatefulWidget {
@@ -35,7 +38,7 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-
+    final t = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: isDark
           ? theme.colorScheme.background
@@ -59,7 +62,7 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
           return const SizedBox.shrink();
         },
       ),
-      floatingActionButton: _buildFAB(context),
+      floatingActionButton: _buildFAB(context, t),
     );
   }
 
@@ -75,7 +78,7 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
         ? (paidAmount / totalAmount).clamp(0.0, 1.0)
         : 0.0;
     final isPaidOff = remainingAmount <= 0;
-
+    final t = AppLocalizations.of(context)!;
     return CustomScrollView(
       physics: const ClampingScrollPhysics(),
       slivers: [
@@ -88,12 +91,14 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
           progress: progress,
           isPaidOff: isPaidOff,
           isDark: isDark,
+          payments: state.payments,
         ),
 
         // ── Payment History Header ──
         SliverPersistentHeader(
           pinned: true,
           delegate: _PaymentHistoryHeaderDelegate(
+            t: t,
             paymentCount: state.payments?.length ?? 0,
             isDark: isDark,
           ),
@@ -117,15 +122,17 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
       padding: const EdgeInsets.symmetric(horizontal: 4),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
-          (context, index) =>
-              PaymentListItem(payment: payments[index], onDelete: () {}),
+          (context, index) => PaymentListItem(
+            payment: payments[index],
+            debtModel: widget.debtModel, //  pass actual debt model
+          ),
           childCount: payments.length,
         ),
       ),
     );
   }
 
-  Widget _buildFAB(BuildContext context) {
+  Widget _buildFAB(BuildContext context, AppLocalizations t) {
     return BlocBuilder<DebtRepaymentBloc, DebtRepaymentState>(
       builder: (context, state) {
         final canAdd =
@@ -167,7 +174,7 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
                   const Icon(Icons.add_rounded, color: Colors.white, size: 22),
                   const SizedBox(width: 8),
                   Text(
-                    'Add Payment',
+                    t.addPayment,
                     style: AppTextStyles.labelLarge.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
@@ -186,10 +193,12 @@ class _DebtTransactionRepayFaceState extends State<DebtTransactionRepayFace> {
 class _PaymentHistoryHeaderDelegate extends SliverPersistentHeaderDelegate {
   final int paymentCount;
   final bool isDark;
+  final AppLocalizations t;
 
   _PaymentHistoryHeaderDelegate({
     required this.paymentCount,
     required this.isDark,
+    required this.t,
   });
 
   static const double _height = 52.0;
@@ -219,7 +228,7 @@ class _PaymentHistoryHeaderDelegate extends SliverPersistentHeaderDelegate {
           child: Row(
             children: [
               Text(
-                'Payment History',
+                t.paymentHistory,
                 style: AppTextStyles.h5.copyWith(fontWeight: FontWeight.w700),
               ),
               const Spacer(),
@@ -234,7 +243,7 @@ class _PaymentHistoryHeaderDelegate extends SliverPersistentHeaderDelegate {
                   border: Border.all(color: primary.withValues(alpha: 0.3)),
                 ),
                 child: Text(
-                  '$paymentCount payments',
+                  '$paymentCount  ${t.payments}',
                   style: AppTextStyles.labelSmall.copyWith(
                     color: primary,
                     fontWeight: FontWeight.w700,
@@ -264,6 +273,7 @@ class _DebtSliverAppBar extends StatelessWidget {
   final double progress;
   final bool isPaidOff;
   final bool isDark;
+  final List<DebtPaymentModel> payments;
 
   const _DebtSliverAppBar({
     required this.debtModel,
@@ -273,6 +283,7 @@ class _DebtSliverAppBar extends StatelessWidget {
     required this.progress,
     required this.isPaidOff,
     required this.isDark,
+    required this.payments,
   });
 
   @override
@@ -282,6 +293,7 @@ class _DebtSliverAppBar extends StatelessWidget {
     final topPad = MediaQuery.of(context).padding.top;
     final collapsedHeight = 64.0 + topPad;
     const expandedHeight = 310.0;
+    final t = AppLocalizations.of(context)!;
 
     return SliverAppBar(
       expandedHeight: expandedHeight,
@@ -322,6 +334,7 @@ class _DebtSliverAppBar extends StatelessWidget {
                       primary: primary,
                       topPad: topPad,
                       availableHeight: current,
+                      payments: payments,
                     ),
                   ),
                 if (collapsedOpacity > 0)
@@ -334,6 +347,8 @@ class _DebtSliverAppBar extends StatelessWidget {
                       remainingAmount: remainingAmount,
                       progress: progress,
                       isPaidOff: isPaidOff,
+                      t: t,
+                      payments: payments,
                     ),
                   ),
               ],
@@ -356,6 +371,7 @@ class _ExpandedHeader extends StatelessWidget {
   final Color primary;
   final double topPad;
   final double availableHeight;
+  final List<DebtPaymentModel> payments;
 
   const _ExpandedHeader({
     required this.debtModel,
@@ -367,10 +383,12 @@ class _ExpandedHeader extends StatelessWidget {
     required this.primary,
     required this.topPad,
     required this.availableHeight,
+    required this.payments,
   });
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final accentColor = isPaidOff
         ? const Color(0xFF10b981)
         : progress > 0.8
@@ -417,6 +435,15 @@ class _ExpandedHeader extends StatelessWidget {
                         icon: Icons.arrow_back_rounded,
                         onTap: () => Navigator.pop(context),
                       ),
+                      const Spacer(),
+                      _IconBtn(
+                        icon: Icons.share_rounded,
+                        onTap: () => DebtPdfService.exportAndShare(
+                          context: context,
+                          debt: debtModel,
+                          payments: payments,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -434,7 +461,7 @@ class _ExpandedHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              debtModel.debtType?.name ?? 'Debt',
+                              debtModel.debtType?.name ?? t.debt,
                               style: AppTextStyles.h2.copyWith(
                                 color: Colors.white,
                                 letterSpacing: -0.5,
@@ -444,8 +471,8 @@ class _ExpandedHeader extends StatelessWidget {
                             const SizedBox(height: 3),
                             Text(
                               isPaidOff
-                                  ? 'Fully paid off 🎉'
-                                  : '${(progress * 100).toStringAsFixed(0)}% repaid',
+                                  ? t.fullyPaidOff
+                                  : '${(progress * 100).toStringAsFixed(0)}% ${t.repaid}',
                               style: AppTextStyles.bodySmall.copyWith(
                                 color: Colors.white.withValues(alpha: 0.7),
                               ),
@@ -479,7 +506,7 @@ class _ExpandedHeader extends StatelessWidget {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              isPaidOff ? 'Cleared' : 'Active',
+                              isPaidOff ? " ${t.cleared}" : t.active,
                               style: AppTextStyles.overline.copyWith(
                                 color: accentColor,
                                 fontWeight: FontWeight.w700,
@@ -502,6 +529,7 @@ class _ExpandedHeader extends StatelessWidget {
                   progress: progress,
                   isPaidOff: isPaidOff,
                   accentColor: accentColor,
+                  t: t,
                 ),
 
                 const SizedBox(height: 16),
@@ -522,6 +550,8 @@ class _CollapsedHeader extends StatelessWidget {
   final double remainingAmount;
   final double progress;
   final bool isPaidOff;
+  final AppLocalizations t;
+  final List<DebtPaymentModel> payments;
 
   const _CollapsedHeader({
     required this.primary,
@@ -530,6 +560,8 @@ class _CollapsedHeader extends StatelessWidget {
     required this.remainingAmount,
     required this.progress,
     required this.isPaidOff,
+    required this.t,
+    required this.payments,
   });
 
   @override
@@ -566,8 +598,8 @@ class _CollapsedHeader extends StatelessWidget {
                 ),
                 Text(
                   isPaidOff
-                      ? 'Fully paid off'
-                      : 'Remaining: \$${_fmt(remainingAmount)}',
+                      ? t.fullyPaidOff
+                      : '${t.remaining}: ${CurrencyFormatter.format(remainingAmount)}',
                   style: AppTextStyles.bodySmall.copyWith(
                     color: accentColor,
                     fontWeight: FontWeight.w600,
@@ -589,7 +621,16 @@ class _CollapsedHeader extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
+          _IconBtn(
+            icon: Icons.share_rounded,
+            onTap: () => DebtPdfService.exportAndShare(
+              context: context,
+              debt: debtModel,
+              payments: payments,
+            ),
+          ),
+          const SizedBox(width: 8),
         ],
       ),
     );
@@ -609,6 +650,7 @@ class _DebtSummaryInline extends StatelessWidget {
   final double progress;
   final bool isPaidOff;
   final Color accentColor;
+  final AppLocalizations t;
 
   const _DebtSummaryInline({
     required this.totalAmount,
@@ -617,6 +659,7 @@ class _DebtSummaryInline extends StatelessWidget {
     required this.progress,
     required this.isPaidOff,
     required this.accentColor,
+    required this.t,
   });
 
   @override
@@ -644,7 +687,7 @@ class _DebtSummaryInline extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Remaining',
+                    t.remaining,
                     style: AppTextStyles.captionSmall.copyWith(
                       color: Colors.white.withValues(alpha: 0.7),
                       letterSpacing: 0.4,
@@ -652,7 +695,7 @@ class _DebtSummaryInline extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '\$${_fmt(remainingAmount.abs())}',
+                    CurrencyFormatter.format(remainingAmount.abs()),
                     style: AppTextStyles.currencyLarge.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
@@ -664,7 +707,7 @@ class _DebtSummaryInline extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'of \$${_fmt(totalAmount)}',
+                    ' ${t.ofa} ${CurrencyFormatter.format(totalAmount)}',
                     style: AppTextStyles.captionSmall.copyWith(
                       color: Colors.white.withValues(alpha: 0.65),
                     ),
@@ -681,8 +724,8 @@ class _DebtSummaryInline extends StatelessWidget {
                     ),
                     child: Text(
                       isPaidOff
-                          ? 'Paid off!'
-                          : '${(progress * 100).toStringAsFixed(0)}% repaid',
+                          ? t.paidOff
+                          : '${(progress * 100).toStringAsFixed(0)}% ${t.repaid} ',
                       style: AppTextStyles.overline.copyWith(
                         color: accentColor,
                         fontWeight: FontWeight.w700,
@@ -713,14 +756,14 @@ class _DebtSummaryInline extends StatelessWidget {
           Row(
             children: [
               _Pill(
-                label: 'Paid',
-                value: '\$${_fmt(paidAmount)}',
+                label: t.paid,
+                value: CurrencyFormatter.format(paidAmount),
                 icon: Icons.check_circle_outline_rounded,
               ),
               const SizedBox(width: 10),
               _Pill(
-                label: 'Total Debt',
-                value: '\$${_fmt(totalAmount)}',
+                label: t.totalDebt,
+                value: CurrencyFormatter.format(totalAmount),
                 icon: Icons.account_balance_outlined,
               ),
             ],

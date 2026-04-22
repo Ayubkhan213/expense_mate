@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
 
 class BudgetDetailsData {
   final BudgetModel budget;

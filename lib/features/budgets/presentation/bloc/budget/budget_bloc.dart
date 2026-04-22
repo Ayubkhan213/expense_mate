@@ -1,17 +1,14 @@
-// ==================== PRESENTATION LAYER ====================
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
 
-// Budget Form Events (for bottom sheet UI state)
+import 'package:spendio/core/domain/use_cases/use_case.dart';
 
-import 'package:expense_mate/core/app_export.dart';
-
-import 'package:expense_mate/core/domain/use_cases/use_case.dart';
-
-import 'package:expense_mate/features/budgets/domain/use_cases/create_budget_usecase.dart';
-import 'package:expense_mate/features/budgets/domain/use_cases/delete_budget_usecase.dart';
-import 'package:expense_mate/features/budgets/domain/use_cases/get_all_budgets_usecase.dart';
-import 'package:expense_mate/features/budgets/domain/use_cases/update_budget_usecase.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_state.dart';
+import 'package:spendio/features/budgets/domain/use_cases/create_budget_usecase.dart';
+import 'package:spendio/features/budgets/domain/use_cases/delete_budget_usecase.dart';
+import 'package:spendio/features/budgets/domain/use_cases/get_all_budgets_usecase.dart';
+import 'package:spendio/features/budgets/domain/use_cases/update_budget_usecase.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_state.dart';
 
 class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   final GetAllBudgetsUseCase getAllBudgetsUseCase;
@@ -67,20 +64,22 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         ),
       ),
       (budgets) {
+        final list = budgets ?? <BudgetModel>[]; // ✅ null safety
+
         final activeBudgets =
-            budgets
+            list
                 .where((b) => b.isActive && !b.isArchived && !b.isExpired)
                 .toList()
               ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
         final archivedBudgets =
-            budgets.where((b) => b.isArchived || b.isExpired).toList()
+            list.where((b) => b.isArchived || b.isExpired).toList()
               ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
         emit(
           state.copyWith(
             status: BudgetStatus.success,
-            budgets: budgets,
+            budgets: list,
             activeBudgets: activeBudgets,
             archivedBudgets: archivedBudgets,
           ),
@@ -107,7 +106,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     );
 
     final result = await createBudgetUseCase(params);
-    print(result);
+
     result.fold(
       (failure) => emit(
         state.copyWith(
@@ -116,7 +115,6 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
         ),
       ),
       (budget) {
-        print('-------- Success -------------');
         add(LoadBudgetsEvent());
         emit(state.copyWith(successMessage: 'Budget created successfully'));
       },
@@ -157,21 +155,30 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
     DeleteBudgetEvent event,
     Emitter<BudgetState> emit,
   ) async {
-    emit(state.copyWith(status: BudgetStatus.loading, clearError: true));
-
-    final result = await deleteBudgetUseCase(event.budgetId);
-
-    result.fold(
-      (failure) => emit(
-        state.copyWith(
-          status: BudgetStatus.error,
-          errorMessage: failure.message,
+    // ✅ Don't emit loading — silent delete like home screen
+    try {
+      final result = await deleteBudgetUseCase(event.budgetId);
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            status: BudgetStatus.error,
+            errorMessage: failure.message,
+          ),
         ),
-      ),
-      (_) {
-        add(LoadBudgetsEvent());
-        emit(state.copyWith(successMessage: 'Budget deleted successfully'));
-      },
-    );
+        (_) {
+          add(LoadBudgetsEvent());
+          emit(
+            state.copyWith(
+              status: BudgetStatus.success,
+              successMessage: 'Budget deleted successfully',
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(status: BudgetStatus.error, errorMessage: e.toString()),
+      );
+    }
   }
 }

@@ -1740,7 +1740,7 @@ class AppLocalizationsUr extends AppLocalizations {
   String get placeholderEmail => 'email@example.com';
 
   @override
-  String get memberSince => 'رکنیت';
+  String get memberSince => 'رکن از';
 
   @override
   String get updatePhoto => 'تصویر تبدیل کریں';
@@ -1784,10 +1784,10 @@ class AppLocalizationsUr extends AppLocalizations {
   }
 
   @override
-  String get splashAppName => 'ایکسپنس میٹ';
+  String get splashAppName => 'اسپنڈیو';
 
   @override
-  String get splashTagline => 'ہوشمند پیسہ · ہوشمند آپ';
+  String get splashTagline => 'ٹریک · بجٹ · خوشحالی';
 
   @override
   String get transactionDetails => 'لین دین کی تفصیلات';
@@ -1839,4 +1839,58 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get deleteCurrentAttachment => 'حذف المرفق الحالي';
+
+  @override
+  String get secQ1_1 => 'آپ کے پہلے پالتو جانور کا نام کیا تھا؟';
+
+  @override
+  String get secQ1_2 => 'آپ کی پیدائش کے شہر کا نام کیا ہے؟';
+
+  @override
+  String get secQ1_3 => 'آپ کی پہلی گاڑی کا برانڈ کیا تھا؟';
+
+  @override
+  String get secQ1_4 => 'آپ کی والدہ کا پیدائشی نام کیا ہے؟';
+
+  @override
+  String get secQ1_5 => 'آپ کے پرائمری اسکول کا نام کیا تھا؟';
+
+  @override
+  String get secQ1_6 => 'بچپن میں آپ کا عرفی نام کیا تھا؟';
+
+  @override
+  String get secQ1_7 => 'آپ جس گلی میں پلے بڑھے اس کا نام کیا ہے؟';
+
+  @override
+  String get secQ2_1 => 'آپ کے سب سے بڑے بہن بھائی کا نام کیا ہے؟';
+
+  @override
+  String get secQ2_2 => 'آپ نے پہلا کنسرٹ کہاں دیکھا؟';
+
+  @override
+  String get secQ2_3 => 'آپ کے پسندیدہ استاد کا نام کیا تھا؟';
+
+  @override
+  String get secQ2_4 => 'آپ اپنے جیون ساتھی سے کس شہر میں ملے؟';
+
+  @override
+  String get secQ2_5 => 'آپ نے پہلا البم کون سا خریدا؟';
+
+  @override
+  String get secQ2_6 => 'آپ کے سب سے بڑے کزن کا پہلا نام کیا ہے؟';
+
+  @override
+  String get secQ2_7 => 'آپ کے پہلے کھلونے یا بھرے جانور کا نام کیا تھا؟';
+
+  @override
+  String get deleteTransaction => 'لین دین حذف کریں';
+
+  @override
+  String get deleteTransactionConfirm => 'کیا آپ واقعی اس لین دین کو حذف کرنا چاہتے ہیں؟ یہ عمل واپس نہیں کیا جا سکتا۔';
+
+  @override
+  String get update => 'اپ ڈیٹ کریں';
+
+  @override
+  String get transactionUpdatedSuccess => 'لین دین کامیابی سے اپ ڈیٹ ہو گیا!';
 }

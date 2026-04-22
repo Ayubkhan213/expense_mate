@@ -1,13 +1,12 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_bloc.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_event.dart';
+import 'package:spendio/features/budgets/presentation/bloc/budget_from/budget_form_state.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Compact row: budget type selector + category picker
 class BudgetSettingsRow extends StatelessWidget {
   final BudgetFormState state;
 
@@ -150,10 +149,9 @@ class _CategoryDropdown extends StatelessWidget {
         : null;
 
     return Container(
-      // ... same decoration ...
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          value: selectedValue, // ✅
+          value: selectedValue, //
           hint: Row(
             children: [
               Icon(
@@ -180,10 +178,25 @@ class _CategoryDropdown extends StatelessWidget {
               child: Text(cat, style: theme.textTheme.bodySmall),
             );
           }).toList(),
-          onChanged: (cat) {
-            if (cat != null) {
-              bloc.add(BudgetFormCategorySelected(cat));
-              bloc.add(BudgetFormNameChanged(cat));
+          onChanged: (translatedCat) {
+            if (translatedCat != null) {
+              // Reverse-lookup the English key from the translated label
+              final allPresetsEn = context.budgetCategoryPresetsEn;
+              final enCategories = allPresetsEn[state.selectedType] ?? [];
+              final allPresetsLocal = context.budgetCategoryPresets;
+              final localCategories = allPresetsLocal[state.selectedType] ?? [];
+
+              final index = localCategories.indexOf(translatedCat);
+              final englishKey = (index >= 0 && index < enCategories.length)
+                  ? enCategories[index]
+                  : translatedCat; // fallback
+
+              bloc.add(
+                BudgetFormCategorySelected(englishKey, translatedCat),
+              ); // ← store English key
+              bloc.add(
+                BudgetFormNameChanged(englishKey),
+              ); // ← store English key
             }
           },
         ),

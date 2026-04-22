@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/features/budgets/presentation/bloc/budget/budget_event.dart';
+
+import 'package:spendio/features/budgets/presentation/bloc/budget/budget_event.dart';
+
+import '../../../../../core/data/models/budget_model.dart';
 
 enum BudgetStatus { initial, loading, success, error }
 

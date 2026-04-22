@@ -1,7 +1,10 @@
-import 'package:expense_mate/core/app_export.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_bloc.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spendio/core/app_export.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_bloc.dart';
+import 'package:spendio/features/recurring/presentation/bloc/add_recurring/add_edit_recurring_event.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 
 /// Frequency selector dropdown
 class RecurringFrequencyDropdown extends StatelessWidget {

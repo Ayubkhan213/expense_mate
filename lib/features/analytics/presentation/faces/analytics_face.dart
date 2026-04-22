@@ -1,13 +1,15 @@
-import 'package:expense_mate/core/extension/responsive_extension.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/analytics/presentation/components/budget_overview_card.dart';
-import 'package:expense_mate/features/analytics/presentation/components/category_chart_card.dart';
-import 'package:expense_mate/features/analytics/presentation/components/debt_overview_card.dart';
-import 'package:expense_mate/features/analytics/presentation/components/financial_summary_card.dart';
-import 'package:expense_mate/features/analytics/presentation/components/monthly_trend_chart.dart';
-import 'package:expense_mate/features/analytics/presentation/components/payment_method_chart.dart';
-import 'package:expense_mate/features/analytics/presentation/components/top_transactions_card.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/extension/responsive_extension.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/services/pdf_analytics_services.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/features/analytics/presentation/components/budget_overview_card.dart';
+import 'package:spendio/features/analytics/presentation/components/category_chart_card.dart';
+import 'package:spendio/features/analytics/presentation/components/debt_overview_card.dart';
+import 'package:spendio/features/analytics/presentation/components/financial_summary_card.dart';
+import 'package:spendio/features/analytics/presentation/components/monthly_trend_chart.dart';
+import 'package:spendio/features/analytics/presentation/components/payment_method_chart.dart';
+import 'package:spendio/features/analytics/presentation/components/top_transactions_card.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/analytics_bloc.dart';
@@ -264,6 +266,7 @@ class _ExpandedHeader extends StatelessWidget {
                           ],
                         ).paddingOnly(left: 10.0),
                       ),
+                      _ExportButton(state: state),
                     ],
                   ),
                 ),
@@ -301,7 +304,7 @@ class _ExpandedHeader extends StatelessWidget {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '${isPositive ? '+' : '-'}\$${summary.netBalance.abs().toStringAsFixed(0)}',
+                                '${isPositive ? '+' : '-'}${CurrencyFormatter.format(summary.netBalance.abs())}',
                                 style: AppTextStyles.currencyLarge.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w800,
@@ -347,14 +350,14 @@ class _ExpandedHeader extends StatelessWidget {
                           _Pill(
                             label: t.income,
                             value:
-                                '\$${summary.totalIncome.toStringAsFixed(0)}',
+                                CurrencyFormatter.format(summary.totalIncome, decimalDigits: 0),
                             icon: Icons.arrow_downward_rounded,
                           ),
                           const SizedBox(width: 10),
                           _Pill(
                             label: t.expense,
                             value:
-                                '\$${summary.totalExpense.toStringAsFixed(0)}',
+                                CurrencyFormatter.format(summary.totalExpense, decimalDigits: 0),
                             icon: Icons.arrow_upward_rounded,
                           ),
                         ],
@@ -385,6 +388,7 @@ class _CollapsedHeader extends StatelessWidget {
   });
 
   @override
+  @override
   Widget build(BuildContext context) {
     final summary = state.data.summary;
     final isPositive = summary.netBalance >= 0;
@@ -401,52 +405,67 @@ class _CollapsedHeader extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Screen title
-            Text(
-              t.analytics,
-              style: AppTextStyles.h5.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-
-            const SizedBox(width: 10),
-
-            // Net balance — most important metric
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-              decoration: BoxDecoration(
-                color: balanceColor.withValues(alpha: 0.28),
-                borderRadius: BorderRadius.circular(10),
-              ),
+            // ✅ Wrap title + balance in Flexible so they shrink
+            Flexible(
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                // mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    isPositive
-                        ? Icons.trending_up_rounded
-                        : Icons.trending_down_rounded,
-                    color: Colors.white,
-                    size: 12,
-                  ),
-                  const SizedBox(width: 4),
+                  // Screen title
                   Text(
-                    '${isPositive ? '+' : '-'}\$${summary.netBalance.abs().toStringAsFixed(0)}',
-                    style: AppTextStyles.labelSmall.copyWith(
+                    t.analytics,
+                    style: AppTextStyles.h5.copyWith(
                       color: Colors.white,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  // Net balance pill
+                  Flexible(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: balanceColor.withValues(alpha: 0.28),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            isPositive
+                                ? Icons.trending_up_rounded
+                                : Icons.trending_down_rounded,
+                            color: Colors.white,
+                            size: 12,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              '${isPositive ? '+' : '-'}${CurrencyFormatter.format(summary.netBalance.abs(), decimalDigits: 0)}',
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w800,
+                              ),
+                              overflow: TextOverflow.ellipsis, // ✅ truncate
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
 
-            const Spacer(),
+            // const Spacer(),
 
             // Income mini-pill
             _MiniPill(
               icon: Icons.arrow_downward_rounded,
-              value: '\$${summary.totalIncome.toStringAsFixed(0)}',
+              value: '${CurrencyFormatter.symbol}${_compact(summary.totalIncome)}', // ✅ compact format
               iconColor: const Color(0xFF10b981),
             ),
             const SizedBox(width: 6),
@@ -454,13 +473,23 @@ class _CollapsedHeader extends StatelessWidget {
             // Expense mini-pill
             _MiniPill(
               icon: Icons.arrow_upward_rounded,
-              value: '\$${summary.totalExpense.toStringAsFixed(0)}',
+              value: '${CurrencyFormatter.symbol}${_compact(summary.totalExpense)}', // ✅ compact format
               iconColor: const Color(0xFFef4444),
             ),
+            const SizedBox(width: 6),
+            _ExportButton(state: state, compact: true),
           ],
         ),
       ),
     );
+  }
+
+  //  Add this helper — converts large numbers to compact form
+  // 1500 → 1.5K, 1000000 → 1M
+  String _compact(double value) {
+    if (value >= 1000000) return '${(value / 1000000).toStringAsFixed(1)}M';
+    if (value >= 1000) return '${(value / 1000).toStringAsFixed(1)}K';
+    return value.toStringAsFixed(0);
   }
 }
 
@@ -677,6 +706,95 @@ class _Pill extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ExportButton extends StatefulWidget {
+  final AnalyticsLoaded state;
+  final bool compact;
+
+  const _ExportButton({required this.state, this.compact = false});
+
+  @override
+  State<_ExportButton> createState() => _ExportButtonState();
+}
+
+class _ExportButtonState extends State<_ExportButton> {
+  bool _loading = false;
+
+  Future<void> _export() async {
+    setState(() => _loading = true);
+    await AnalyticsPdfService.generateAndShare(context, widget.state);
+    if (mounted) setState(() => _loading = false);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.compact) {
+      // Collapsed bar — small icon button
+      return GestureDetector(
+        onTap: _loading ? null : _export,
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(9),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.26)),
+          ),
+          child: _loading
+              ? const Padding(
+                  padding: EdgeInsets.all(7),
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Icon(
+                  Icons.ios_share_rounded,
+                  color: Colors.white,
+                  size: 16,
+                ),
+        ),
+      );
+    }
+
+    // Expanded header — labelled button
+    return GestureDetector(
+      onTap: _loading ? null : _export,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+        ),
+        child: _loading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(Icons.ios_share_rounded, color: Colors.white, size: 15),
+                  SizedBox(width: 6),
+                  Text(
+                    'Export',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

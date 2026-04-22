@@ -1,7 +1,8 @@
 import 'dart:io';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
-import 'package:expense_mate/core/utils/translation_helper.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/core/utils/translation_helper.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -516,7 +517,7 @@ class _ExpandedContent extends StatelessWidget {
             ),
             const SizedBox(height: 16), // Reduced from 20 to 16
             Text(
-              '$sign\$${transaction.totalAmount.toStringAsFixed(2)}',
+              '$sign${CurrencyFormatter.format(transaction.totalAmount)}',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 42,
@@ -634,7 +635,7 @@ class _CollapsedBar extends StatelessWidget {
                 border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
               ),
               child: Text(
-                '$sign\$${transaction.totalAmount.toStringAsFixed(2)}',
+                '$sign${CurrencyFormatter.format(transaction.totalAmount)}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 13,
@@ -755,7 +756,7 @@ class _InfoCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '\$${item.amount.toStringAsFixed(2)}',
+                    CurrencyFormatter.format(item.amount),
                     style: TextStyle(
                       color: amountColor,
                       fontSize: 15,
@@ -783,7 +784,7 @@ class _InfoCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  '\$${txn.totalAmount.toStringAsFixed(2)}',
+                  CurrencyFormatter.format(txn.totalAmount),
                   style: TextStyle(
                     color: amountColor,
                     fontSize: 18,

@@ -1,25 +1,26 @@
-import 'package:expense_mate/core/data/models/analytics_data_models.dart';
-import 'package:expense_mate/core/data/models/budget_model.dart';
-import 'package:expense_mate/core/data/models/debt_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/features/analytics/domain/repository/analytics_repository.dart';
-import 'package:hive/hive.dart';
+import 'package:spendio/core/data/models/analytics_data_models.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_item_sql_model.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
+import 'package:spendio/core/data/repository_imp/db_constants.dart';
+import 'package:spendio/core/database/sqflite_helper.dart';
+import 'package:spendio/core/services/app_prefs.dart';
+import 'package:spendio/features/analytics/domain/repository/analytics_repository.dart';
 
-import '../../../../core/data/models/transaction_model.dart';
+import '../../../../core/domain/entity/transcation_item_entity.dart';
 
 class AnalyticsRepositoryImpl implements AnalyticsRepository {
-  final Box<TransactionModel> transactionBox;
-  final Box<BudgetModel> budgetBox;
-  final Box<DebtModel> debtBox;
-  final Box<CategoryHiveModel> categoryBox;
+  final SqliteHelper _db = SqliteHelper.instance;
 
-  AnalyticsRepositoryImpl({
-    required this.transactionBox,
-    required this.budgetBox,
-    required this.debtBox,
-    required this.categoryBox,
-  });
+  // ── Current logged-in user ─────────────────────────────────────────────────
+  String get _userId => AppPrefs.instance.userId ?? '';
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOP-LEVEL AGGREGATOR
+  // ═══════════════════════════════════════════════════════════════════════════
 
   @override
   Future<AnalyticsData> getAnalyticsData({
@@ -27,42 +28,19 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     required DateTime endDate,
     String? categoryFilter,
   }) async {
-    final summary = await getFinancialSummary(
-      startDate: startDate,
-      endDate: endDate,
-    );
+    final transactions = await _getTransactionsInRange(startDate, endDate);
+    final categories = await _getAllCategories();
+    final debts = await _getAllDebts();
+    final budgets = await _getBudgetsInRange(startDate, endDate);
 
-    final categoryBreakdown = await getCategoryBreakdown(
-      startDate: startDate,
-      endDate: endDate,
-    );
-
-    final monthlyTrends = await getMonthlyTrends(
-      startDate: startDate,
-      endDate: endDate,
-    );
-
-    final dailySpending = await getDailySpending(
-      startDate: startDate,
-      endDate: endDate,
-    );
-
-    final budgetAnalysis = await getBudgetAnalysis(
-      startDate: startDate,
-      endDate: endDate,
-    );
-
-    final debtAnalysis = await getDebtAnalysis();
-
-    final paymentMethodBreakdown = await getPaymentMethodBreakdown(
-      startDate: startDate,
-      endDate: endDate,
-    );
-
-    final topTransactions = await getTopTransactions(
-      startDate: startDate,
-      endDate: endDate,
-    );
+    final summary = _buildSummary(transactions, startDate, endDate);
+    final categoryBreakdown = _buildCategoryBreakdown(transactions, categories);
+    final monthlyTrends = _buildMonthlyTrends(transactions);
+    final dailySpending = _buildDailySpending(transactions);
+    final budgetAnalysis = _buildBudgetAnalysis(budgets);
+    final debtAnalysis = _buildDebtAnalysis(debts);
+    final paymentMethodBreakdown = _buildPaymentMethodBreakdown(transactions);
+    final topTransactions = _buildTopTransactions(transactions);
 
     return AnalyticsData(
       summary: summary,
@@ -76,250 +54,271 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     );
   }
 
-  @override
-  Future<FinancialSummary> getFinancialSummary({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
-    final transactions = _getTransactionsInRange(startDate, endDate);
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DB FETCHERS — all scoped to current user_id
+  // ═══════════════════════════════════════════════════════════════════════════
 
+  Future<List<TransactionModel>> _getTransactionsInRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    final rows = await _db.queryWhere(
+      DbConstants.tableTransactions,
+      where:
+          '${DbConstants.colIsDeleted} = 0 '
+          'AND ${DbConstants.colUserId} = ? '
+          'AND ${DbConstants.colTxnDate} >= ? '
+          'AND ${DbConstants.colTxnDate} <= ?',
+      whereArgs: [
+        _userId,
+        startDate.subtract(const Duration(days: 1)).toIso8601String(),
+        endDate.add(const Duration(days: 1)).toIso8601String(),
+      ],
+    );
+
+    final List<TransactionModel> result = [];
+    for (final row in rows) {
+      final itemRows = await _db.queryWhere(
+        DbConstants.tableTransactionItems,
+        where: '${DbConstants.colTxnItemTransactionId} = ?',
+        whereArgs: [row['id'] as String],
+      );
+      final items = itemRows
+          .map<TransactionItemEntity>((r) => TransactionItemModel.fromMap(r))
+          .toList();
+      result.add(TransactionModel.fromMap(row, items));
+    }
+    return result;
+  }
+
+  // Categories are global (shared) — no user_id filter needed
+  Future<List<CategoryModel>> _getAllCategories() async {
+    final rows = await _db.queryAll(DbConstants.tableCategories);
+    return rows.map((r) => CategoryModel.fromMap(r)).toList();
+  }
+
+  Future<List<DebtModel>> _getAllDebts() async {
+    final rows = await _db.queryWhere(
+      DbConstants.tableDebts,
+      where: '${DbConstants.colUserId} = ?',
+      whereArgs: [_userId],
+    );
+    return rows.map((r) => DebtModel.fromMap(r)).toList();
+  }
+
+  Future<List<BudgetModel>> _getBudgetsInRange(
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
+    final rows = await _db.queryWhere(
+      DbConstants.tableBudgets,
+      where:
+          '${DbConstants.colUserId} = ? '
+          'AND ${DbConstants.colBudgetIsArchived} = 0 '
+          'AND ${DbConstants.colBudgetStartDate} <= ? '
+          'AND ${DbConstants.colBudgetEndDate} >= ?',
+      whereArgs: [
+        _userId,
+        endDate.toIso8601String(),
+        startDate.toIso8601String(),
+      ],
+    );
+    return rows
+        .map((r) => BudgetModel.fromMap(r, transactionIds: const []))
+        .toList();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PURE BUILDERS — unchanged, operate on pre-fetched lists
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  FinancialSummary _buildSummary(
+    List<TransactionModel> transactions,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     double totalIncome = 0;
     double totalExpense = 0;
-    int transactionCount = transactions.length;
 
-    for (var transaction in transactions) {
-      if (transaction.type == TransactionType.income) {
-        totalIncome += transaction.totalAmount;
+    for (final t in transactions) {
+      if (t.type == TransactionType.income) {
+        totalIncome += t.totalAmount;
       } else {
-        totalExpense += transaction.totalAmount;
+        totalExpense += t.totalAmount;
       }
     }
 
-    final netBalance = totalIncome - totalExpense;
-    final daysDifference = endDate.difference(startDate).inDays + 1;
-    final averageDailyExpense = daysDifference > 0
-        ? totalExpense / daysDifference
-        : 0;
-
-    final averageTransactionAmount = transactionCount > 0
-        ? (totalIncome + totalExpense) / transactionCount
-        : 0;
-
-    final savingsRate = totalIncome > 0
-        ? ((totalIncome - totalExpense) / totalIncome * 100)
-        : 0;
+    final days = endDate.difference(startDate).inDays + 1;
+    final count = transactions.length;
 
     return FinancialSummary(
       totalIncome: totalIncome,
       totalExpense: totalExpense,
-      netBalance: netBalance,
-      averageDailyExpense: double.parse(averageDailyExpense.toString()),
-      averageTransactionAmount: double.parse(
-        averageTransactionAmount.toString(),
-      ),
-      totalTransactions: transactionCount,
-      savingsRate: double.parse(savingsRate.toString()),
+      netBalance: totalIncome - totalExpense,
+      averageDailyExpense: days > 0 ? totalExpense / days : 0,
+      averageTransactionAmount: count > 0
+          ? (totalIncome + totalExpense) / count
+          : 0,
+      totalTransactions: count,
+      savingsRate: totalIncome > 0
+          ? ((totalIncome - totalExpense) / totalIncome * 100)
+          : 0,
     );
   }
 
-  @override
-  Future<List<CategoryBreakdown>> getCategoryBreakdown({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
-    final transactions = _getTransactionsInRange(
-      startDate,
-      endDate,
-    ).where((t) => t.type == TransactionType.expense).toList();
+  List<CategoryBreakdown> _buildCategoryBreakdown(
+    List<TransactionModel> transactions,
+    List<CategoryModel> categories,
+  ) {
+    final expenses = transactions.where(
+      (t) => t.type == TransactionType.expense,
+    );
+    final Map<String, _CategoryData> map = {};
+    double total = 0;
 
-    final Map<String, CategoryData> categoryMap = {};
-    double totalExpense = 0;
+    for (final t in expenses) {
+      for (final item in t.items) {
+        total += item.amount;
+        final cat = categories.firstWhere(
+          (c) => c.key == item.category,
+          orElse: () => CategoryModel(
+            key: item.category,
+            iconCode: 0xe86f,
+            colorValue: 0xFF9E9E9E,
+            isIncome: false,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
 
-    for (var transaction in transactions) {
-      for (var item in transaction.items) {
-        totalExpense += item.amount;
-
-        // Get category info from categoryBox
-        final category = _getCategoryByKey(item.category);
-        final categoryKey = item.category;
-        final colorValue = category?.colorValue ?? 0xFF9E9E9E;
-        final iconCode = category?.iconCode ?? 0xe86f; // default icon
-
-        if (categoryMap.containsKey(categoryKey)) {
-          categoryMap[categoryKey]!.amount += item.amount;
-          categoryMap[categoryKey]!.count += 1;
+        if (map.containsKey(item.category)) {
+          map[item.category]!.amount += item.amount;
+          map[item.category]!.count++;
         } else {
-          categoryMap[categoryKey] = CategoryData(
+          map[item.category] = _CategoryData(
             amount: item.amount,
             count: 1,
-            colorValue: colorValue,
-            iconCode: iconCode,
+            colorValue: cat.colorValue,
+            iconCode: cat.iconCode,
           );
         }
       }
     }
 
-    return categoryMap.entries.map((entry) {
-      final percentage = totalExpense > 0
-          ? (entry.value.amount / totalExpense * 100)
-          : 0.0;
-
+    return map.entries.map((e) {
       return CategoryBreakdown(
-        categoryKey: entry.key,
-        amount: entry.value.amount,
-        percentage: percentage,
-        transactionCount: entry.value.count,
-        colorValue: entry.value.colorValue,
-        iconCode: entry.value.iconCode,
+        categoryKey: e.key,
+        amount: e.value.amount,
+        percentage: total > 0 ? e.value.amount / total * 100 : 0,
+        transactionCount: e.value.count,
+        colorValue: e.value.colorValue,
+        iconCode: e.value.iconCode,
       );
     }).toList()..sort((a, b) => b.amount.compareTo(a.amount));
   }
 
-  @override
-  Future<List<MonthlyTrend>> getMonthlyTrends({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
-    final transactions = _getTransactionsInRange(startDate, endDate);
-    final Map<String, MonthlyData> monthlyMap = {};
+  List<MonthlyTrend> _buildMonthlyTrends(List<TransactionModel> transactions) {
+    final Map<String, _MonthlyData> map = {};
 
-    for (var transaction in transactions) {
-      final monthKey =
-          '${_getMonthName(transaction.date.month)} ${transaction.date.year}';
-
-      if (!monthlyMap.containsKey(monthKey)) {
-        monthlyMap[monthKey] = MonthlyData(
-          month: monthKey,
-          income: 0,
-          expense: 0,
-        );
-      }
-
-      if (transaction.type == TransactionType.income) {
-        monthlyMap[monthKey]!.income += transaction.totalAmount;
+    for (final t in transactions) {
+      final key = '${_monthName(t.date.month)} ${t.date.year}';
+      map.putIfAbsent(
+        key,
+        () => _MonthlyData(month: key, income: 0, expense: 0),
+      );
+      if (t.type == TransactionType.income) {
+        map[key]!.income += t.totalAmount;
       } else {
-        monthlyMap[monthKey]!.expense += transaction.totalAmount;
+        map[key]!.expense += t.totalAmount;
       }
     }
 
-    return monthlyMap.values.map((data) {
-      return MonthlyTrend(
-        month: data.month,
-        income: data.income,
-        expense: data.expense,
-        net: data.income - data.expense,
-      );
-    }).toList();
+    return map.values
+        .map(
+          (d) => MonthlyTrend(
+            month: d.month,
+            income: d.income,
+            expense: d.expense,
+            net: d.income - d.expense,
+          ),
+        )
+        .toList();
   }
 
-  @override
-  Future<List<DailySpending>> getDailySpending({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
-    final transactions = _getTransactionsInRange(
-      startDate,
-      endDate,
-    ).where((t) => t.type == TransactionType.expense).toList();
+  List<DailySpending> _buildDailySpending(List<TransactionModel> transactions) {
+    final expenses = transactions.where(
+      (t) => t.type == TransactionType.expense,
+    );
+    final Map<DateTime, double> map = {};
 
-    final Map<DateTime, double> dailyMap = {};
-
-    for (var transaction in transactions) {
-      final date = DateTime(
-        transaction.date.year,
-        transaction.date.month,
-        transaction.date.day,
-      );
-
-      dailyMap[date] = (dailyMap[date] ?? 0) + transaction.totalAmount;
+    for (final t in expenses) {
+      final day = DateTime(t.date.year, t.date.month, t.date.day);
+      map[day] = (map[day] ?? 0) + t.totalAmount;
     }
 
-    return dailyMap.entries
-        .map((entry) => DailySpending(date: entry.key, amount: entry.value))
+    return map.entries
+        .map((e) => DailySpending(date: e.key, amount: e.value))
         .toList()
       ..sort((a, b) => a.date.compareTo(b.date));
   }
 
-  @override
-  Future<BudgetAnalysis> getBudgetAnalysis({
-    required DateTime startDate,
-    required DateTime endDate,
-  }) async {
-    final budgets = budgetBox.values
-        .where(
-          (b) =>
-              !b.isArchived &&
-              b.startDate.isBefore(endDate) &&
-              b.endDate.isAfter(startDate),
-        )
-        .toList();
-
-    int activeBudgets = budgets.where((b) => b.isActive).length;
-    int overBudgetCount = budgets.where((b) => b.isOverBudget).length;
-
-    double totalBudgetAmount = 0;
-    double totalSpentAmount = 0;
-
+  BudgetAnalysis _buildBudgetAnalysis(List<BudgetModel> budgets) {
+    double totalBudget = 0;
+    double totalSpent = 0;
     final List<BudgetProgress> progresses = [];
 
-    for (var budget in budgets) {
-      totalBudgetAmount += budget.totalAmount;
-      totalSpentAmount += budget.spentAmount;
-
+    for (final b in budgets) {
+      totalBudget += b.totalAmount;
+      totalSpent += b.spentAmount;
       progresses.add(
         BudgetProgress(
-          budgetName: budget.name,
-          budgetAmount: budget.totalAmount,
-          spentAmount: budget.spentAmount,
-          percentage: budget.spentPercentage,
-          isOverBudget: budget.isOverBudget,
-          colorCode: budget.colorCode,
+          budgetName: b.name,
+          budgetAmount: b.totalAmount,
+          spentAmount: b.spentAmount,
+          percentage: b.spentPercentage,
+          isOverBudget: b.isOverBudget,
+          colorCode: b.colorCode,
         ),
       );
     }
 
-    final overallUtilization = totalBudgetAmount > 0
-        ? (totalSpentAmount / totalBudgetAmount * 100)
-        : 0.0;
-
     return BudgetAnalysis(
       totalBudgets: budgets.length,
-      activeBudgets: activeBudgets,
-      overBudgetCount: overBudgetCount,
-      totalBudgetAmount: totalBudgetAmount,
-      totalSpentAmount: totalSpentAmount,
-      overallBudgetUtilization: overallUtilization,
+      activeBudgets: budgets.where((b) => b.isActive).length,
+      overBudgetCount: budgets.where((b) => b.isOverBudget).length,
+      totalBudgetAmount: totalBudget,
+      totalSpentAmount: totalSpent,
+      overallBudgetUtilization: totalBudget > 0
+          ? totalSpent / totalBudget * 100
+          : 0,
       budgetProgresses: progresses,
     );
   }
 
-  @override
-  Future<DebtAnalysis> getDebtAnalysis() async {
-    final debts = debtBox.values.toList();
+  DebtAnalysis _buildDebtAnalysis(List<DebtModel> debts) {
+    double totalBorrowed = 0,
+        totalLent = 0,
+        borrowedRemaining = 0,
+        lentRemaining = 0;
+    int activeBorrowed = 0,
+        activeLent = 0,
+        overdueBorrowed = 0,
+        overdueLent = 0;
 
-    double totalBorrowed = 0;
-    double totalLent = 0;
-    double borrowedRemaining = 0;
-    double lentRemaining = 0;
-    int activeBorrowedCount = 0;
-    int activeLentCount = 0;
-    int overdueBorrowedCount = 0;
-    int overdueLentCount = 0;
-
-    for (var debt in debts) {
-      if (debt.debtType == DebtType.borrowed) {
-        totalBorrowed += debt.totalAmount;
-        if (!debt.isReturned) {
-          borrowedRemaining += debt.remainingAmount;
-          activeBorrowedCount++;
-          if (debt.isOverdue) overdueBorrowedCount++;
+    for (final d in debts) {
+      if (d.debtType == DebtType.borrowed) {
+        totalBorrowed += d.totalAmount;
+        if (!d.isReturned) {
+          borrowedRemaining += d.remainingAmount;
+          activeBorrowed++;
+          if (d.isOverdue) overdueBorrowed++;
         }
       } else {
-        totalLent += debt.totalAmount;
-        if (!debt.isReturned) {
-          lentRemaining += debt.remainingAmount;
-          activeLentCount++;
-          if (debt.isOverdue) overdueLentCount++;
+        totalLent += d.totalAmount;
+        if (!d.isReturned) {
+          lentRemaining += d.remainingAmount;
+          activeLent++;
+          if (d.isOverdue) overdueLent++;
         }
       }
     }
@@ -329,11 +328,101 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
       totalLent: totalLent,
       borrowedRemaining: borrowedRemaining,
       lentRemaining: lentRemaining,
-      activeBorrowedCount: activeBorrowedCount,
-      activeLentCount: activeLentCount,
-      overdueBorrowedCount: overdueBorrowedCount,
-      overdueLentCount: overdueLentCount,
+      activeBorrowedCount: activeBorrowed,
+      activeLentCount: activeLent,
+      overdueBorrowedCount: overdueBorrowed,
+      overdueLentCount: overdueLent,
     );
+  }
+
+  PaymentMethodBreakdown _buildPaymentMethodBreakdown(
+    List<TransactionModel> transactions,
+  ) {
+    final Map<String, double> amounts = {};
+    final Map<String, int> counts = {};
+
+    for (final t in transactions) {
+      final m = t.paymentMethod.name;
+      amounts[m] = (amounts[m] ?? 0) + t.totalAmount;
+      counts[m] = (counts[m] ?? 0) + 1;
+    }
+
+    return PaymentMethodBreakdown(methodAmounts: amounts, methodCounts: counts);
+  }
+
+  List<TopTransaction> _buildTopTransactions(
+    List<TransactionModel> transactions, {
+    int limit = 10,
+  }) {
+    final expenses =
+        transactions.where((t) => t.type == TransactionType.expense).toList()
+          ..sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
+
+    return expenses.take(limit).map((t) {
+      return TopTransaction(
+        id: t.id,
+        categoryKey: t.items.isNotEmpty ? t.items.first.category : 'unknown',
+        amount: t.totalAmount,
+        date: t.date,
+        note: t.items.isNotEmpty ? t.items.first.note : null,
+      );
+    }).toList();
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PUBLIC OVERRIDES
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  @override
+  Future<FinancialSummary> getFinancialSummary({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final txns = await _getTransactionsInRange(startDate, endDate);
+    return _buildSummary(txns, startDate, endDate);
+  }
+
+  @override
+  Future<List<CategoryBreakdown>> getCategoryBreakdown({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final txns = await _getTransactionsInRange(startDate, endDate);
+    final cats = await _getAllCategories();
+    return _buildCategoryBreakdown(txns, cats);
+  }
+
+  @override
+  Future<List<MonthlyTrend>> getMonthlyTrends({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final txns = await _getTransactionsInRange(startDate, endDate);
+    return _buildMonthlyTrends(txns);
+  }
+
+  @override
+  Future<List<DailySpending>> getDailySpending({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final txns = await _getTransactionsInRange(startDate, endDate);
+    return _buildDailySpending(txns);
+  }
+
+  @override
+  Future<BudgetAnalysis> getBudgetAnalysis({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final budgets = await _getBudgetsInRange(startDate, endDate);
+    return _buildBudgetAnalysis(budgets);
+  }
+
+  @override
+  Future<DebtAnalysis> getDebtAnalysis() async {
+    final debts = await _getAllDebts();
+    return _buildDebtAnalysis(debts);
   }
 
   @override
@@ -341,22 +430,8 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
-    final transactions = _getTransactionsInRange(startDate, endDate);
-
-    final Map<String, double> methodAmounts = {};
-    final Map<String, int> methodCounts = {};
-
-    for (var transaction in transactions) {
-      final method = transaction.paymentMethod.name;
-      methodAmounts[method] =
-          (methodAmounts[method] ?? 0) + transaction.totalAmount;
-      methodCounts[method] = (methodCounts[method] ?? 0) + 1;
-    }
-
-    return PaymentMethodBreakdown(
-      methodAmounts: methodAmounts,
-      methodCounts: methodCounts,
-    );
+    final txns = await _getTransactionsInRange(startDate, endDate);
+    return _buildPaymentMethodBreakdown(txns);
   }
 
   @override
@@ -365,84 +440,36 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
     required DateTime endDate,
     int limit = 10,
   }) async {
-    final transactions =
-        _getTransactionsInRange(
-            startDate,
-            endDate,
-          ).where((t) => t.type == TransactionType.expense).toList()
-          ..sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
-
-    final topTrans = transactions.take(limit).toList();
-
-    return topTrans.map((t) {
-      final categoryKey = t.items.isNotEmpty
-          ? t.items.first.category
-          : 'unknown';
-
-      final note = t.items.isNotEmpty && t.items.first.note != null
-          ? t.items.first.note
-          : null;
-
-      return TopTransaction(
-        id: t.id,
-        categoryKey: categoryKey,
-        amount: t.totalAmount,
-        date: t.date,
-        note: note,
-      );
-    }).toList();
+    final txns = await _getTransactionsInRange(startDate, endDate);
+    return _buildTopTransactions(txns, limit: limit);
   }
 
-  // Helper methods
-  List<TransactionModel> _getTransactionsInRange(
-    DateTime startDate,
-    DateTime endDate,
-  ) {
-    return transactionBox.values
-        .where(
-          (t) =>
-              !t.isDeleted &&
-              t.date.isAfter(startDate.subtract(const Duration(days: 1))) &&
-              t.date.isBefore(endDate.add(const Duration(days: 1))),
-        )
-        .toList();
-  }
+  // ── Utilities ──────────────────────────────────────────────────────────────
 
-  CategoryHiveModel? _getCategoryByKey(String key) {
-    try {
-      return categoryBox.values.firstWhere((cat) => cat.key == key);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  String _getMonthName(int month) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[month - 1];
-  }
+  String _monthName(int month) => const [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ][month - 1];
 }
 
-// Helper classes for data aggregation
-class CategoryData {
+// ── Private helper classes ────────────────────────────────────────────────────
+
+class _CategoryData {
   double amount;
   int count;
   final int colorValue;
   final int iconCode;
-
-  CategoryData({
+  _CategoryData({
     required this.amount,
     required this.count,
     required this.colorValue,
@@ -450,12 +477,11 @@ class CategoryData {
   });
 }
 
-class MonthlyData {
+class _MonthlyData {
   final String month;
   double income;
   double expense;
-
-  MonthlyData({
+  _MonthlyData({
     required this.month,
     required this.income,
     required this.expense,

@@ -1,5 +1,5 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/features/transcation/presentation/bloc/category_bottom_sheet_bloc/category_bottom_sheet_state.dart';
 
 abstract class TransactionEvent {}
 
@@ -13,7 +13,7 @@ class FetchAllExpancesEvent extends TransactionEvent {}
 class FetchAllIncomEvent extends TransactionEvent {}
 
 class ToggleCategorySelection extends TransactionEvent {
-  final CategoryHiveModel selectedCategory;
+  final CategoryModel selectedCategory;
 
   ToggleCategorySelection({required this.selectedCategory});
 }

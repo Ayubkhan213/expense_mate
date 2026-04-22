@@ -1,9 +1,8 @@
-import 'package:expense_mate/core/data/models/budget_model.dart';
-
-import 'package:expense_mate/core/domain/use_cases/use_case.dart';
-import 'package:expense_mate/core/error/failure.dart';
-import 'package:expense_mate/core/utils/either.dart';
-import 'package:expense_mate/features/budgets/domain/repository/budget_repository.dart';
+import 'package:spendio/core/data/models/budget_model.dart';
+import 'package:spendio/core/domain/use_cases/use_case.dart';
+import 'package:spendio/core/error/failure.dart';
+import 'package:spendio/core/utils/either.dart';
+import 'package:spendio/features/budgets/domain/repository/budget_repository.dart';
 
 class UpdateBudgetUseCase implements UseCase<BudgetModel, UpdateBudgetParams> {
   final BudgetRepository repository;
@@ -12,20 +11,26 @@ class UpdateBudgetUseCase implements UseCase<BudgetModel, UpdateBudgetParams> {
 
   @override
   Future<Either<Failure, BudgetModel>> call(UpdateBudgetParams params) async {
-    final budgetResult = repository.getAllBudgets();
+    final budgetResult = await repository.getAllBudgets();
 
     return budgetResult.fold((failure) => Left(failure), (budgets) async {
-      final budget = budgets.firstWhere(
-        (b) => b.id == params.budgetId,
-        orElse: () => throw Exception('Budget not found'),
-      );
+      final list = budgets ?? <BudgetModel>[];
 
+      BudgetModel? budget;
+      try {
+        budget = list.firstWhere((b) => b.id == params.budgetId);
+      } catch (_) {
+        return Left(CacheFailure('Budget not found'));
+      }
+
+      // ✅ Build directly — no copyWith needed
       final updatedBudget = BudgetModel(
         id: budget.id,
+        userId: budget.userId,
         name: params.name ?? budget.name,
         type: budget.type,
         totalAmount: params.totalAmount ?? budget.totalAmount,
-        spentAmount: budget.spentAmount,
+        spentAmount: budget.spentAmount, // ✅ locked
         startDate: budget.startDate,
         endDate: budget.endDate,
         transactionIds: budget.transactionIds,
@@ -35,7 +40,6 @@ class UpdateBudgetUseCase implements UseCase<BudgetModel, UpdateBudgetParams> {
         isActive: params.isActive ?? budget.isActive,
         isArchived: params.isArchived ?? budget.isArchived,
         createdAt: budget.createdAt,
-        userId: budget.userId,
         updatedAt: DateTime.now(),
       );
 
@@ -43,13 +47,12 @@ class UpdateBudgetUseCase implements UseCase<BudgetModel, UpdateBudgetParams> {
 
       return updateResult.fold(
         (failure) => Left(failure),
-        (_) => Right(updatedBudget), // ✅ THIS IS THE FIX
+        (_) => Right(updatedBudget),
       );
     });
   }
 }
 
-// Update Budget
 class UpdateBudgetParams {
   final String budgetId;
   final String? name;

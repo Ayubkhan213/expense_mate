@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:expense_mate/core/data/models/notification_secdular.dart';
+import 'package:spendio/core/data/models/notification_secdular.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -98,7 +98,7 @@ class DailyNotificationService {
       id: id,
       title: title,
       body: body,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
       scheduledDate: tzScheduledDate,
       notificationDetails: notificationDetails,

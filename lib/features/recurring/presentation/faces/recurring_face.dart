@@ -1,17 +1,17 @@
-import 'package:expense_mate/core/data/models/category_hive_model.dart';
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/recurring_transaction_model.dart';
-import 'package:expense_mate/core/extension/responsive_extension.dart';
-import 'package:expense_mate/core/theme/typography/app_text_styles.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_bloc.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
-import 'package:expense_mate/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_component/recurring_transaction_card.dart';
-import 'package:expense_mate/features/recurring/presentation/component/recurring_component/recurring_empty_state.dart';
-import 'package:expense_mate/features/recurring/presentation/faces/recurring_bottomsheet.dart';
-import 'package:expense_mate/features/recurring/presentation/faces/recurring_category_selection.dart';
-import 'package:expense_mate/features/recurring/presentation/faces/recurring_detail.dart';
-import 'package:expense_mate/l10n/app_localizations.dart';
+import 'package:spendio/core/data/models/category_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/extension/responsive_extension.dart';
+import 'package:spendio/core/theme/typography/app_text_styles.dart';
+import 'package:spendio/core/utils/currency_formatter.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_bloc.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_event.dart';
+import 'package:spendio/features/recurring/presentation/bloc/recurring/recurring_list_state.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_component/recurring_transaction_card.dart';
+import 'package:spendio/features/recurring/presentation/component/recurring_component/recurring_empty_state.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_bottomsheet.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_category_selection.dart';
+import 'package:spendio/features/recurring/presentation/faces/recurring_detail.dart';
+import 'package:spendio/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../component/recurring_component/recurring_filter_chips.dart';
@@ -140,11 +140,13 @@ class _RecurringFaceState extends State<RecurringFace> {
                       ToggleRecurringStatus(t.id),
                     ),
                     onEdit: () {
-                      final cat = CategoryHiveModel(
+                      final cat = CategoryModel(
                         key: t.categoryKey,
                         isIncome: t.type == TransactionType.income,
                         colorValue: 0xFF6200EA,
                         iconCode: Icons.category.codePoint,
+                        createdAt: DateTime.now(),
+                        updatedAt: DateTime.now(),
                       );
                       RecurringTransactionBottomSheet.show(
                         context,
@@ -677,7 +679,7 @@ class _RecurringStatsInline extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '\$${stats.netMonthly.abs().toStringAsFixed(0)}',
+                    CurrencyFormatter.format(stats.netMonthly.abs(), decimalDigits: 0),
                     style: AppTextStyles.currencyLarge.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
@@ -709,14 +711,14 @@ class _RecurringStatsInline extends StatelessWidget {
             children: [
               _Pill(
                 label: t.income,
-                value: '\$${stats.monthlyIncomeEstimate.toStringAsFixed(0)}/mo',
+                value: '${CurrencyFormatter.format(stats.monthlyIncomeEstimate, decimalDigits: 0)}/mo',
                 icon: Icons.arrow_downward_rounded,
               ),
               const SizedBox(width: 10),
               _Pill(
                 label: t.expense,
                 value:
-                    '\$${stats.monthlyExpenseEstimate.toStringAsFixed(0)}/mo',
+                    '${CurrencyFormatter.format(stats.monthlyExpenseEstimate, decimalDigits: 0)}/mo',
                 icon: Icons.arrow_upward_rounded,
               ),
             ],

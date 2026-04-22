@@ -1,5 +1,6 @@
-import 'package:expense_mate/core/data/models/enums.dart';
-import 'package:expense_mate/core/data/models/transaction_model.dart';
+import 'package:spendio/core/data/models/debt_sql_model.dart';
+import 'package:spendio/core/data/models/enums.dart';
+import 'package:spendio/core/data/models/transcation_sql_model.dart';
 
 enum AllDebtTxStatus { initial, loading, loaded, error }
 
@@ -15,6 +16,9 @@ class AllDebtTransactionsState {
   final bool collapsedSearchOpen;
   final String? error;
 
+  // ← NEW: resolved debt models keyed by debtId
+  final Map<String, DebtModel> debtMap;
+
   const AllDebtTransactionsState({
     this.status = AllDebtTxStatus.initial,
     this.all = const [],
@@ -26,6 +30,7 @@ class AllDebtTransactionsState {
     this.dateEnd,
     this.collapsedSearchOpen = false,
     this.error,
+    this.debtMap = const {},
   });
 
   bool get hasActiveFilters =>
@@ -57,6 +62,7 @@ class AllDebtTransactionsState {
     bool clearDateEnd = false,
     bool? collapsedSearchOpen,
     String? error,
+    Map<String, DebtModel>? debtMap,
   }) {
     return AllDebtTransactionsState(
       status: status ?? this.status,
@@ -69,6 +75,7 @@ class AllDebtTransactionsState {
       dateEnd: clearDateEnd ? null : (dateEnd ?? this.dateEnd),
       collapsedSearchOpen: collapsedSearchOpen ?? this.collapsedSearchOpen,
       error: error ?? this.error,
+      debtMap: debtMap ?? this.debtMap,
     );
   }
 }
