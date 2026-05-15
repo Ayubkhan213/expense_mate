@@ -226,40 +226,126 @@ class SqliteHelper {
          flag    TEXT NOT NULL
        )''');
 
+    // ── transactions_archive ─────────────────────────────────────────────────
+    batch.execute('''
+      CREATE TABLE ${DbConstants.tableTransactionsArchive} (
+        ${DbConstants.colId}                TEXT PRIMARY KEY NOT NULL,
+        ${DbConstants.colUserId}            TEXT,
+        ${DbConstants.colTxnType}           TEXT NOT NULL,
+        ${DbConstants.colTxnTotalAmount}    REAL NOT NULL,
+        ${DbConstants.colTxnPaymentMethod}  TEXT NOT NULL,
+        ${DbConstants.colTxnDate}           TEXT NOT NULL,
+        ${DbConstants.colTxnIsDebt}         INTEGER NOT NULL DEFAULT 0,
+        ${DbConstants.colTxnDebtId}         TEXT,
+        ${DbConstants.colTxnTags}           TEXT,
+        ${DbConstants.colTxnAttachmentPath} TEXT,
+        ${DbConstants.colTxnIsRecurring}    INTEGER NOT NULL DEFAULT 0,
+        ${DbConstants.colTxnBudgetId}       TEXT,
+        ${DbConstants.colIsDeleted}         INTEGER NOT NULL DEFAULT 0,
+        ${DbConstants.colCreatedAt}         TEXT NOT NULL,
+        ${DbConstants.colUpdatedAt}         TEXT NOT NULL,
+        ${DbConstants.colArchivedAt}        TEXT NOT NULL,
+        FOREIGN KEY (${DbConstants.colUserId})
+          REFERENCES ${DbConstants.tableUsers}(${DbConstants.colId})
+          ON DELETE SET NULL
+      )
+    ''');
+
     await batch.commit(noResult: true);
     await _createIndexes(db);
+
+    // ── Archive Index (Only created here because table exists in _onCreate) ──
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_arch_user_date ON ${DbConstants.tableTransactionsArchive}(${DbConstants.colUserId}, ${DbConstants.colTxnDate})',
+    );
   }
 
   Future<void> _createIndexes(Database db) async {
     final batch = db.batch();
+
     // Speed up common queries
     batch.execute(
-      'CREATE INDEX idx_txn_user_date ON ${DbConstants.tableTransactions}(${DbConstants.colUserId}, ${DbConstants.colTxnDate})',
+      'CREATE INDEX IF NOT EXISTS idx_txn_user_date ON ${DbConstants.tableTransactions}(${DbConstants.colUserId}, ${DbConstants.colTxnDate})',
     );
     batch.execute(
-      'CREATE INDEX idx_txn_budget ON ${DbConstants.tableTransactions}(${DbConstants.colTxnBudgetId})',
+      'CREATE INDEX IF NOT EXISTS idx_txn_budget ON ${DbConstants.tableTransactions}(${DbConstants.colTxnBudgetId})',
     );
     batch.execute(
-      'CREATE INDEX idx_txn_items_txn ON ${DbConstants.tableTransactionItems}(${DbConstants.colTxnItemTransactionId})',
+      'CREATE INDEX IF NOT EXISTS idx_txn_items_txn ON ${DbConstants.tableTransactionItems}(${DbConstants.colTxnItemTransactionId})',
     );
     batch.execute(
-      'CREATE INDEX idx_debts_user ON ${DbConstants.tableDebts}(${DbConstants.colUserId})',
+      'CREATE INDEX IF NOT EXISTS idx_debts_user ON ${DbConstants.tableDebts}(${DbConstants.colUserId})',
     );
     batch.execute(
-      'CREATE INDEX idx_debt_payments_debt ON ${DbConstants.tableDebtPayments}(${DbConstants.colDebtPaymentDebtId})',
+      'CREATE INDEX IF NOT EXISTS idx_debt_payments_debt ON ${DbConstants.tableDebtPayments}(${DbConstants.colDebtPaymentDebtId})',
     );
     batch.execute(
-      'CREATE INDEX idx_budgets_user ON ${DbConstants.tableBudgets}(${DbConstants.colUserId})',
+      'CREATE INDEX IF NOT EXISTS idx_budgets_user ON ${DbConstants.tableBudgets}(${DbConstants.colUserId})',
     );
     batch.execute(
-      'CREATE INDEX idx_recurring_user ON ${DbConstants.tableRecurringTransactions}(${DbConstants.colUserId})',
+      'CREATE INDEX IF NOT EXISTS idx_recurring_user ON ${DbConstants.tableRecurringTransactions}(${DbConstants.colUserId})',
     );
+
+
+    // New optimizations for large data (100k+ rows)
+    batch.execute(
+      'CREATE INDEX IF NOT EXISTS idx_txn_user_type_date ON ${DbConstants.tableTransactions}(${DbConstants.colUserId}, ${DbConstants.colTxnType}, ${DbConstants.colTxnDate})',
+    );
+    batch.execute(
+      'CREATE INDEX IF NOT EXISTS idx_txn_user_deleted_date ON ${DbConstants.tableTransactions}(${DbConstants.colUserId}, ${DbConstants.colIsDeleted}, ${DbConstants.colTxnDate})',
+    );
+    batch.execute(
+      'CREATE INDEX IF NOT EXISTS idx_txn_user_payment ON ${DbConstants.tableTransactions}(${DbConstants.colUserId}, ${DbConstants.colTxnPaymentMethod})',
+    );
+    batch.execute(
+      'CREATE INDEX IF NOT EXISTS idx_txn_items_category ON ${DbConstants.tableTransactionItems}(${DbConstants.colTxnItemCategory})',
+    );
+
+    // Partial index to optimize queries that always filter by is_deleted = 0
+    batch.execute(
+      'CREATE INDEX IF NOT EXISTS idx_txn_partial_active ON ${DbConstants.tableTransactions}(${DbConstants.colUserId}, ${DbConstants.colTxnDate}) WHERE ${DbConstants.colIsDeleted} = 0',
+    );
+
     await batch.commit(noResult: true);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Add migration steps here as the schema evolves, e.g.:
-    // if (oldVersion < 2) { await db.execute('ALTER TABLE ...'); }
+    if (oldVersion < 2) {
+      // Migration to version 2: Adding optimized indexes for large datasets
+      await _createIndexes(db);
+    }
+
+    if (oldVersion < 3) {
+      // Migration to version 3: Adding transaction archiving system
+      final batch = db.batch();
+      batch.execute('''
+        CREATE TABLE IF NOT EXISTS ${DbConstants.tableTransactionsArchive} (
+          ${DbConstants.colId}                TEXT PRIMARY KEY NOT NULL,
+          ${DbConstants.colUserId}            TEXT,
+          ${DbConstants.colTxnType}           TEXT NOT NULL,
+          ${DbConstants.colTxnTotalAmount}    REAL NOT NULL,
+          ${DbConstants.colTxnPaymentMethod}  TEXT NOT NULL,
+          ${DbConstants.colTxnDate}           TEXT NOT NULL,
+          ${DbConstants.colTxnIsDebt}         INTEGER NOT NULL DEFAULT 0,
+          ${DbConstants.colTxnDebtId}         TEXT,
+          ${DbConstants.colTxnTags}           TEXT,
+          ${DbConstants.colTxnAttachmentPath} TEXT,
+          ${DbConstants.colTxnIsRecurring}    INTEGER NOT NULL DEFAULT 0,
+          ${DbConstants.colTxnBudgetId}       TEXT,
+          ${DbConstants.colIsDeleted}         INTEGER NOT NULL DEFAULT 0,
+          ${DbConstants.colCreatedAt}         TEXT NOT NULL,
+          ${DbConstants.colUpdatedAt}         TEXT NOT NULL,
+          ${DbConstants.colArchivedAt}        TEXT NOT NULL,
+          FOREIGN KEY (${DbConstants.colUserId})
+            REFERENCES ${DbConstants.tableUsers}(${DbConstants.colId})
+            ON DELETE SET NULL
+        )
+      ''');
+      batch.execute(
+        'CREATE INDEX IF NOT EXISTS idx_arch_user_date ON ${DbConstants.tableTransactionsArchive}(${DbConstants.colUserId}, ${DbConstants.colTxnDate})',
+      );
+      await batch.commit(noResult: true);
+    }
   }
 
   // ══════════════════════════════════════════════════════════════════════════
@@ -414,5 +500,110 @@ class SqliteHelper {
     final targetPath = join(targetDir.path, DbConstants.dbName);
     await dbFile.copy(targetPath);
     return targetPath;
+  }
+
+  // ── Archiving ───────────────────────────────────────────────────────────────
+
+  /// Moves transactions older than 12 months to the archive table and runs VACUUM.
+  Future<int> archiveOldTransactions(String userId) async {
+    try {
+      final db = await database;
+      final cutoff =
+          DateTime.now().subtract(const Duration(days: 365)).toIso8601String();
+
+      int archivedCount = 0;
+
+      await db.transaction((txn) async {
+        // 1. Insert into archive table
+        await txn.execute('''
+          INSERT OR IGNORE INTO ${DbConstants.tableTransactionsArchive} (
+            ${DbConstants.colId}, ${DbConstants.colUserId}, ${DbConstants.colTxnType}, 
+            ${DbConstants.colTxnTotalAmount}, ${DbConstants.colTxnPaymentMethod}, 
+            ${DbConstants.colTxnDate}, ${DbConstants.colTxnIsDebt}, ${DbConstants.colTxnDebtId}, 
+            ${DbConstants.colTxnTags}, ${DbConstants.colTxnAttachmentPath}, 
+            ${DbConstants.colTxnIsRecurring}, ${DbConstants.colTxnBudgetId}, 
+            ${DbConstants.colIsDeleted}, ${DbConstants.colCreatedAt}, 
+            ${DbConstants.colUpdatedAt}, ${DbConstants.colArchivedAt}
+          )
+          SELECT 
+            ${DbConstants.colId}, ${DbConstants.colUserId}, ${DbConstants.colTxnType}, 
+            ${DbConstants.colTxnTotalAmount}, ${DbConstants.colTxnPaymentMethod}, 
+            ${DbConstants.colTxnDate}, ${DbConstants.colTxnIsDebt}, ${DbConstants.colTxnDebtId}, 
+            ${DbConstants.colTxnTags}, ${DbConstants.colTxnAttachmentPath}, 
+            ${DbConstants.colTxnIsRecurring}, ${DbConstants.colTxnBudgetId}, 
+            ${DbConstants.colIsDeleted}, ${DbConstants.colCreatedAt}, 
+            ${DbConstants.colUpdatedAt}, ?
+          FROM ${DbConstants.tableTransactions}
+          WHERE ${DbConstants.colUserId} = ? AND ${DbConstants.colTxnDate} < ?
+        ''', [DateTime.now().toIso8601String(), userId, cutoff]);
+
+        // 2. Delete from main table
+        archivedCount = await txn.delete(
+          DbConstants.tableTransactions,
+          where: '${DbConstants.colUserId} = ? AND ${DbConstants.colTxnDate} < ?',
+          whereArgs: [userId, cutoff],
+        );
+      });
+
+      if (archivedCount > 0) {
+        await db.execute('VACUUM');
+        print('[Archive] Moved $archivedCount rows to archive');
+      }
+
+      return archivedCount;
+    } catch (e) {
+      print('[Archive Error] Failed to archive old transactions: $e');
+      return 0;
+    }
+  }
+
+  /// Silently checks and triggers archiving if old data exceeds 500 rows.
+  Future<void> checkAndArchive(String userId) async {
+    try {
+      final db = await database;
+      final cutoff =
+          DateTime.now().subtract(const Duration(days: 365)).toIso8601String();
+
+      final result = await db.rawQuery('''
+        SELECT COUNT(*) as count 
+        FROM ${DbConstants.tableTransactions} 
+        WHERE ${DbConstants.colUserId} = ? AND ${DbConstants.colTxnDate} < ?
+      ''', [userId, cutoff]);
+
+      final count = Sqflite.firstIntValue(result) ?? 0;
+
+      if (count > 500) {
+        await archiveOldTransactions(userId);
+      }
+    } catch (e) {
+      print('[Archive Error] Check and archive failed: $e');
+    }
+  }
+
+  /// Fetches paginated archived transactions for a specific user and date range.
+  Future<List<Map<String, dynamic>>> getArchivedTransactions(
+    String userId,
+    DateTime from,
+    DateTime to,
+    int page,
+  ) async {
+    try {
+      final db = await database;
+      const int pageSize = 30;
+      final int offset = page * pageSize;
+
+      return await db.query(
+        DbConstants.tableTransactionsArchive,
+        where:
+            '${DbConstants.colUserId} = ? AND ${DbConstants.colTxnDate} BETWEEN ? AND ?',
+        whereArgs: [userId, from.toIso8601String(), to.toIso8601String()],
+        orderBy: '${DbConstants.colTxnDate} DESC',
+        limit: pageSize,
+        offset: offset,
+      );
+    } catch (e) {
+      print('[Archive Error] Failed to fetch archived transactions: $e');
+      return [];
+    }
   }
 }

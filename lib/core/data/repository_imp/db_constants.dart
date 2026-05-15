@@ -6,7 +6,7 @@ class DbConstants {
 
   // ── Meta ────────────────────────────────────────────────────────────────────
   static const String dbName = 'spendio.db';
-  static const int dbVersion = 1;
+  static const int dbVersion = 3;
 
   // ── Shared column names ──────────────────────────────────────────────────────
   static const String colId = 'id';
@@ -62,6 +62,8 @@ class DbConstants {
   static const String colTxnAttachmentPath = 'attachment_path';
   static const String colTxnIsRecurring = 'is_recurring';
   static const String colTxnBudgetId = 'budget_id';
+  static const String tableTransactionsArchive = 'transactions_archive';
+  static const String colArchivedAt = 'archived_at';
 
   // ════════════════════════════════════════════════════════════════════════════
   // TRANSACTION ITEMS
